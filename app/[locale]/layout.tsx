@@ -3,6 +3,8 @@ import { Geist, Geist_Mono } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import { NextIntlClientProvider } from "next-intl"
 import { getMessages } from "next-intl/server"
+import { notFound } from "next/navigation"
+import { routing } from "@/i18n/routing" // Import shared routing config
 import type { ReactNode } from "react"
 import "../globals.css"
 import Navbar from "@/components/navbar"
@@ -41,6 +43,11 @@ export const metadata: Metadata = {
   },
 }
 
+// Use the shared routing config to generate static params
+export function generateStaticParams() {
+  return routing.locales.map((locale) => ({ locale }));
+}
+
 export default async function LocaleLayout({
   children,
   params,
@@ -49,6 +56,12 @@ export default async function LocaleLayout({
   params: Promise<{ locale: string }>
 }) {
   const { locale } = await params
+
+  // Ensure the locale is valid
+  if (!routing.locales.includes(locale as any)) {
+    notFound();
+  }
+
   const messages = await getMessages()
 
   return (
@@ -56,9 +69,11 @@ export default async function LocaleLayout({
       <body className={`${geist.className} antialiased`}>
         <ThemeProvider>
           <NextIntlClientProvider messages={messages}>
-            <Navbar />
-            <main className="min-h-screen">{children}</main>
-            <Footer />
+            <div className="flex flex-col min-h-screen">
+              <Navbar />
+              <main className="flex-1">{children}</main>
+              <Footer />
+            </div>
           </NextIntlClientProvider>
         </ThemeProvider>
         <Analytics />

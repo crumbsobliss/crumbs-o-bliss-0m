@@ -29,7 +29,7 @@ export async function generateMetadata({ params }: ItemPageProps): Promise<Metad
     openGraph: {
       title: name,
       description: description,
-      type: "product",
+      
       images: [
         {
           url: item.image,
