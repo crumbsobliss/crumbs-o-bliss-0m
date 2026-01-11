@@ -205,3 +205,47 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* --- global.css --- */
+
+/* 1. Slow Spin (for the Star icon) */
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+.animate-spin-slow {
+  animation: spin-slow 8s linear infinite;
+}
+
+/* 2. Floating Effect (for Images and Icons) */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-20px); }
+}
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+/* 3. Delayed Float (so items don't bob in sync) */
+.animate-float-delayed {
+  animation: float 6s ease-in-out 3s infinite; /* 3s delay */
+}
+
+/* 4. Slow Pulse (for background blobs) */
+@keyframes pulse-slow {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+.animate-pulse-slow {
+  animation: pulse-slow 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* 5. Shimmer (for the button sheen) */
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+/* Note: We use a utility class here to make it easier to toggle on hover */
+.animate-shimmer {
+  animation: shimmer 1.5s infinite;
+}

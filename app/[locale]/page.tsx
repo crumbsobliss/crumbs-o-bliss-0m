@@ -15,7 +15,11 @@ import {
   MapPin,
   Instagram,
   ChefHat,
-  Coffee
+  Coffee,
+  Croissant,
+  Cookie,
+  UtensilsCrossed,
+  Wheat
 } from "lucide-react";
 import CircularGallery from "@/components/CircularGallery";
 import {
@@ -104,112 +108,145 @@ export default async function HomePage({
   return (
     <div className={`w-full overflow-x-hidden bg-background ${inter.className}`}>
       
-      {/* --- HERO SECTION --- */}
-      <section className="relative min-h-[95vh] flex items-center justify-center px-4 overflow-hidden bg-gradient-to-br from-[var(--hero-bg-start)] via-[var(--hero-bg-via)] to-[var(--hero-bg-end)] transition-colors duration-500">
-        {/* Animated Background Elements */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-20 left-10 w-72 h-72 bg-[var(--blob-1)] rounded-full blur-3xl animate-pulse opacity-40" />
-          <div className="absolute bottom-20 right-10 w-96 h-96 bg-[var(--blob-2)] rounded-full blur-3xl animate-pulse delay-700 opacity-40" />
-          <div className="absolute top-1/2 left-1/3 w-64 h-64 bg-[var(--blob-3)] rounded-full blur-3xl animate-pulse delay-1000 opacity-30" />
-        </div>
+     <section className="relative min-h-[95vh] flex items-center justify-center px-4 overflow-hidden bg-gradient-to-br from-[var(--hero-bg-start)] via-[var(--hero-bg-via)] to-[var(--hero-bg-end)] transition-colors duration-500">
+      
+      {/* --- BACKGROUND ATMOSPHERE --- */}
+      
+      {/* 1. Animated Gradient Blobs */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-20 left-10 w-72 h-72 bg-[var(--blob-1)] rounded-full blur-3xl animate-pulse opacity-30" />
+        <div className="absolute bottom-20 right-10 w-96 h-96 bg-[var(--blob-2)] rounded-full blur-3xl animate-pulse delay-700 opacity-30" />
+        <div className="absolute top-1/2 left-1/3 w-64 h-64 bg-[var(--blob-3)] rounded-full blur-3xl animate-pulse delay-1000 opacity-20" />
+      </div>
 
-        <div className="relative z-10 max-w-7xl mx-auto text-center">
-          {/* Badge */}
-          <div className={`inline-flex items-center gap-2 px-6 py-2 rounded-full bg-[var(--badge-bg)] backdrop-blur-md border border-[var(--badge-border)] text-[var(--badge-text)] font-semibold text-sm mb-8 animate-in fade-in slide-in-from-bottom-4 duration-1000 shadow-lg hover:shadow-xl transition-all ${montserrat.className}`}>
+      {/* 2. Floating Bakery Icon Pattern (Low Opacity Wallpaper) */}
+      <div className="absolute inset-0 opacity-[0.03] pointer-events-none select-none overflow-hidden">
+        <Croissant className="absolute top-10 left-[10%] w-24 h-24 rotate-12 animate-float" />
+        <Cookie className="absolute top-40 right-[15%] w-16 h-16 -rotate-12 animate-float-delayed" />
+        <UtensilsCrossed className="absolute bottom-32 left-[20%] w-32 h-32 rotate-45 animate-pulse-slow" />
+        <ChefHat className="absolute top-1/2 right-[5%] w-20 h-20 -rotate-12 animate-float" />
+        <Wheat className="absolute bottom-10 right-[30%] w-40 h-40 -rotate-12 opacity-50" />
+      </div>
+
+      {/* 3. "Flour Dust" Particles (Simple CSS circles) */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-white rounded-full opacity-40 animate-ping duration-[3000ms]" />
+        <div className="absolute top-3/4 left-2/3 w-1.5 h-1.5 bg-white rounded-full opacity-40 animate-ping delay-700 duration-[4000ms]" />
+        <div className="absolute top-1/3 right-1/4 w-1 h-1 bg-white rounded-full opacity-30 animate-ping delay-1000 duration-[5000ms]" />
+      </div>
+
+      {/* --- MAIN CONTENT --- */}
+      <div className="relative z-10 max-w-7xl mx-auto text-center pt-10">
+        
+        {/* Animated Badge */}
+        <div className={`group inline-flex items-center gap-3 px-6 py-2 rounded-full bg-[var(--badge-bg)] backdrop-blur-md border border-[var(--badge-border)] text-[var(--badge-text)] font-semibold text-sm mb-8 animate-in fade-in slide-in-from-bottom-4 duration-1000 shadow-lg hover:shadow-[var(--badge-shadow)] transition-all cursor-default ${montserrat.className}`}>
+          <div className="relative">
             <Star className="w-4 h-4 fill-[var(--badge-icon)] text-[var(--badge-icon)] animate-spin-slow" />
-            <span className="tracking-wide uppercase text-xs">{t("hero.cta")}</span>
-            <Sparkles className="w-4 h-4 text-[var(--badge-icon)]" />
+            <div className="absolute inset-0 bg-[var(--badge-icon)] blur-sm opacity-50 animate-pulse" />
           </div>
-
-          {/* Main Heading (Font: Cinzel) */}
-          <h1
-            className={`text-6xl md:text-9xl font-black mb-6 text-balance bg-gradient-to-br from-[var(--text-heading-grad-from)] via-[var(--text-heading-grad-via)] to-[var(--text-heading-grad-to)] bg-clip-text text-transparent tracking-tighter leading-[0.9] animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-200 ${cinzel.className}`}
-          >
-            {t("hero.title")}
-          </h1>
-
-          {/* Decorative underline */}
-          <div className="flex items-center justify-center gap-3 mb-8 animate-in fade-in duration-1000 delay-400">
-            <div className="h-px w-16 md:w-32 bg-gradient-to-r from-transparent to-[var(--divider-color)]" />
-            <Leaf className="w-6 h-6 text-[var(--divider-color)]" />
-            <div className="h-px w-16 md:w-32 bg-gradient-to-l from-transparent to-[var(--divider-color)]" />
-          </div>
-
-          <p
-            className={`text-2xl md:text-4xl text-[var(--text-body-color)] mb-14 text-balance max-w-4xl mx-auto leading-relaxed animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-500 ${dancing.className}`}
-          >
-            {t("hero.subtitle")}
-          </p>
-
-          {/* CTA Buttons (Font: Oswald) */}
-          <div className={`flex flex-col sm:flex-row items-center justify-center gap-6 animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-700 ${oswald.className}`}>
-            <Link
-              href={`/${locale}/items`}
-              className="group relative flex items-center gap-3 px-12 py-5 bg-gradient-to-r from-[var(--btn-primary-start)] to-[var(--btn-primary-end)] text-white font-bold rounded-full hover:brightness-110 transition-all hover:scale-105 shadow-2xl shadow-[var(--btn-shadow)] overflow-hidden uppercase tracking-widest"
-            >
-              <span className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
-              <span className="relative z-10 text-lg">
-                Shop Collection
-              </span>
-              <ArrowRight className="relative z-10 w-5 h-5 group-hover:translate-x-2 transition-transform" />
-            </Link>
-            <Link
-              href={`/${locale}/about`}
-              className="px-12 py-5 bg-[var(--badge-bg)] backdrop-blur-sm border-2 border-[var(--badge-border)] text-[var(--badge-text)] font-bold rounded-full hover:bg-[var(--badge-bg)] hover:brightness-105 transition-all hover:scale-105 shadow-lg text-lg tracking-widest uppercase"
-            >
-              Our Story
-            </Link>
-          </div>
-
-          {/* Floating Images Gallery (Hero Images 1-3) */}
-          <div className="mt-20 relative h-64 md:h-80 animate-in fade-in duration-1000 delay-1000 pointer-events-none md:pointer-events-auto">
-            <div className="absolute left-1/2 -translate-x-1/2 top-0 w-48 h-48 md:w-64 md:h-64 rounded-3xl overflow-hidden shadow-2xl rotate-6 hover:rotate-0 transition-transform duration-500 border-4 border-white dark:border-stone-800 z-10">
-              <Image
-                src="https://images.unsplash.com/photo-1509440159596-0249088772ff?w=600&q=80"
-                alt="Artisan bread"
-                fill
-                priority
-                sizes="(max-width: 768px) 200px, 300px"
-                className="object-cover"
-              />
-            </div>
-            <div className="absolute left-[5%] md:left-[20%] top-8 w-32 h-32 md:w-48 md:h-48 rounded-3xl overflow-hidden shadow-xl -rotate-12 hover:rotate-0 transition-transform duration-500 border-4 border-white dark:border-stone-800 opacity-90 hover:opacity-100 hover:z-20">
-              <Image
-                src="https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=600&q=80"
-                alt="Croissants"
-                fill
-                priority
-                sizes="(max-width: 768px) 150px, 200px"
-                className="object-cover"
-              />
-            </div>
-            <div className="absolute right-[5%] md:right-[20%] top-12 w-32 h-32 md:w-48 md:h-48 rounded-3xl overflow-hidden shadow-xl rotate-12 hover:rotate-0 transition-transform duration-500 border-4 border-white dark:border-stone-800 opacity-90 hover:opacity-100 hover:z-20">
-              <Image
-                src="https://images.unsplash.com/photo-1486427944299-d1955d23e34d?w=600&q=80"
-                alt="Pastries"
-                fill
-                priority
-                sizes="(max-width: 768px) 150px, 200px"
-                className="object-cover"
-              />
-            </div>
-          </div>
+          <span className="tracking-widest uppercase text-xs font-bold">{t("hero.cta")}</span>
+          <Sparkles className="w-4 h-4 text-[var(--badge-icon)] group-hover:rotate-12 transition-transform" />
         </div>
 
-        {/* Wave Divider */}
-        <div className="absolute bottom-0 left-0 w-full overflow-hidden leading-none z-20">
-          <svg
-            className="relative block w-full h-24 md:h-32"
-            viewBox="0 0 1200 120"
-            preserveAspectRatio="none"
-          >
-            <path
-              d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z"
-              className="fill-white dark:fill-background"
-            ></path>
-          </svg>
+        {/* Main Heading with Wheat Decoration */}
+        <div className="relative inline-block">
+            <Wheat className="hidden md:block absolute -left-16 top-1/2 -translate-y-1/2 w-12 h-12 text-[var(--divider-color)] opacity-60 -rotate-45" />
+            <Wheat className="hidden md:block absolute -right-16 top-1/2 -translate-y-1/2 w-12 h-12 text-[var(--divider-color)] opacity-60 rotate-45 flip-x" />
+            
+            <h1 className={`text-6xl md:text-9xl font-black mb-6 text-balance bg-gradient-to-br from-[var(--text-heading-grad-from)] via-[var(--text-heading-grad-via)] to-[var(--text-heading-grad-to)] bg-clip-text text-transparent tracking-tighter leading-[0.9] animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-200 drop-shadow-sm ${cinzel.className}`}>
+                {t("hero.title")}
+            </h1>
         </div>
-      </section>
+
+        {/* Decorative Divider */}
+        <div className="flex items-center justify-center gap-4 mb-8 animate-in fade-in duration-1000 delay-400 opacity-80">
+          <div className="h-px w-12 md:w-24 bg-gradient-to-r from-transparent via-[var(--divider-color)] to-[var(--divider-color)]" />
+          <div className="p-2 border border-[var(--divider-color)] rounded-full rotate-45">
+            <div className="w-2 h-2 bg-[var(--divider-color)] -rotate-45" />
+          </div>
+          <Leaf className="w-5 h-5 text-[var(--divider-color)]" />
+          <div className="p-2 border border-[var(--divider-color)] rounded-full rotate-45">
+            <div className="w-2 h-2 bg-[var(--divider-color)] -rotate-45" />
+          </div>
+          <div className="h-px w-12 md:w-24 bg-gradient-to-l from-transparent via-[var(--divider-color)] to-[var(--divider-color)]" />
+        </div>
+
+        {/* Subtitle */}
+        <p className={`text-2xl md:text-4xl text-[var(--text-body-color)] mb-14 text-balance max-w-4xl mx-auto leading-relaxed animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-500 ${dancing.className}`}>
+          {t("hero.subtitle")}
+        </p>
+
+        {/* CTA Buttons */}
+        <div className={`flex flex-col sm:flex-row items-center justify-center gap-6 animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-700 ${oswald.className}`}>
+          <Link
+            href={`/${locale}/items`}
+            className="group relative flex items-center gap-3 px-10 py-5 bg-gradient-to-r from-[var(--btn-primary-start)] to-[var(--btn-primary-end)] text-white font-bold rounded-full hover:brightness-110 transition-all hover:scale-105 shadow-2xl shadow-[var(--btn-shadow)] overflow-hidden uppercase tracking-widest ring-offset-2 hover:ring-2 ring-[var(--btn-primary-start)]"
+          >
+            {/* Shimmer Effect */}
+            <span className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:animate-[shimmer_1s_infinite]" />
+            
+            <span className="relative z-10 text-lg">Shop Collection</span>
+            <div className="relative z-10 p-1 bg-white/20 rounded-full group-hover:bg-white/30 transition-colors">
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            </div>
+          </Link>
+          
+          <Link
+            href={`/${locale}/about`}
+            className="group flex items-center gap-2 px-10 py-5 bg-[var(--badge-bg)] backdrop-blur-sm border-2 border-[var(--badge-border)] text-[var(--badge-text)] font-bold rounded-full hover:bg-[var(--badge-bg)] hover:brightness-105 transition-all hover:scale-105 shadow-lg text-lg tracking-widest uppercase"
+          >
+            <span>Our Story</span>
+            <ChefHat className="w-5 h-5 text-[var(--badge-icon)] opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" />
+          </Link>
+        </div>
+
+        {/* --- FLOATING GALLERY --- */}
+        <div className="mt-24 relative h-64 md:h-80 animate-in fade-in duration-1000 delay-1000 pointer-events-none md:pointer-events-auto perspective-1000">
+          
+          {/* Image 1: Center (Hero) - Animated Float */}
+          <div className="absolute left-1/2 -translate-x-1/2 top-0 w-48 h-48 md:w-72 md:h-72 rounded-full md:rounded-[2rem] overflow-hidden shadow-2xl z-20 border-4 border-white dark:border-stone-800 animate-float">
+            <Image
+              src="https://images.unsplash.com/photo-1509440159596-0249088772ff?w=600&q=80"
+              alt="Artisan bread"
+              fill
+              priority
+              className="object-cover hover:scale-110 transition-transform duration-700"
+            />
+            {/* Sticker Badge */}
+            <div className="absolute bottom-4 right-4 bg-yellow-400 text-black text-xs font-bold px-3 py-1 rounded-full shadow-lg rotate-[-5deg] z-30 font-sans border border-yellow-200">
+              FRESH
+            </div>
+          </div>
+
+          {/* Image 2: Left - Delayed Float */}
+          <div className="absolute left-[5%] md:left-[15%] top-12 w-36 h-36 md:w-56 md:h-56 rounded-full md:rounded-[2rem] overflow-hidden shadow-xl -rotate-6 z-10 border-4 border-white dark:border-stone-800 animate-float-delayed opacity-90 hover:opacity-100 hover:z-30 hover:rotate-0 transition-all">
+            <Image
+              src="https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=600&q=80"
+              alt="Croissants"
+              fill
+              className="object-cover hover:scale-110 transition-transform duration-700"
+            />
+          </div>
+
+          {/* Image 3: Right - Delayed Float */}
+          <div className="absolute right-[5%] md:right-[15%] top-16 w-36 h-36 md:w-56 md:h-56 rounded-full md:rounded-[2rem] overflow-hidden shadow-xl rotate-6 z-10 border-4 border-white dark:border-stone-800 animate-float-delayed opacity-90 hover:opacity-100 hover:z-30 hover:rotate-0 transition-all">
+            <Image
+              src="https://images.unsplash.com/photo-1486427944299-d1955d23e34d?w=600&q=80"
+              alt="Pastries"
+              fill
+              className="object-cover hover:scale-110 transition-transform duration-700"
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* Wave Divider (Unchanged but ensuring z-index covers particles) */}
+      <div className="absolute bottom-0 left-0 w-full overflow-hidden leading-none z-30">
+        <svg className="relative block w-full h-16 md:h-24" viewBox="0 0 1200 120" preserveAspectRatio="none">
+          <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" className="fill-white dark:fill-background"></path>
+        </svg>
+      </div>
+    </section>
 
       {/* --- PHILOSOPHY STATS --- */}
       <section className="py-16 bg-white dark:bg-background border-y border-[var(--lp-card-border)]/50">
