@@ -73,6 +73,12 @@ export default function Navbar() {
             >
               {t("nav.cart")}
             </Link>
+            <Link
+              href={`/${currentLocale}/contact`}
+              className="text-sm font-medium text-foreground hover:text-primary transition-colors"
+            >
+              {t("nav.contact")}
+            </Link>
           </div>
 
           {/* Right Side Controls */}
