@@ -246,7 +246,7 @@ export function ItemsGrid({ items, locale }: ItemsGridProps) {
       </div>
 
       {/* Results Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-start">
         {filteredItems.length > 0 ? (
           filteredItems.map((item) => (
             <Link
@@ -254,16 +254,20 @@ export function ItemsGrid({ items, locale }: ItemsGridProps) {
               href={`/${locale}/items/${item.slug}`}
               className="group bg-card border border-border rounded-xl overflow-hidden hover:shadow-xl hover:shadow-primary/5 hover:border-primary/50 transition-all duration-300 flex flex-col"
             >
-              <div className="aspect-square bg-muted relative overflow-hidden">
+              {/* IMAGE CONTAINER MODIFIED: Removed aspect-square, removed fill */}
+              <div className="bg-muted relative overflow-hidden">
                 <Image
                   src={item.image || "/placeholder.svg"}
                   alt={item.name.en}
-                  fill
-                  className="object-cover group-hover:scale-110 transition-transform duration-500"
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  // These props allow Next.js to optimize while respecting the CSS-defined aspect ratio
+                  width={0}
+                  height={0}
+                  sizes="100vw"
+                  className="w-full h-auto object-cover group-hover:scale-110 transition-transform duration-500"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
               </div>
+              
               <div className="p-5 flex flex-col flex-1">
                 <h2 className="text-lg font-bold mb-2 group-hover:text-primary transition-colors line-clamp-1">
                   {locale === "en" ? item.name.en : item.name.bn}

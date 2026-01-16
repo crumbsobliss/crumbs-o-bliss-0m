@@ -79,6 +79,12 @@ export default function Navbar() {
             >
               {t("nav.contact")}
             </Link>
+            <Link
+              href={`/${currentLocale}/profile`}
+              className="text-sm font-medium text-foreground hover:text-primary transition-colors"
+            >
+              {t("nav.profile")}
+            </Link>
           </div>
 
           {/* Right Side Controls */}
