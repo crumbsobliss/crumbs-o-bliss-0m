@@ -720,7 +720,7 @@ export default async function HomePage({
                 src="https://images.unsplash.com/photo-1517686469429-8bdb88b9f907?w=800&q=80"
                 alt="Bakery interior"
                 fill
-                loading="lazy"
+                priority
                 sizes="(max-width: 768px) 100vw, 50vw"
                 className="object-cover hover:scale-110 transition-transform duration-[2s]"
               />
