@@ -4,6 +4,7 @@ import { useTheme } from "next-themes"
 import { useTranslations } from "next-intl"
 import { useRouter, usePathname } from "next/navigation"
 import Link from "next/link"
+import Image from "next/image"
 import { Moon, Sun, Globe } from "lucide-react"
 import { useState, useEffect } from "react"
 
@@ -36,9 +37,15 @@ export default function Navbar() {
           {/* Brand */}
           <Link
             href={`/${currentLocale}`}
-            className="text-xl font-bold text-primary hover:text-primary/90 transition-colors"
+            className="relative flex items-center justify-center w-32 h-full hover:opacity-80 transition-opacity"
           >
-            {t("nav.brand")}
+            <Image 
+              src="/icon.png" 
+              alt="Logo" 
+              fill
+              className="object-contain " 
+              priority
+            />
           </Link>
 
           {/* Navigation Links */}
