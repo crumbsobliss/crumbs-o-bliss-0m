@@ -115,7 +115,7 @@ export function ItemsGrid({ items, locale }: ItemsGridProps) {
       ${playfair.variable} ${cinzel.variable} ${cormorant.variable} 
       ${prata.variable} ${oldStandard.variable} ${italiana.variable} 
       ${bodoni.variable} ${unna.variable}
-      min-h-screen bg-[#FDFBF7] text-[#2C241B] space-y-12 pb-20
+      min-h-screen bg-background text-yellow-400 space-y-12 pb-20
     `}>
       
       {/* --- Classical Controls Dashboard --- */}
@@ -124,7 +124,7 @@ export function ItemsGrid({ items, locale }: ItemsGridProps) {
         <div className="h-1 w-full bg-[#2C241B] mb-1"></div>
         <div className="h-0.5 w-full bg-[#D4AF37] mb-6"></div>
 
-        <div className="bg-[#2C241B] text-[#FDFBF7] p-6 md:p-8 shadow-2xl relative overflow-hidden">
+        <div className="bg-background text-[#FDFBF7] p-6 md:p-8 shadow-2xl relative overflow-hidden">
            {/* Subtle Texture Overlay */}
            <div className="absolute inset-0 opacity-10 pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/black-linen.png')]"></div>
 
@@ -223,9 +223,9 @@ export function ItemsGrid({ items, locale }: ItemsGridProps) {
 
         {/* Categories Panel (Classical Menu Style) */}
         {showFilters && (
-          <div className="bg-[#F4EFE6] border-b-2 border-[#D4AF37] p-6 shadow-inner">
+          <div className="bg-background border-b-2 border-[#D4AF37] p-6 shadow-inner">
              <div className="flex items-center justify-between mb-4">
-                <h3 className="font-playfair text-2xl italic text-[#2C241B]">Categories & Collections</h3>
+                <h3 className="font-playfair text-2xl italic text-yellow-400">Categories & Collections</h3>
                 <span className="font-cinzel text-xs text-[#8B7355] tracking-widest">{allTags.length} AVAILABLE</span>
              </div>
              <div className="flex flex-wrap gap-3">
@@ -254,7 +254,7 @@ export function ItemsGrid({ items, locale }: ItemsGridProps) {
       <div className="px-4 md:px-8 max-w-[1600px] mx-auto">
         <div className="flex items-center justify-center mb-10">
            <div className="h-[1px] bg-[#D4AF37] w-24"></div>
-           <span className="mx-4 font-bodoni text-[#2C241B] text-xl tracking-widest">
+           <span className="mx-4 font-bodoni text-xl tracking-widest">
               SHOWING {filteredItems.length} OF {items.length}
            </span>
            <div className="h-[1px] bg-[#D4AF37] w-24"></div>
@@ -266,13 +266,13 @@ export function ItemsGrid({ items, locale }: ItemsGridProps) {
               <Link
                 key={item.slug}
                 href={`/${locale}/items/${item.slug}`}
-                className="group relative bg-white flex flex-col shadow-xl hover:shadow-2xl transition-all duration-500 hover:-translate-y-2"
+                className="group relative bg-background flex flex-col shadow-xl hover:shadow-2xl transition-all duration-500 hover:-translate-y-2"
               >
                 {/* Classical Frame Border */}
-                <div className="absolute inset-2 border border-[#E5E0D8] pointer-events-none z-20 group-hover:border-[#D4AF37] transition-colors duration-500"></div>
+                <div className="absolute inset-2 border border-accent pointer-events-none z-20 group-hover:border-[#D4AF37] transition-colors duration-500"></div>
                 
                 {/* Image Area */}
-                <div className="relative h-[300px] overflow-hidden bg-[#F4EFE6] m-2 mb-0">
+                <div className="relative h-[300px] overflow-hidden bg-background m-2 mb-0">
                   <Image
                     src={item.image || "/placeholder.svg"}
                     alt={item.name.en}
@@ -288,8 +288,8 @@ export function ItemsGrid({ items, locale }: ItemsGridProps) {
                 </div>
                 
                 {/* Content Area */}
-                <div className="p-6 pt-8 text-center flex-1 flex flex-col bg-white relative z-10 m-2 mt-0 border-t-0">
-                  <h2 className="font-playfair text-2xl font-bold mb-3 text-[#2C241B] group-hover:text-[#8B4513] transition-colors leading-tight">
+                <div className="p-6 pt-8 text-center flex-1 flex flex-col bg-background relative z-10 m-2 mt-0 border-t-0">
+                  <h2 className="font-playfair text-2xl font-bold mb-3 group-hover:text-[#8B4513] transition-colors leading-tight">
                     {locale === "en" ? item.name.en : item.name.bn}
                   </h2>
                   
@@ -298,7 +298,7 @@ export function ItemsGrid({ items, locale }: ItemsGridProps) {
                      <span className="text-[#D4AF37] text-xs">♦ &nbsp; ♦ &nbsp; ♦</span>
                   </div>
 
-                  <p className="font-cormorant text-xl text-[#5D4E3C] mb-6 line-clamp-3 leading-relaxed flex-1">
+                  <p className="font-cormorant text-xl mb-6 line-clamp-3 leading-relaxed flex-1">
                     {locale === "en" ? item.description.en : item.description.bn}
                   </p>
                   

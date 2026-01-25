@@ -63,28 +63,10 @@ export default function Navbar() {
               {t("nav.items")}
             </Link>
             <Link
-              href={`/${currentLocale}/about`}
-              className="text-sm font-medium text-foreground hover:text-primary transition-colors"
-            >
-              {t("nav.about")}
-            </Link>
-            <Link
-              href={`/${currentLocale}/terms`}
-              className="text-sm font-medium text-foreground hover:text-primary transition-colors"
-            >
-              {t("nav.terms")}
-            </Link>
-            <Link
               href={`/${currentLocale}/cart`}
               className="text-sm font-medium text-foreground hover:text-primary transition-colors"
             >
               {t("nav.cart")}
-            </Link>
-            <Link
-              href={`/${currentLocale}/contact`}
-              className="text-sm font-medium text-foreground hover:text-primary transition-colors"
-            >
-              {t("nav.contact")}
             </Link>
             <Link
               href={`/${currentLocale}/profile`}
@@ -98,6 +80,21 @@ export default function Navbar() {
             >
               Custom
             </Link>
+            <Link
+              href={`/${currentLocale}/about`}
+              className="text-sm font-medium text-foreground hover:text-primary transition-colors"
+            >
+              {t("nav.about")}
+            </Link>
+            
+            
+            <Link
+              href={`/${currentLocale}/contact`}
+              className="text-sm font-medium text-foreground hover:text-primary transition-colors"
+            >
+              {t("nav.contact")}
+            </Link>
+            
           </div>
 
           {/* Right Side Controls */}

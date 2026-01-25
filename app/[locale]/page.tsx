@@ -215,7 +215,7 @@ export default async function HomePage({
             <Wheat className="hidden md:block absolute -right-16 top-1/2 -translate-y-1/2 w-12 h-12 text-[var(--divider-color)] opacity-60 rotate-45 flip-x" />
 
             <h1
-              className={`text-6xl md:text-9xl font-black mb-6 text-balance bg-gradient-to-br from-[var(--text-heading-grad-from)] via-[var(--text-heading-grad-via)] to-[var(--text-heading-grad-to)] bg-clip-text text-transparent tracking-tighter leading-[0.9] animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-200 drop-shadow-sm font-cinzel`}
+              className={`text-6xl md:text-9xl font-black mb-6 text-balance bg-primary  bg-clip-text text-transparent tracking-tighter leading-[0.9] animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-200 drop-shadow-sm font-cinzel`}
             >
               {t("hero.title")}
             </h1>
@@ -369,7 +369,7 @@ export default async function HomePage({
 
       {/* Circular Gallery Section */}
       <div
-        style={{ height: "600px", position: "relative" }}
+        style={{ height: "400px", position: "relative" }}
         className="bg-gradient-to-b from-white to-[var(--feat-bg-start)] dark:from-background dark:to-[var(--feat-bg-start)]"
       >
         <CircularGallery bend={3} items={bakeryGalleryItems} />

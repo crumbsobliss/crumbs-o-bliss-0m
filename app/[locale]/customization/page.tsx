@@ -336,13 +336,13 @@ export default function CustomizationPage() {
   if (!mounted) return null;
 
   return (
-    <div className={`min-h-screen bg-[#FDFBF7] text-[#4A4036] selection:bg-[#D4AF37] selection:text-white
+    <div className={`min-h-screen bg-background text-[var(--text)] selection:bg-[#D4AF37] selection:text-white
       ${playfair.variable} ${montserrat.variable} ${greatVibes.variable} ${cinzel.variable} ${lato.variable} ${dancingScript.variable}`}>
       
       {/* Header */}
       <header className="pt-12 pb-8 text-center px-4 relative overflow-hidden">
         <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#D4AF37] to-transparent opacity-50"></div>
-        <h1 className="font-playfair text-4xl md:text-6xl font-bold text-[#2C241B] mb-2 tracking-tight">
+        <h1 className="font-playfair text-4xl md:text-6xl font-bold text-[var(--text)] mb-2 tracking-tight">
           The Artisan's Studio
         </h1>
         <p className="font-great-vibes text-2xl md:text-3xl text-[#8B7355] mt-2">
@@ -361,7 +361,7 @@ export default function CustomizationPage() {
                 : 'text-[#8B7355] hover:bg-[#F5F5F0]'
             }`}
           >
-            PATISSERIE
+            CAKE
           </button>
           <button
             onClick={() => setActivePanel('pizza')}
@@ -371,7 +371,7 @@ export default function CustomizationPage() {
                 : 'text-[#8B7355] hover:bg-[#F5F5F0]'
             }`}
           >
-            TRATTORIA
+            PIZZA
           </button>
         </div>
       </div>
@@ -380,7 +380,7 @@ export default function CustomizationPage() {
         
         {/* LEFT PANEL: VISUALIZER */}
         <div className="lg:col-span-5 sticky top-8 z-10">
-          <div className="bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-[#E5E0D8] relative h-[500px] flex flex-col items-center justify-center transition-all duration-500">
+          <div className="bg-background rounded-[2rem] shadow-2xl overflow-hidden border border-[#E5E0D8] relative h-[500px] flex flex-col items-center justify-center transition-all duration-500">
             <div className="absolute inset-0 opacity-5 pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
             
             {/* Dynamic Rendering Area */}
@@ -398,14 +398,14 @@ export default function CustomizationPage() {
 
         {/* RIGHT PANEL: CONTROLS */}
         <div className="lg:col-span-7">
-          <div className="bg-white rounded-[2rem] shadow-xl border border-[#E5E0D8] overflow-hidden">
+          <div className="bg-background rounded-[2rem] shadow-xl border border-[#E5E0D8] overflow-hidden">
             <div className="p-8 md:p-10">
               
               {activePanel === 'cake' ? (
                 // --- CAKE FORM ---
                 <div className="space-y-8 animate-in slide-in-from-right-4 duration-500">
                   <div className="border-b border-gray-100 pb-4 mb-4">
-                    <h2 className="font-cinzel text-2xl text-[#2C241B] flex items-center gap-3">
+                    <h2 className="font-cinzel text-2xl text-[var(--text)] flex items-center gap-3">
                       <span className="w-8 h-[1px] bg-[#D4AF37]"></span>
                       Cake Configuration
                     </h2>
