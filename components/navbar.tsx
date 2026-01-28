@@ -5,7 +5,18 @@ import { useTranslations } from 'next-intl'
 import { useRouter, usePathname } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
-import { Moon, Sun, Globe, ShoppingCart } from 'lucide-react'
+import {
+  Moon,
+  Sun,
+  Globe,
+  ShoppingCart,
+  Home,
+  Package,
+  User,
+  Sparkles,
+  Info,
+  Mail,
+} from 'lucide-react'
 import { useState, useEffect } from 'react'
 import { useCart } from '@/lib/cart-context'
 
@@ -61,15 +72,17 @@ export default function Navbar() {
           <div className="hidden md:flex items-center gap-8">
             <Link
               href={`/${currentLocale}`}
-              className="text-sm font-medium text-foreground hover:text-primary transition-colors"
+              className="text-sm font-medium text-foreground hover:text-primary transition-colors flex items-center gap-1"
             >
-              {t("nav.home")}
+              <Home className="w-4 h-4" />
+              {t('nav.home')}
             </Link>
             <Link
               href={`/${currentLocale}/items`}
-              className="text-sm font-medium text-foreground hover:text-primary transition-colors"
+              className="text-sm font-medium text-foreground hover:text-primary transition-colors flex items-center gap-1"
             >
-              {t("nav.items")}
+              <Package className="w-4 h-4" />
+              {t('nav.items')}
             </Link>
             <Link
               href={`/${currentLocale}/cart`}
@@ -85,31 +98,33 @@ export default function Navbar() {
             </Link>
             <Link
               href={`/${currentLocale}/profile`}
-              className="text-sm font-medium text-foreground hover:text-primary transition-colors"
+              className="text-sm font-medium text-foreground hover:text-primary transition-colors flex items-center gap-1"
             >
-              {t("nav.profile")}
+              <User className="w-4 h-4" />
+              {t('nav.profile')}
             </Link>
             <Link
               href={`/${currentLocale}/customization`}
-              className="text-sm font-medium text-foreground hover:text-primary transition-colors"
+              className="text-sm font-medium text-foreground hover:text-primary transition-colors flex items-center gap-1"
             >
+              <Sparkles className="w-4 h-4" />
               Custom
             </Link>
             <Link
               href={`/${currentLocale}/about`}
-              className="text-sm font-medium text-foreground hover:text-primary transition-colors"
+              className="text-sm font-medium text-foreground hover:text-primary transition-colors flex items-center gap-1"
             >
-              {t("nav.about")}
+              <Info className="w-4 h-4" />
+              {t('nav.about')}
             </Link>
-            
-            
+
             <Link
               href={`/${currentLocale}/contact`}
-              className="text-sm font-medium text-foreground hover:text-primary transition-colors"
+              className="text-sm font-medium text-foreground hover:text-primary transition-colors flex items-center gap-1"
             >
-              {t("nav.contact")}
+              <Mail className="w-4 h-4" />
+              {t('nav.contact')}
             </Link>
-            
           </div>
 
           {/* Right Side Controls */}
@@ -160,21 +175,39 @@ export default function Navbar() {
         </div>
 
         {/* Mobile Menu */}
-        <div className="md:hidden flex items-center justify-center gap-4 pb-4 border-t border-border pt-4">
-          <Link href={`/${currentLocale}`} className="text-xs font-medium">
-            {t("nav.home")}
+        <div className="md:hidden flex items-center justify-center gap-4 pb-4 border-t border-border pt-4 flex-wrap">
+          <Link
+            href={`/${currentLocale}`}
+            className="text-xs font-medium flex items-center gap-1 hover:text-primary transition-colors"
+          >
+            <Home className="w-3 h-3" />
+            {t('nav.home')}
           </Link>
-          <Link href={`/${currentLocale}/items`} className="text-xs font-medium">
-            {t("nav.items")}
+          <Link
+            href={`/${currentLocale}/items`}
+            className="text-xs font-medium flex items-center gap-1 hover:text-primary transition-colors"
+          >
+            <Package className="w-3 h-3" />
+            {t('nav.items')}
           </Link>
-          <Link href={`/${currentLocale}/about`} className="text-xs font-medium">
-            {t("nav.about")}
+          <Link
+            href={`/${currentLocale}/about`}
+            className="text-xs font-medium flex items-center gap-1 hover:text-primary transition-colors"
+          >
+            <Info className="w-3 h-3" />
+            {t('nav.about')}
           </Link>
-          <Link href={`/${currentLocale}/terms`} className="text-xs font-medium">
-            {t("nav.terms")}
-          </Link>
-          <Link href={`/${currentLocale}/cart`} className="text-xs font-medium">
-            {t("nav.cart")}
+          <Link
+            href={`/${currentLocale}/cart`}
+            className="text-xs font-medium flex items-center gap-1 hover:text-primary transition-colors relative"
+          >
+            <ShoppingCart className="w-3 h-3" />
+            {t('nav.cart')}
+            {cartCount > 0 && (
+              <span className="absolute -top-1 -right-1 bg-accent text-accent-foreground text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center">
+                {cartCount}
+              </span>
+            )}
           </Link>
         </div>
       </div>
