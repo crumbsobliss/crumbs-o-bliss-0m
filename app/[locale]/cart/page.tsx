@@ -11,15 +11,57 @@ import Loader from '@/components/loader'
 
 function CartPageContent({ locale }: { locale: string }) {
   const t = useTranslations()
-  const { items, removeItem, updateQuantity, getTotal } = useCart()
+  const { items, removeItem, updateQuantity, getTotal, clearCart } = useCart()
   const [mounted, setMounted] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
+  const [isCheckingOut, setIsCheckingOut] = useState(false)
 
   useEffect(() => {
     setMounted(true)
     // Simulate loading
     setTimeout(() => setIsLoading(false), 600)
   }, [])
+
+  const handleCheckout = () => {
+    if (items.length === 0) return
+
+    setIsCheckingOut(true)
+
+    // Generate WhatsApp message with cart details
+    const orderDetails = items
+      .map(
+        (cartItem) =>
+          `${locale === 'bn' ? cartItem.item.name.bn : cartItem.item.name.en} - ₹${cartItem.item.price} × ${cartItem.quantity} = ₹${cartItem.item.price * cartItem.quantity}`
+      )
+      .join('\n')
+
+    const subtotal = getTotal()
+    const shippingCost = subtotal > 500 ? 0 : 50
+    const total = subtotal + shippingCost
+
+    const message = `
+*New Cart Order* 🛒
+
+*Order Details:*
+${orderDetails}
+
+*Order Summary:*
+Subtotal: ₹${subtotal.toFixed(2)}
+Shipping: ${shippingCost === 0 ? 'Free' : `₹${shippingCost}`}
+Total: ₹${total.toFixed(2)}
+
+Please confirm this order!
+    `.trim()
+
+    // Open WhatsApp with the message
+    const phoneNumber = '911234567890'
+    const whatsappLink = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`
+
+    // Clear cart and redirect
+    clearCart()
+    window.open(whatsappLink, '_blank')
+    setIsCheckingOut(false)
+  }
 
   if (!mounted) return null
 
@@ -167,8 +209,12 @@ function CartPageContent({ locale }: { locale: string }) {
                   <span>₹{total.toFixed(2)}</span>
                 </div>
 
-                <button className="w-full px-6 py-3 bg-primary text-primary-foreground font-semibold rounded-lg hover:bg-primary/90 transition-colors">
-                  {t('cart.checkout')}
+                <button
+                  onClick={handleCheckout}
+                  disabled={isCheckingOut || items.length === 0}
+                  className="w-full px-6 py-3 bg-primary text-primary-foreground font-semibold rounded-lg hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {isCheckingOut ? 'Processing...' : t('cart.checkout')}
                 </button>
 
                 <Link
