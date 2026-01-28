@@ -10,6 +10,7 @@ import "../globals.css"
 import Navbar from "@/components/navbar"
 import Footer from "@/components/footer"
 import ThemeProvider from "@/components/theme-provider"
+import { CartProvider } from "@/lib/cart-context"
 
 // Optimize fonts: Use 'swap' to ensure text is visible during font load
 // and define variables for CSS usage
@@ -112,11 +113,13 @@ export default async function LocaleLayout({
       <body className={`${geist.variable} ${geistMono.variable} antialiased font-sans`}>
         <ThemeProvider>
           <NextIntlClientProvider messages={messages}>
-            <div className="flex flex-col min-h-screen">
-              <Navbar />
-              <main className="flex-1">{children}</main>
-              <Footer />
-            </div>
+            <CartProvider>
+              <div className="flex flex-col min-h-screen">
+                <Navbar />
+                <main className="flex-1">{children}</main>
+                <Footer />
+              </div>
+            </CartProvider>
           </NextIntlClientProvider>
         </ThemeProvider>
         <Analytics />

@@ -53,5 +53,93 @@
     "description": "Artisan bakery specializing in fresh, honest, small-batch baked goods",
     "links": "Quick Links",
     "rights": "All rights reserved"
+  },
+  "stats": {
+    "organic": "100% Organic",
+    "woodFired": "Wood Fired",
+    "handCrafted": "Hand Crafted",
+    "masterChefs": "Master Chefs"
+  },
+  "videoSection": {
+    "badge": "Behind the Scenes",
+    "title": "Crafting Perfection",
+    "quote": "From the wood-fired oven to your plate, experience the art of baking."
+  },
+  "testimonials": {
+    "title": "What Our Customers Say",
+    "description": "Taste the passion in every creation"
+  },
+  "faq": {
+    "title": "Frequently Asked Questions",
+    "delivery": "Do you offer delivery?",
+    "deliveryAns": "Yes, we deliver fresh baked goods within Shyamnagar and nearby areas.",
+    "customOrders": "Can I place custom orders?",
+    "customOrdersAns": "Absolutely! Contact us for personalized cakes and special occasion items.",
+    "ingredients": "Are your products organic?",
+    "ingredientsAns": "We use only premium, sourced ingredients with no artificial additives.",
+    "preOrder": "How do I place a pre-order?",
+    "preOrderAns": "Visit our website, select items, and order via WhatsApp for fast confirmation."
+  },
+  "cta": {
+    "shopCollection": "Shop Collection",
+    "ourStory": "Our Story"
+  },
+  "modal": {
+    "deliveryDetails": "Delivery Details",
+    "provideDetails": "Please provide your details to proceed with the order on WhatsApp.",
+    "name": "Name",
+    "yourName": "Your Name",
+    "mobileNumber": "Mobile Number",
+    "mobile10Digit": "10 digit mobile number",
+    "address": "Address",
+    "fullAddress": "Full delivery address",
+    "pincode": "Pincode",
+    "pincode6Digit": "6 digit pincode",
+    "proceedWhatsApp": "Proceed to WhatsApp",
+    "processing": "Processing...",
+    "orderPlaced": "Order placed successfully!"
+  },
+  "itemDetails": {
+    "price": "Price",
+    "caloriesPerServing": "Calories per serving",
+    "ingredients": "Ingredients",
+    "tags": "Tags",
+    "orderWhatsApp": "Order via WhatsApp",
+    "addToCart": "Add to Cart",
+    "cartAdded": "Added to cart!"
+  },
+  "cart": {
+    "title": "Shopping Cart",
+    "empty": "Your cart is empty",
+    "continue": "Continue Shopping",
+    "total": "Total",
+    "subtotal": "Subtotal",
+    "shipping": "Shipping",
+    "checkout": "Proceed to Checkout",
+    "remove": "Remove",
+    "quantity": "Quantity",
+    "removeItem": "Remove from cart"
+  },
+  "profile": {
+    "title": "Your Profile",
+    "subtitle": "Manage your shipping details for faster checkout on WhatsApp.",
+    "stored": "These details are stored locally on your device.",
+    "fullName": "Full Name",
+    "mobileNo": "Mobile Number",
+    "deliveryAddress": "Delivery Address",
+    "pinCodeLabel": "Pincode",
+    "saveChanges": "Save Changes",
+    "saving": "Saving...",
+    "saved": "Settings saved successfully!",
+    "clearData": "Clear saved data",
+    "clearConfirm": "Are you sure you want to clear your saved details? This cannot be undone.",
+    "noDetails": "You haven't saved any details yet. Fill out the form above so you don't have to enter your address every time you order!"
+  },
+  "customization": {
+    "title": "Customization Service",
+    "subtitle": "Create your perfect baked good"
+  },
+  "loader": {
+    "loading": "Loading..."
   }
 }

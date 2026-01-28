@@ -1,24 +1,33 @@
-"use client"
+'use client'
 
-import { useTheme } from "next-themes"
-import { useTranslations } from "next-intl"
-import { useRouter, usePathname } from "next/navigation"
-import Link from "next/link"
-import Image from "next/image"
-import { Moon, Sun, Globe } from "lucide-react"
-import { useState, useEffect } from "react"
+import { useTheme } from 'next-themes'
+import { useTranslations } from 'next-intl'
+import { useRouter, usePathname } from 'next/navigation'
+import Link from 'next/link'
+import Image from 'next/image'
+import { Moon, Sun, Globe, ShoppingCart } from 'lucide-react'
+import { useState, useEffect } from 'react'
+import { useCart } from '@/lib/cart-context'
 
 export default function Navbar() {
   const { theme, setTheme } = useTheme()
   const t = useTranslations()
   const router = useRouter()
   const pathname = usePathname()
+  const { getItemCount } = useCart()
   const [mounted, setMounted] = useState(false)
   const [isLanguageOpen, setIsLanguageOpen] = useState(false)
+  const [cartCount, setCartCount] = useState(0)
 
   useEffect(() => {
     setMounted(true)
   }, [])
+
+  useEffect(() => {
+    if (mounted) {
+      setCartCount(getItemCount())
+    }
+  }, [mounted, getItemCount])
 
   // Extract locale from pathname
   const locale = pathname.split("/")[1]
@@ -64,9 +73,15 @@ export default function Navbar() {
             </Link>
             <Link
               href={`/${currentLocale}/cart`}
-              className="text-sm font-medium text-foreground hover:text-primary transition-colors"
+              className="text-sm font-medium text-foreground hover:text-primary transition-colors relative flex items-center gap-1"
             >
-              {t("nav.cart")}
+              <ShoppingCart className="w-4 h-4" />
+              {t('nav.cart')}
+              {cartCount > 0 && (
+                <span className="absolute -top-2 -right-2 bg-accent text-accent-foreground text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                  {cartCount}
+                </span>
+              )}
             </Link>
             <Link
               href={`/${currentLocale}/profile`}

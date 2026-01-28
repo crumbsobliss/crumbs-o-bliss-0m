@@ -1,18 +1,21 @@
-"use client"
+'use client'
 
-import { useState, useEffect } from "react"
-import Link from "next/link"
-import { 
-  User, 
-  Phone, 
-  MapPin, 
-  Save, 
-  Trash2, 
-  CheckCircle2, 
+import { useState, useEffect } from 'react'
+import Link from 'next/link'
+import { useTranslations } from 'next-intl'
+import {
+  User,
+  Phone,
+  MapPin,
+  Save,
+  Trash2,
+  CheckCircle2,
   AlertCircle,
   ArrowLeft,
-  Loader2
-} from "lucide-react"
+  Loader2,
+  Info,
+} from 'lucide-react'
+import Loader from '@/components/loader'
 
 interface UserData {
   name: string
@@ -21,40 +24,60 @@ interface UserData {
   pincode: string
 }
 
-export default function ProfilePage() {
+interface ProfilePageProps {
+  params: Promise<{ locale: string }>
+}
+
+export default function ProfilePage({ params }: ProfilePageProps) {
+  const [locale, setLocale] = useState<string>('')
+  const t = useTranslations()
   const [formData, setFormData] = useState<UserData>({
-    name: "",
-    mobile: "",
-    address: "",
-    pincode: "",
+    name: '',
+    mobile: '',
+    address: '',
+    pincode: '',
   })
-  
+
   const [isLoading, setIsLoading] = useState(true)
   const [isSaving, setIsSaving] = useState(false)
-  const [saveStatus, setSaveStatus] = useState<"idle" | "success" | "error">("idle")
+  const [saveStatus, setSaveStatus] = useState<'idle' | 'success' | 'error'>(
+    'idle'
+  )
   const [hasData, setHasData] = useState(false)
+  const [showAlert, setShowAlert] = useState(false)
 
-  // Load data from localStorage on mount
+  // Load params and data
   useEffect(() => {
-    const storedUser = localStorage.getItem("bakery_user_info")
-    if (storedUser) {
-      try {
-        const parsed = JSON.parse(storedUser)
-        setFormData(parsed)
-        setHasData(true)
-      } catch (e) {
-        console.error("Failed to parse user data")
+    const loadData = async () => {
+      const resolvedParams = await params
+      setLocale(resolvedParams.locale)
+
+      const storedUser = localStorage.getItem('bakery_user_info')
+      if (storedUser) {
+        try {
+          const parsed = JSON.parse(storedUser)
+          setFormData(parsed)
+          setHasData(true)
+        } catch (e) {
+          console.error('Failed to parse user data')
+        }
+      } else {
+        setShowAlert(true)
       }
+      setIsLoading(false)
     }
-    setIsLoading(false)
-  }, [])
+
+    loadData()
+  }, [params])
 
   // Handle Input Changes
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target
-    setFormData(prev => ({ ...prev, [name]: value }))
+    setFormData((prev) => ({ ...prev, [name]: value }))
     // Reset status when user types
-    if (saveStatus !== "idle") setSaveStatus("idle")
+    if (saveStatus !== 'idle') setSaveStatus('idle')
   }
 
   // Save to LocalStorage
@@ -65,14 +88,15 @@ export default function ProfilePage() {
     // Simulate network delay for better UX
     setTimeout(() => {
       try {
-        localStorage.setItem("bakery_user_info", JSON.stringify(formData))
+        localStorage.setItem('bakery_user_info', JSON.stringify(formData))
         setHasData(true)
-        setSaveStatus("success")
-        
+        setSaveStatus('success')
+        setShowAlert(false)
+
         // Clear success message after 3 seconds
-        setTimeout(() => setSaveStatus("idle"), 3000)
+        setTimeout(() => setSaveStatus('idle'), 3000)
       } catch (e) {
-        setSaveStatus("error")
+        setSaveStatus('error')
       } finally {
         setIsSaving(false)
       }
@@ -81,75 +105,93 @@ export default function ProfilePage() {
 
   // Clear Data
   const handleClearData = () => {
-    if (window.confirm("Are you sure you want to clear your saved details? This cannot be undone.")) {
-      localStorage.removeItem("bakery_user_info")
+    if (
+      window.confirm(
+        t('profile.clearConfirm')
+      )
+    ) {
+      localStorage.removeItem('bakery_user_info')
       setFormData({
-        name: "",
-        mobile: "",
-        address: "",
-        pincode: "",
+        name: '',
+        mobile: '',
+        address: '',
+        pincode: '',
       })
       setHasData(false)
-      setSaveStatus("idle")
+      setSaveStatus('idle')
+      setShowAlert(true)
     }
   }
 
   if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-      </div>
-    )
+    return <Loader />
   }
 
   return (
     <div className="min-h-screen py-12 px-4 bg-background">
       <div className="max-w-2xl mx-auto space-y-8">
-        
         {/* Header */}
         <div className="flex flex-col gap-2">
-          <Link 
-            href="/" 
+          <Link
+            href={`/${locale}`}
             className="inline-flex items-center text-sm text-muted-foreground hover:text-primary transition-colors mb-4"
           >
             <ArrowLeft className="w-4 h-4 mr-1" />
-            Back to Home
+            Back
           </Link>
-          <h1 className="text-3xl font-bold tracking-tight">Your Profile</h1>
+          <h1 className="text-3xl font-bold tracking-tight">
+            {t('profile.title')}
+          </h1>
           <p className="text-muted-foreground">
-            Manage your shipping details for faster checkout on WhatsApp.
+            {t('profile.subtitle')}
             <br />
-            <span className="text-xs opacity-70">These details are stored locally on your device.</span>
+            <span className="text-xs opacity-70">{t('profile.stored')}</span>
           </p>
         </div>
 
+        {/* Alert for Incomplete Profile */}
+        {showAlert && (
+          <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-lg p-4 flex items-start gap-3 text-sm animate-in slide-in-from-top-4">
+            <Info className="w-5 h-5 text-yellow-600 dark:text-yellow-400 shrink-0 mt-0.5" />
+            <div>
+              <p className="font-semibold text-yellow-700 dark:text-yellow-300 mb-1">
+                Complete Your Profile
+              </p>
+              <p className="text-yellow-600 dark:text-yellow-200">
+                {t('profile.noDetails')}
+              </p>
+            </div>
+          </div>
+        )}
+
         {/* Main Card */}
         <div className="bg-card border border-border rounded-xl shadow-sm overflow-hidden">
-          
           {/* Status Bar */}
-          {saveStatus === "success" && (
+          {saveStatus === 'success' && (
             <div className="bg-green-500/10 text-green-600 dark:text-green-400 px-6 py-3 flex items-center text-sm font-medium border-b border-green-500/10 animate-in slide-in-from-top-2">
               <CheckCircle2 className="w-4 h-4 mr-2" />
-              Settings saved successfully!
+              {t('profile.saved')}
             </div>
           )}
-          
+
           {/* Form */}
           <form onSubmit={handleSave} className="p-6 md:p-8 space-y-6">
-            
             <div className="grid gap-6 md:grid-cols-2">
               {/* Name */}
               <div className="space-y-2">
-                <label htmlFor="name" className="text-sm font-medium flex items-center gap-2">
+                <label
+                  htmlFor="name"
+                  className="text-sm font-medium flex items-center gap-2"
+                >
                   <User className="w-4 h-4 text-primary" />
-                  Full Name
+                  {t('profile.fullName')}
                 </label>
                 <input
                   id="name"
                   name="name"
                   type="text"
                   required
-                  placeholder="John Doe"
+                  placeholder={t('modal.yourName')}
                   value={formData.name}
                   onChange={handleChange}
                   className="w-full px-3 py-2 bg-muted/50 border border-input rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all outline-none"
@@ -158,9 +200,12 @@ export default function ProfilePage() {
 
               {/* Mobile */}
               <div className="space-y-2">
-                <label htmlFor="mobile" className="text-sm font-medium flex items-center gap-2">
+                <label
+                  htmlFor="mobile"
+                  className="text-sm font-medium flex items-center gap-2"
+                >
                   <Phone className="w-4 h-4 text-primary" />
-                  Mobile Number
+                  {t('profile.mobileNo')}
                 </label>
                 <input
                   id="mobile"
@@ -168,7 +213,7 @@ export default function ProfilePage() {
                   type="tel"
                   required
                   pattern="[0-9]{10}"
-                  placeholder="9876543210"
+                  placeholder={t('modal.mobile10Digit')}
                   value={formData.mobile}
                   onChange={handleChange}
                   className="w-full px-3 py-2 bg-muted/50 border border-input rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all outline-none"
@@ -177,9 +222,12 @@ export default function ProfilePage() {
 
               {/* Pincode */}
               <div className="space-y-2">
-                <label htmlFor="pincode" className="text-sm font-medium flex items-center gap-2">
+                <label
+                  htmlFor="pincode"
+                  className="text-sm font-medium flex items-center gap-2"
+                >
                   <MapPin className="w-4 h-4 text-primary" />
-                  Pincode
+                  {t('profile.pinCodeLabel')}
                 </label>
                 <input
                   id="pincode"
@@ -187,7 +235,7 @@ export default function ProfilePage() {
                   type="text"
                   required
                   pattern="[0-9]{6}"
-                  placeholder="700001"
+                  placeholder={t('modal.pincode6Digit')}
                   value={formData.pincode}
                   onChange={handleChange}
                   className="w-full px-3 py-2 bg-muted/50 border border-input rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all outline-none"
@@ -197,15 +245,18 @@ export default function ProfilePage() {
 
             {/* Address */}
             <div className="space-y-2">
-              <label htmlFor="address" className="text-sm font-medium flex items-center gap-2">
+              <label
+                htmlFor="address"
+                className="text-sm font-medium flex items-center gap-2"
+              >
                 <MapPin className="w-4 h-4 text-primary" />
-                Delivery Address
+                {t('profile.deliveryAddress')}
               </label>
               <textarea
                 id="address"
                 name="address"
                 required
-                placeholder="Flat No, Street Name, Landmark..."
+                placeholder={t('modal.fullAddress')}
                 rows={3}
                 value={formData.address}
                 onChange={handleChange}
@@ -221,7 +272,7 @@ export default function ProfilePage() {
                   className="text-sm text-destructive hover:text-destructive/80 flex items-center gap-2 px-2 py-1 rounded-md hover:bg-destructive/10 transition-colors"
                 >
                   <Trash2 className="w-4 h-4" />
-                  Clear saved data
+                  {t('profile.clearData')}
                 </button>
               ) : (
                 <div /> /* Spacer */
@@ -235,28 +286,18 @@ export default function ProfilePage() {
                 {isSaving ? (
                   <>
                     <Loader2 className="w-4 h-4 animate-spin" />
-                    Saving...
+                    {t('profile.saving')}
                   </>
                 ) : (
                   <>
                     <Save className="w-4 h-4" />
-                    Save Changes
+                    {t('profile.saveChanges')}
                   </>
                 )}
               </button>
             </div>
           </form>
         </div>
-
-        {/* Info Box */}
-        {!hasData && (
-          <div className="bg-accent/20 border border-accent/30 rounded-lg p-4 flex items-start gap-3 text-sm text-muted-foreground">
-            <AlertCircle className="w-5 h-5 text-accent shrink-0 mt-0.5" />
-            <p>
-              You haven't saved any details yet. Fill out the form above so you don't have to enter your address every time you order!
-            </p>
-          </div>
-        )}
       </div>
     </div>
   )
