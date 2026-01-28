@@ -62,8 +62,8 @@ export default function Footer() {
           {/* Contact */}
           <div>
             <h4 className="font-semibold mb-4">Contact</h4>
-            <p className="text-sm text-muted-foreground">Email: hello@crumbsobliss.com</p>
-            <p className="text-sm text-muted-foreground">Phone: +1 (555) 123-4567</p>
+            <p className="text-sm text-muted-foreground">Email: crumbsoblisscakebakery@gmail.com </p>
+            <p className="text-sm text-muted-foreground">Phone: +91 9775628674 / +91 7866092157</p>
           </div>
         </div>
 
