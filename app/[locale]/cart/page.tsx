@@ -1,43 +1,43 @@
-"use client"
+"use client";
 
-import { useEffect, useState } from 'react'
-import type { Metadata } from 'next'
-import Link from 'next/link'
-import Image from 'next/image'
-import { useTranslations } from 'next-intl'
-import { Trash2, Plus, Minus, ShoppingBag } from 'lucide-react'
-import { useCart } from '@/lib/cart-context'
-import Loader from '@/components/loader'
+import { useEffect, useState } from "react";
+import type { Metadata } from "next";
+import Link from "next/link";
+import Image from "next/image";
+import { useTranslations } from "next-intl";
+import { Trash2, Plus, Minus, ShoppingBag } from "lucide-react";
+import { useCart } from "@/lib/cart-context";
+import Loader from "@/components/loader";
 
 function CartPageContent({ locale }: { locale: string }) {
-  const t = useTranslations()
-  const { items, removeItem, updateQuantity, getTotal, clearCart } = useCart()
-  const [mounted, setMounted] = useState(false)
-  const [isLoading, setIsLoading] = useState(true)
-  const [isCheckingOut, setIsCheckingOut] = useState(false)
+  const t = useTranslations();
+  const { items, removeItem, updateQuantity, getTotal, clearCart } = useCart();
+  const [mounted, setMounted] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isCheckingOut, setIsCheckingOut] = useState(false);
 
   useEffect(() => {
-    setMounted(true)
+    setMounted(true);
     // Simulate loading
-    setTimeout(() => setIsLoading(false), 600)
-  }, [])
+    setTimeout(() => setIsLoading(false), 600);
+  }, []);
 
   const handleCheckout = () => {
-    if (items.length === 0) return
+    if (items.length === 0) return;
 
-    setIsCheckingOut(true)
+    setIsCheckingOut(true);
 
     // Generate WhatsApp message with cart details
     const orderDetails = items
       .map(
         (cartItem) =>
-          `${locale === 'bn' ? cartItem.item.name.bn : cartItem.item.name.en} - ₹${cartItem.item.price} × ${cartItem.quantity} = ₹${cartItem.item.price * cartItem.quantity}`
+          `${locale === "bn" ? cartItem.item.name.bn : cartItem.item.name.en} - ₹${cartItem.item.price} × ${cartItem.quantity} = ₹${cartItem.item.price * cartItem.quantity}`,
       )
-      .join('\n')
+      .join("\n");
 
-    const subtotal = getTotal()
-    const shippingCost = subtotal > 500 ? 0 : 50
-    const total = subtotal + shippingCost
+    const subtotal = getTotal();
+    const shippingCost = subtotal > 500 ? 0 : 50;
+    const total = subtotal + shippingCost;
 
     const message = `
 *New Cart Order* 🛒
@@ -47,38 +47,38 @@ ${orderDetails}
 
 *Order Summary:*
 Subtotal: ₹${subtotal.toFixed(2)}
-Shipping: ${shippingCost === 0 ? 'Free' : `₹${shippingCost}`}
+Shipping: ${shippingCost === 0 ? "Free" : `₹${shippingCost}`}
 Total: ₹${total.toFixed(2)}
 
 Please confirm this order!
-    `.trim()
+    `.trim();
 
     // Open WhatsApp with the message
-    const phoneNumber = '+919593035680'
-    const whatsappLink = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`
+    const phoneNumber = "+919593035680";
+    const whatsappLink = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
 
     // Clear cart and redirect
-    clearCart()
-    window.open(whatsappLink, '_blank')
-    setIsCheckingOut(false)
-  }
+    clearCart();
+    window.open(whatsappLink, "_blank");
+    setIsCheckingOut(false);
+  };
 
-  if (!mounted) return null
+  if (!mounted) return null;
 
   if (isLoading) {
-    return <Loader />
+    return <Loader />;
   }
 
-  const subtotal = getTotal()
-  const shippingCost = subtotal > 0 ? (subtotal > 500 ? 0 : 50) : 0
-  const total = subtotal + shippingCost
+  const subtotal = getTotal();
+  const shippingCost = subtotal > 0 ? (subtotal > 500 ? 0 : 50) : 0;
+  const total = subtotal + shippingCost;
 
   return (
     <div className="min-h-screen py-12 px-4 bg-background">
       <div className="max-w-4xl mx-auto">
         <div className="mb-8">
           <h1 className="text-4xl md:text-5xl font-bold text-primary">
-            {t('cart.title')}
+            {t("cart.title")}
           </h1>
         </div>
 
@@ -86,13 +86,13 @@ Please confirm this order!
           <div className="text-center py-20">
             <ShoppingBag className="w-20 h-20 mx-auto text-muted-foreground mb-6 opacity-50" />
             <p className="text-2xl text-muted-foreground mb-8">
-              {t('cart.empty')}
+              {t("cart.empty")}
             </p>
             <Link
               href={`/${locale}/items`}
               className="inline-block px-8 py-3 bg-primary text-primary-foreground font-semibold rounded-lg hover:bg-primary/90 transition-colors"
             >
-              {t('cart.continue')}
+              {t("cart.continue")}
             </Link>
           </div>
         ) : (
@@ -107,7 +107,7 @@ Please confirm this order!
                   {/* Image */}
                   <div className="w-24 h-24 bg-muted rounded-lg overflow-hidden flex-shrink-0">
                     <Image
-                      src={cartItem.item.image || '/placeholder.svg'}
+                      src={cartItem.item.image || "/placeholder.svg"}
                       alt={cartItem.item.name.en}
                       width={96}
                       height={96}
@@ -118,7 +118,7 @@ Please confirm this order!
                   {/* Details */}
                   <div className="flex-grow">
                     <h3 className="font-semibold text-lg text-primary mb-1">
-                      {locale === 'bn'
+                      {locale === "bn"
                         ? cartItem.item.name.bn
                         : cartItem.item.name.en}
                     </h3>
@@ -133,7 +133,7 @@ Please confirm this order!
                         onClick={() =>
                           updateQuantity(
                             cartItem.item.id,
-                            cartItem.quantity - 1
+                            cartItem.quantity - 1,
                           )
                         }
                         className="p-1 rounded hover:bg-muted transition-colors"
@@ -147,7 +147,7 @@ Please confirm this order!
                         onChange={(e) =>
                           updateQuantity(
                             cartItem.item.id,
-                            parseInt(e.target.value) || 1
+                            parseInt(e.target.value) || 1,
                           )
                         }
                         className="w-12 text-center border border-border rounded px-2 py-1"
@@ -157,7 +157,7 @@ Please confirm this order!
                         onClick={() =>
                           updateQuantity(
                             cartItem.item.id,
-                            cartItem.quantity + 1
+                            cartItem.quantity + 1,
                           )
                         }
                         className="p-1 rounded hover:bg-muted transition-colors"
@@ -184,28 +184,30 @@ Please confirm this order!
             <div className="lg:col-span-1">
               <div className="bg-card border border-border rounded-lg p-6 sticky top-24">
                 <h2 className="text-2xl font-bold mb-6 text-primary">
-                  {t('cart.title')}
+                  {t("cart.title")}
                 </h2>
 
                 <div className="space-y-3 mb-6 border-b border-border pb-6">
                   <div className="flex justify-between items-center">
                     <span className="text-muted-foreground">
-                      {t('cart.subtotal')}
+                      {t("cart.subtotal")}
                     </span>
-                    <span className="font-semibold">₹{subtotal.toFixed(2)}</span>
+                    <span className="font-semibold">
+                      ₹{subtotal.toFixed(2)}
+                    </span>
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-muted-foreground">
-                      {t('cart.shipping')}
+                      {t("cart.shipping")}
                     </span>
                     <span className="font-semibold">
-                      {shippingCost === 0 ? 'Free' : `₹${shippingCost}`}
+                      {shippingCost === 0 ? "Free" : `₹${shippingCost}`}
                     </span>
                   </div>
                 </div>
 
                 <div className="flex justify-between items-center py-4 text-xl font-bold text-primary mb-6">
-                  <span>{t('cart.total')}</span>
+                  <span>{t("cart.total")}</span>
                   <span>₹{total.toFixed(2)}</span>
                 </div>
 
@@ -214,14 +216,14 @@ Please confirm this order!
                   disabled={isCheckingOut || items.length === 0}
                   className="w-full px-6 py-3 bg-primary text-primary-foreground font-semibold rounded-lg hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {isCheckingOut ? 'Processing...' : t('cart.checkout')}
+                  {isCheckingOut ? "Processing..." : t("cart.checkout")}
                 </button>
 
                 <Link
                   href={`/${locale}/items`}
                   className="mt-4 block text-center px-6 py-2 border border-border text-foreground font-semibold rounded-lg hover:bg-muted transition-colors"
                 >
-                  {t('cart.continue')}
+                  {t("cart.continue")}
                 </Link>
               </div>
             </div>
@@ -229,14 +231,14 @@ Please confirm this order!
         )}
       </div>
     </div>
-  )
+  );
 }
 
 interface CartPageProps {
-  params: Promise<{ locale: string }>
+  params: Promise<{ locale: string }>;
 }
 
 export default async function CartPage({ params }: CartPageProps) {
-  const { locale } = await params
-  return <CartPageContent locale={locale} />
+  const { locale } = await params;
+  return <CartPageContent locale={locale} />;
 }
