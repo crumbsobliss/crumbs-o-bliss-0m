@@ -39,7 +39,7 @@ export default function AboutPage() {
       <div className="w-full bg-[#1C1917] text-[#FAFAF9] pt-32 pb-20 px-4">
         <div className="max-w-7xl mx-auto text-center">
             <span className={`inline-block py-2 px-6 border border-[#FAFAF9]/30 rounded-full text-sm uppercase tracking-[0.2em] mb-6 ${montserrat.className}`}>
-                Est. 2023
+                Est. 2025
             </span>
             <h1 className={`text-5xl md:text-8xl font-black mb-8 leading-none ${cinzel.className}`}>
                 Science<br />

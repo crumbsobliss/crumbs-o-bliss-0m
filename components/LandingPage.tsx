@@ -4,7 +4,7 @@ import { useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
-import { motion, useScroll, useTransform, useSpring, useInView } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import {
   ArrowRight, Star, Leaf, Clock, Award, MapPin, Instagram,
   Coffee, Play, Quote, ChefHat
@@ -12,24 +12,8 @@ import {
 import CircularGallery from "@/components/CircularGallery";
 import details from "@/config/details.json";
 
-// --- Font Imports (Client Side Injection) ---
-import {
-  Inter, Playfair_Display, Dancing_Script, Cinzel, Montserrat,
-  Lora, Oswald, Great_Vibes, Merriweather, Syne, Prata, Space_Grotesk
-} from "next/font/google";
-
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
-const playfair = Playfair_Display({ subsets: ["latin"], variable: "--font-playfair", display: "swap" });
-const dancing = Dancing_Script({ subsets: ["latin"], variable: "--font-dancing", display: "swap" });
-const cinzel = Cinzel({ subsets: ["latin"], variable: "--font-cinzel", display: "swap" });
-const montserrat = Montserrat({ subsets: ["latin"], variable: "--font-montserrat", display: "swap" });
-const lora = Lora({ subsets: ["latin"], variable: "--font-lora", display: "swap" });
-const oswald = Oswald({ subsets: ["latin"], variable: "--font-oswald", display: "swap" });
-const greatVibes = Great_Vibes({ weight: "400", subsets: ["latin"], variable: "--font-great-vibes", display: "swap" });
-const merriweather = Merriweather({ weight: ["300", "400", "700"], subsets: ["latin"], variable: "--font-merriweather", display: "swap" });
-const syne = Syne({ subsets: ["latin"], variable: "--font-syne", display: "swap" });
-const prata = Prata({ weight: "400", subsets: ["latin"], variable: "--font-prata", display: "swap" });
-const spaceGrotesk = Space_Grotesk({ subsets: ["latin"], variable: "--font-space", display: "swap" });
+// --- No External Font Imports ---
+// We rely on standard CSS fonts: font-sans, font-serif, font-mono
 
 interface LandingPageProps {
   locale: string;
@@ -60,13 +44,7 @@ export function LandingPage({ locale, featuredItems, bakeryGalleryItems }: Landi
   };
 
   return (
-    <div className={`
-      w-full overflow-x-hidden bg-[var(--background)] text-[var(--foreground)]
-      ${inter.variable} ${playfair.variable} ${dancing.variable} ${cinzel.variable}
-      ${montserrat.variable} ${lora.variable} ${oswald.variable} ${greatVibes.variable}
-      ${merriweather.variable} ${syne.variable} ${prata.variable} ${spaceGrotesk.variable}
-      font-sans selection:bg-[var(--highlight)] selection:text-[var(--primary)]
-    `}>
+    <div className="w-full overflow-x-hidden bg-[var(--background)] text-[var(--foreground)] font-sans selection:bg-[var(--highlight)] selection:text-[var(--primary)]">
       
       {/* --- HERO SECTION --- */}
       <section className="relative min-h-screen flex items-center justify-center px-4 overflow-hidden bg-gradient-to-br from-[var(--hero-bg-start)] via-[var(--hero-bg-via)] to-[var(--hero-bg-end)]">
@@ -93,23 +71,23 @@ export function LandingPage({ locale, featuredItems, bakeryGalleryItems }: Landi
           className="relative z-10 max-w-7xl mx-auto text-center pt-10"
         >
           {/* Badge */}
-          <motion.div variants={fadeInUp} className="flex justify-center mb-10">
-            <div className="group inline-flex items-center gap-3 px-8 py-3 rounded-full bg-[var(--badge-bg)] backdrop-blur-xl border border-[var(--badge-border)] text-[var(--badge-text)] text-xs tracking-[0.2em] uppercase font-bold shadow-2xl hover:scale-105 transition-transform font-montserrat">
+          <motion.div  className="flex justify-center mb-10" variants={fadeInUp}>
+            <div className="group inline-flex items-center gap-3 px-8 py-3 rounded-full bg-[var(--badge-bg)] backdrop-blur-xl border border-[var(--badge-border)] text-[var(--badge-text)] text-xs tracking-[0.2em] uppercase font-bold shadow-2xl hover:scale-105 transition-transform font-sans">
               <Star className="w-4 h-4 text-[var(--badge-icon)] animate-[spin_4s_linear_infinite]" />
               <span>{t("hero.cta")}</span>
             </div>
           </motion.div>
 
           {/* Heading */}
-          <motion.div variants={fadeInUp} className="relative inline-block mb-8">
-            <h1 className="text-6xl md:text-8xl lg:text-9xl font-black text-balance bg-clip-text text-transparent bg-gradient-to-r from-[var(--text-heading-grad-from)] via-[var(--text-heading-grad-via)] to-[var(--text-heading-grad-to)] tracking-tighter leading-[0.9] drop-shadow-lg font-cinzel">
+          <motion.div variants={fadeInUp} animate="active" className="relative inline-block mb-8">
+            <h1 className="text-6xl md:text-8xl lg:text-9xl font-black text-balance bg-clip-text text-transparent bg-gradient-to-r from-[var(--text-heading-grad-from)] via-[var(--text-heading-grad-via)] to-[var(--text-heading-grad-to)] tracking-tighter leading-[0.9] drop-shadow-lg font-serif">
               {t("hero.title")}
             </h1>
             <motion.span 
               initial={{ opacity: 0, rotate: -10, scale: 0.5 }}
               animate={{ opacity: 1, rotate: 12, scale: 1 }}
               transition={{ delay: 0.8, type: "spring" }}
-              className="absolute -top-12 -right-8 md:-right-16 text-5xl text-[var(--divider-color)] font-great-vibes rotate-12 hidden md:block"
+              className="absolute -top-12 -right-8 md:-right-16 text-5xl text-[var(--divider-color)] italic font-serif rotate-12 hidden md:block"
             >
               Est. 2024
             </motion.span>
@@ -118,13 +96,13 @@ export function LandingPage({ locale, featuredItems, bakeryGalleryItems }: Landi
           {/* Subtitle */}
           <motion.p 
             variants={fadeInUp}
-            className="text-xl md:text-3xl text-[var(--text-body-color)] mb-16 text-balance max-w-4xl mx-auto leading-relaxed font-prata"
+            className="text-xl md:text-3xl text-[var(--text-body-color)] mb-16 text-balance max-w-4xl mx-auto leading-relaxed font-serif italic"
           >
             {t("hero.subtitle")}
           </motion.p>
 
           {/* CTA Buttons */}
-          <motion.div variants={fadeInUp} className="flex flex-col sm:flex-row items-center justify-center gap-6 font-space">
+          <motion.div variants={fadeInUp} className="flex flex-col sm:flex-row items-center justify-center gap-6 font-mono">
             <Link
               href={`/${locale}/items`}
               className="group relative px-12 py-5 bg-gradient-to-r from-[var(--btn-primary-start)] to-[var(--btn-primary-end)] text-white font-bold rounded-full overflow-hidden shadow-2xl shadow-[var(--btn-shadow)] hover:shadow-[var(--highlight)]/50 transition-all duration-300"
@@ -137,7 +115,7 @@ export function LandingPage({ locale, featuredItems, bakeryGalleryItems }: Landi
 
             <Link
               href={`/${locale}/about`}
-              className="group px-12 py-5 bg-transparent border-2 border-[var(--badge-border)] text-[var(--badge-text)] font-bold rounded-full hover:bg-[var(--badge-bg)] transition-all text-lg tracking-widest uppercase font-montserrat"
+              className="group px-12 py-5 bg-transparent border-2 border-[var(--badge-border)] text-[var(--badge-text)] font-bold rounded-full hover:bg-[var(--badge-bg)] transition-all text-lg tracking-widest uppercase font-sans"
             >
               Our Story
             </Link>
@@ -182,7 +160,7 @@ export function LandingPage({ locale, featuredItems, bakeryGalleryItems }: Landi
               <div className="w-16 h-16 rounded-full bg-[var(--background)] flex items-center justify-center border border-[var(--badge-border)] group-hover:border-[var(--highlight)] transition-colors shadow-lg">
                 <stat.icon className="w-8 h-8 text-[var(--badge-icon)] group-hover:scale-110 transition-transform duration-300" />
               </div>
-              <span className="text-sm md:text-base font-bold uppercase tracking-[0.2em] text-[var(--text-body-color)] font-oswald group-hover:text-[var(--badge-text)] transition-colors">
+              <span className="text-sm md:text-base font-bold uppercase tracking-[0.2em] text-[var(--text-body-color)] font-sans group-hover:text-[var(--badge-text)] transition-colors">
                 {stat.label}
               </span>
             </motion.div>
@@ -198,10 +176,10 @@ export function LandingPage({ locale, featuredItems, bakeryGalleryItems }: Landi
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
           >
-            <span className="inline-block px-4 py-1 mb-6 text-xs font-bold tracking-[0.3em] uppercase border border-[var(--badge-border)] text-[var(--badge-text)] rounded-full font-space">
+            <span className="inline-block px-4 py-1 mb-6 text-xs font-bold tracking-[0.3em] uppercase border border-[var(--badge-border)] text-[var(--badge-text)] rounded-full font-mono">
               Behind the Scenes
             </span>
-            <h2 className="text-5xl md:text-7xl font-bold text-[var(--text-heading-grad-from)] font-playfair leading-tight">
+            <h2 className="text-5xl md:text-7xl font-bold text-[var(--text-heading-grad-from)] font-serif leading-tight">
               Crafting<br/>Perfection
             </h2>
           </motion.div>
@@ -209,7 +187,7 @@ export function LandingPage({ locale, featuredItems, bakeryGalleryItems }: Landi
             initial={{ opacity: 0, x: 50 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            className="max-w-md text-[var(--text-body-color)] font-dancing text-3xl text-right md:text-left leading-relaxed"
+            className="max-w-md text-[var(--text-body-color)] font-serif italic text-3xl text-right md:text-left leading-relaxed"
           >
             "From the wood-fired oven to your plate, experience the art of baking."
           </motion.p>
@@ -226,9 +204,9 @@ export function LandingPage({ locale, featuredItems, bakeryGalleryItems }: Landi
             <video 
               autoPlay loop muted playsInline 
               className="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all duration-1000 ease-out"
-              poster="https://images.unsplash.com/photo-1590947132387-155cc02f3212?w=1200&q=80"
+              
             >
-              <source src="https://assets.mixkit.co/videos/preview/mixkit-chef-putting-pizza-in-oven-41924-large.mp4" type="video/mp4" />
+              <source src="/assets/videos/cake-edit.mp4" type="video/mp4" />
             </video>
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
             
@@ -238,10 +216,9 @@ export function LandingPage({ locale, featuredItems, bakeryGalleryItems }: Landi
                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
                    <span className="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
                  </span>
-                 <span className="text-xs font-bold tracking-[0.2em] uppercase text-white/90 font-inter">Live Kitchen</span>
+                 <span className="text-xs font-bold tracking-[0.2em] uppercase text-white/90 font-sans">Live</span>
               </div>
-              <h3 className="text-4xl font-bold font-cinzel text-white mb-3">Wood-Fired Magic</h3>
-              <p className="text-white/80 font-lora max-w-lg text-lg">Authentic Napoletana style pizzas baked at 400°C.</p>
+              <h3 className="text-4xl font-bold font-serif text-white mb-3">Let's Bliss Together</h3>
             </div>
           </motion.div>
 
@@ -276,7 +253,7 @@ export function LandingPage({ locale, featuredItems, bakeryGalleryItems }: Landi
                 </video>
                 <div className="absolute inset-0 bg-black/30 group-hover:bg-transparent transition-colors duration-500" />
                 <div className="absolute bottom-6 left-6 z-10">
-                  <h4 className="text-xl font-bold font-cinzel text-white">{vid.title}</h4>
+                  <h4 className="text-xl font-bold font-serif text-white">{vid.title}</h4>
                 </div>
                 <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 scale-50 group-hover:scale-100">
                   <div className="w-14 h-14 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center border border-white/50">
@@ -305,20 +282,20 @@ export function LandingPage({ locale, featuredItems, bakeryGalleryItems }: Landi
             className="flex flex-col md:flex-row md:items-end justify-between mb-20 gap-8"
           >
             <motion.div variants={fadeInUp} className="max-w-2xl">
-              <span className="inline-block mb-6 px-4 py-1 bg-[var(--badge-bg)] border border-[var(--badge-border)] text-[var(--badge-text)] text-xs font-bold uppercase tracking-[0.25em] rounded-full font-montserrat">
+              <span className="inline-block mb-6 px-4 py-1 bg-[var(--badge-bg)] border border-[var(--badge-border)] text-[var(--badge-text)] text-xs font-bold uppercase tracking-[0.25em] rounded-full font-sans">
                 Selected Works
               </span>
-              <h2 className="text-5xl md:text-8xl font-black mb-6 text-[var(--text-heading-grad-from)] font-playfair">
+              <h2 className="text-5xl md:text-8xl font-black mb-6 text-[var(--text-heading-grad-from)] font-serif">
                 {t("items.title")}
               </h2>
-              <p className="text-2xl text-[var(--text-body-color)] italic font-merriweather opacity-80">
+              <p className="text-2xl text-[var(--text-body-color)] italic font-serif opacity-80">
                 {t("items.description")}
               </p>
             </motion.div>
             <motion.div variants={fadeInUp}>
               <Link
                 href={`/${locale}/items`}
-                className="group flex items-center gap-3 text-[var(--text-heading-grad-via)] font-bold text-lg font-space uppercase tracking-widest hover:text-[var(--primary)] transition-colors"
+                className="group flex items-center gap-3 text-[var(--text-heading-grad-via)] font-bold text-lg font-mono uppercase tracking-widest hover:text-[var(--primary)] transition-colors"
               >
                 View Full Menu
                 <span className="w-12 h-[1px] bg-current group-hover:w-20 transition-all duration-300" />
@@ -347,7 +324,7 @@ export function LandingPage({ locale, featuredItems, bakeryGalleryItems }: Landi
                       fill
                       className="object-cover group-hover:scale-110 transition-transform duration-1000"
                     />
-                    <div className="absolute top-4 right-4 bg-white/95 backdrop-blur text-[var(--text)] font-bold px-6 py-2 rounded-full border border-[var(--border)] font-oswald text-lg tracking-wider shadow-lg">
+                    <div className="absolute top-4 right-4 bg-white/95 backdrop-blur text-[var(--text)] font-bold px-6 py-2 rounded-full border border-[var(--border)] font-sans text-lg tracking-wider shadow-lg">
                       ₹{item.price}
                     </div>
                     {/* Overlay */}
@@ -355,19 +332,19 @@ export function LandingPage({ locale, featuredItems, bakeryGalleryItems }: Landi
                   </div>
 
                   <div className="p-8">
-                    <h3 className="text-3xl font-bold mb-3 text-[var(--text-heading-grad-from)] font-cinzel group-hover:text-[var(--badge-icon)] transition-colors">
+                    <h3 className="text-3xl font-bold mb-3 text-[var(--text-heading-grad-from)] font-serif group-hover:text-[var(--badge-icon)] transition-colors">
                       {locale === "en" ? item.name.en : item.name.bn}
                     </h3>
-                    <p className="text-[var(--text-body-color)] line-clamp-2 text-lg mb-6 font-lora opacity-80 leading-relaxed">
+                    <p className="text-[var(--text-body-color)] line-clamp-2 text-lg mb-6 font-serif opacity-80 leading-relaxed">
                       {locale === "en" ? item.description.en : item.description.bn}
                     </p>
                     
                     <div className="flex items-center justify-between pt-6 border-t border-[var(--lp-card-border)]">
-                      <span className="text-xs font-bold text-[var(--muted-foreground)] uppercase tracking-[0.2em] flex items-center gap-2 font-inter">
+                      <span className="text-xs font-bold text-[var(--muted-foreground)] uppercase tracking-[0.2em] flex items-center gap-2 font-sans">
                         <span className="w-2 h-2 rounded-full bg-[var(--badge-icon)] animate-pulse" />
                         {item.calories} Cal
                       </span>
-                      <span className="text-sm font-bold text-[var(--badge-icon)] uppercase tracking-widest group-hover:underline underline-offset-4 decoration-2">
+                      <span className="text-sm font-bold text-[var(--badge-icon)] uppercase tracking-widest group-hover:underline underline-offset-4 decoration-2 font-sans">
                         Details
                       </span>
                     </div>
@@ -387,11 +364,11 @@ export function LandingPage({ locale, featuredItems, bakeryGalleryItems }: Landi
           viewport={{ once: true }}
           className="max-w-6xl mx-auto text-center mb-20"
         >
-          <h2 className="text-6xl md:text-8xl font-black mb-6 text-[var(--text-heading-grad-from)] font-syne opacity-20">
+          <h2 className="text-6xl md:text-8xl font-black mb-6 text-[var(--text-heading-grad-from)] font-sans opacity-20">
             TESTIMONIALS
           </h2>
           <div className="mt-[-4rem] relative z-10">
-            <h3 className="text-4xl md:text-5xl font-bold font-playfair text-[var(--foreground)]">Customer Love</h3>
+            <h3 className="text-4xl md:text-5xl font-bold font-serif text-[var(--foreground)]">Customer Love</h3>
           </div>
         </motion.div>
 
@@ -416,10 +393,10 @@ export function LandingPage({ locale, featuredItems, bakeryGalleryItems }: Landi
                   <Star key={j} className="w-4 h-4 fill-[var(--badge-icon)] text-[var(--badge-icon)]" />
                 ))}
               </div>
-              <p className="text-[var(--text-body-color)] text-xl mb-8 leading-relaxed italic font-merriweather relative z-10">"{t.quote}"</p>
+              <p className="text-[var(--text-body-color)] text-xl mb-8 leading-relaxed italic font-serif relative z-10">"{t.quote}"</p>
               <div>
-                <p className="font-bold text-[var(--badge-text)] text-xl font-prata">{t.name}</p>
-                <p className="text-xs text-[var(--muted-foreground)] uppercase tracking-widest font-inter mt-1">{t.role}</p>
+                <p className="font-bold text-[var(--badge-text)] text-xl font-serif">{t.name}</p>
+                <p className="text-xs text-[var(--muted-foreground)] uppercase tracking-widest font-sans mt-1">{t.role}</p>
               </div>
             </motion.div>
           ))}
@@ -438,15 +415,15 @@ export function LandingPage({ locale, featuredItems, bakeryGalleryItems }: Landi
           className="relative z-10 max-w-5xl mx-auto text-center"
         >
           <Award className="w-20 h-20 mx-auto mb-10 text-[var(--badge-icon)] animate-pulse" />
-          <h2 className="text-5xl md:text-8xl font-black mb-10 font-cinzel text-white leading-tight">
+          <h2 className="text-5xl md:text-8xl font-black mb-10 font-serif text-white leading-tight">
             {t("about.title")}
           </h2>
-          <p className="text-3xl md:text-6xl mb-16 font-light text-white/90 font-great-vibes leading-normal">
+          <p className="text-3xl md:text-6xl mb-16 font-light text-white/90 italic font-serif leading-normal">
             "{t("about.description")}"
           </p>
           <Link
             href={`/${locale}/about`}
-            className="inline-block px-14 py-5 bg-white text-[var(--brand-bg-start)] font-bold rounded-full hover:scale-110 transition-transform uppercase tracking-[0.2em] font-oswald shadow-[0_0_40px_rgba(255,255,255,0.3)]"
+            className="inline-block px-14 py-5 bg-white text-[var(--brand-bg-start)] font-bold rounded-full hover:scale-110 transition-transform uppercase tracking-[0.2em] font-sans shadow-[0_0_40px_rgba(255,255,255,0.3)]"
           >
             Read Our Philosophy
           </Link>
@@ -461,10 +438,10 @@ export function LandingPage({ locale, featuredItems, bakeryGalleryItems }: Landi
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
           >
-            <div className="inline-block mb-6 px-4 py-1 bg-[var(--badge-bg)] text-[var(--badge-text)] text-xs font-bold uppercase tracking-[0.2em] rounded-full font-space border border-[var(--badge-border)]">
+            <div className="inline-block mb-6 px-4 py-1 bg-[var(--badge-bg)] text-[var(--badge-text)] text-xs font-bold uppercase tracking-[0.2em] rounded-full font-mono border border-[var(--badge-border)]">
               Visit Us
             </div>
-            <h2 className="text-5xl md:text-7xl font-black mb-10 text-[var(--text-heading-grad-from)] font-playfair">
+            <h2 className="text-5xl md:text-7xl font-black mb-10 text-[var(--text-heading-grad-from)] font-serif">
               Experience the Taste
             </h2>
             <div className="space-y-10 mb-12 text-[var(--text-body-color)]">
@@ -473,8 +450,8 @@ export function LandingPage({ locale, featuredItems, bakeryGalleryItems }: Landi
                    <MapPin className="w-6 h-6 text-[var(--foreground)] group-hover:text-white transition-colors" />
                 </div>
                 <div>
-                  <p className="font-bold text-[var(--foreground)] text-xl font-cinzel mb-1">Shyamnagar, West Bengal</p>
-                  <p className="font-inter text-lg opacity-80">{details.location.address}</p>
+                  <p className="font-bold text-[var(--foreground)] text-xl font-serif mb-1">Sarisha, West Bengal</p>
+                  <p className="font-sans text-lg opacity-80">{details.location.address}</p>
                 </div>
               </div>
               <div className="flex items-start gap-6 group">
@@ -482,18 +459,18 @@ export function LandingPage({ locale, featuredItems, bakeryGalleryItems }: Landi
                    <Clock className="w-6 h-6 text-[var(--foreground)] group-hover:text-white transition-colors" />
                 </div>
                 <div>
-                  <p className="font-bold text-[var(--foreground)] text-xl font-cinzel mb-1">Open Daily</p>
-                  <p className="font-inter text-lg opacity-80">09:00 AM - 09:00 PM</p>
+                  <p className="font-bold text-[var(--foreground)] text-xl font-serif mb-1">Open Daily</p>
+                  <p className="font-sans text-lg opacity-80">09:00 AM - 09:00 PM</p>
                 </div>
               </div>
             </div>
             <div className="flex flex-wrap gap-6">
-              <Link href={`/${locale}/contact`} className="px-10 py-4 bg-gradient-to-r from-[var(--btn-primary-start)] to-[var(--btn-primary-end)] text-white font-bold rounded-full font-montserrat uppercase tracking-widest hover:opacity-90 shadow-lg">
+              <Link href={`/${locale}/contact`} className="px-10 py-4 bg-gradient-to-r from-[var(--btn-primary-start)] to-[var(--btn-primary-end)] text-white font-bold rounded-full font-sans uppercase tracking-widest hover:opacity-90 shadow-lg">
                 Get Directions
               </Link>
-              <button className="px-10 py-4 rounded-full border-2 border-[var(--badge-text)] text-[var(--badge-text)] font-bold font-montserrat uppercase tracking-widest hover:bg-[var(--badge-text)] hover:text-white transition-all flex items-center gap-2">
+              <Link href={"https://instagram.com/crumbsobliss_official"} className="px-10 py-4 rounded-full border-2 border-[var(--badge-text)] text-[var(--badge-text)] font-bold font-sans uppercase tracking-widest hover:bg-[var(--badge-text)] hover:text-white transition-all flex items-center gap-2">
                 <Instagram className="w-5 h-5" /> Follow Us
-              </button>
+              </Link>
             </div>
           </motion.div>
            
@@ -513,7 +490,7 @@ export function LandingPage({ locale, featuredItems, bakeryGalleryItems }: Landi
             <div className="absolute inset-0 bg-gradient-to-t from-[var(--brand-bg-end)] via-transparent to-transparent opacity-90" />
             <div className="absolute bottom-12 left-12 text-white max-w-sm">
               <Coffee className="w-10 h-10 mb-6 text-[var(--badge-icon)]" />
-              <p className="text-5xl font-bold font-great-vibes leading-tight">Fresh Slices &<br />Sweet Delights</p>
+              <p className="text-5xl font-bold font-serif italic leading-tight">Fresh Slices &<br />Sweet Delights</p>
             </div>
           </motion.div>
         </div>
