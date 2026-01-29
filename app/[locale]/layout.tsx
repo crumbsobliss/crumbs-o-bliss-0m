@@ -11,6 +11,7 @@ import Navbar from "@/components/navbar"
 import Footer from "@/components/footer"
 import ThemeProvider from "@/components/theme-provider"
 import { CartProvider } from "@/lib/cart-context"
+import details from "@/config/details.json"
 
 // Optimize fonts: Use 'swap' to ensure text is visible during font load
 // and define variables for CSS usage
@@ -37,41 +38,40 @@ export const viewport: Viewport = {
 }
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://crumbs-o-bliss.com"), // Replaces localhost for social images
+  metadataBase: new URL(details.store.fullDomain),
   title: {
-    default: "Crumbs O' Bliss | Artisan Bakery",
-    template: "%s | Crumbs O' Bliss",
+    default: `${details.store.name} | Artisan Pizza & Cake Bakery`,
+    template: `%s | ${details.store.name}`,
   },
-  description:
-    "Fresh, honest, small-batch baked goods made with time-tested techniques and thoughtfully sourced ingredients. Experience the best sourdough in Shyamnagar.",
-  keywords: ["Bakery", "Sourdough", "Croissant", "Shyamnagar", "West Bengal", "Artisan Bread", "Organic Bakery", "Cafe"],
-  authors: [{ name: "Crumbs O' Bliss Team" }],
-  creator: "Crumbs O' Bliss",
-  publisher: "Crumbs O' Bliss",
+  description: `${details.store.name} - ${details.store.slogan}. Fresh artisanal pizzas and custom cakes in ${details.location.state}. Contact: ${details.contact.primaryPhone}`,
+  keywords: details.seo.keywords,
+  authors: [{ name: `${details.store.name} Team` }],
+  creator: details.store.name,
+  publisher: details.store.name,
   icons: {
-    icon: "/icon.png", // Simplified to single icon as requested
-    apple: "/icon.png", // Fallback for Apple devices
+    icon: "/icon.png",
+    apple: "/icon.png",
   },
   openGraph: {
-    title: "Crumbs O' Bliss | Artisan Bakery",
-    description: "Fresh, honest, small-batch baked goods made with time-tested techniques.",
-    url: "https://crumbs-o-bliss.com",
-    siteName: "Crumbs O' Bliss",
-    locale: "en_US",
+    title: `${details.store.name} | Artisan Pizza & Cake Bakery`,
+    description: details.store.slogan,
+    url: details.store.fullDomain,
+    siteName: details.store.name,
+    locale: "en_IN",
     type: "website",
     images: [
       {
-        url: "/opengraph-image.png", // Ensure you have this image in /public
+        url: "/opengraph-image.png",
         width: 1200,
         height: 630,
-        alt: "Crumbs O' Bliss Artisan Bakery",
+        alt: `${details.store.name} - ${details.store.slogan}`,
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Crumbs O' Bliss | Artisan Bakery",
-    description: "Fresh, honest, small-batch baked goods made with time-tested techniques.",
+    title: `${details.store.name} | Artisan Pizza & Cake Bakery`,
+    description: details.store.slogan,
     images: ["/opengraph-image.png"],
   },
   robots: {

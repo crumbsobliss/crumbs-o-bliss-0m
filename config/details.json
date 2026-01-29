@@ -1,0 +1,50 @@
+{
+  "store": {
+    "name": "Crumbs O' Bliss",
+    "type": "Bakery",
+    "slogan": "Let's bliss together",
+    "domain": "www.crumbsobliss.com",
+    "fullDomain": "https://www.crumbsobliss.com"
+  },
+  "contact": {
+    "primaryPhone": "+91 7866092157",
+    "secondaryPhone": "+919775628674",
+    "email": "crumbsoblisscakebakery@gmail.com",
+    "whatsappNumber": "7866092157"
+  },
+  "social": {
+    "instagram": "crumbsobliss_official",
+    "facebook": "crumbsobliss_official",
+    "instagramUrl": "https://instagram.com/crumbsobliss_official",
+    "facebookUrl": "https://facebook.com/crumbsobliss_official"
+  },
+  "location": {
+    "address": "Sarisa, Diamond Harbour Road, Cheora",
+    "city": "South 24 Parganas",
+    "state": "West Bengal",
+    "postalCode": "743368",
+    "country": "India",
+    "landmark": "Near Neotia University",
+    "fullAddress": "Sarisa, Diamond Harbour Road, Cheora, South 24 Parganas, West Bengal - 743368, India",
+    "latitude": 22.1045,
+    "longitude": 88.3707
+  },
+  "items": {
+    "categories": ["Pizza", "Cakes"]
+  },
+  "seo": {
+    "keywords": [
+      "Bakery",
+      "Pizza",
+      "Cakes",
+      "Artisan Bakery",
+      "Fresh Baked Goods",
+      "South 24 Parganas",
+      "West Bengal",
+      "Cheora",
+      "Organic Bakery",
+      "Custom Cakes",
+      "Pizza Studio"
+    ]
+  }
+}

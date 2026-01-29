@@ -1,4 +1,26 @@
 {
+  "seo": {
+    "homeTitle": "Crumbs O' Bliss | Artisan Pizza & Cake Bakery in West Bengal",
+    "homeDescription": "Experience the magic of artisanal pizzas, custom cakes, and fresh baked goods in Cheora, West Bengal. Let's bliss together with Crumbs O' Bliss!",
+    "aboutTitle": "About Crumbs O' Bliss | Artisan Bakery",
+    "aboutDescription": "Learn about Crumbs O' Bliss - your favorite artisan bakery specializing in fresh pizzas, custom cakes, and organic baked goods.",
+    "itemsTitle": "Our Menu | Pizzas & Cakes | Crumbs O' Bliss",
+    "itemsDescription": "Browse our delicious collection of artisanal pizzas and custom cakes. Fresh, honest, small-batch baked goods made with care.",
+    "contactTitle": "Contact Us | Crumbs O' Bliss Bakery",
+    "contactDescription": "Get in touch with Crumbs O' Bliss. Call us, email us, or visit our location near Neotia University in South 24 Parganas."
+  },
+  "contact": {
+    "phone": "Phone",
+    "email": "Email",
+    "address": "Address",
+    "whatsapp": "WhatsApp",
+    "followUs": "Follow Us",
+    "location": "Location",
+    "landmark": "Landmark",
+    "callUs": "Call Us",
+    "emailUs": "Email Us",
+    "visitUs": "Visit Us"
+  },
   "nav": {
     "brand": "Crumbs O' Bliss",
     "home": "Home",

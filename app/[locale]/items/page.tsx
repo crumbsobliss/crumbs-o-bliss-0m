@@ -1,11 +1,12 @@
 import type { Metadata } from 'next'
 import { getTranslations } from 'next-intl/server'
 import { items } from '@/lib/items'
+import details from '@/config/details.json'
 import { ItemsGrid } from '@/components/items-grid'
 
 export const metadata: Metadata = {
-  title: 'Items | Crumbs O\' Bliss',
-  description: 'Browse our collection of artisan baked goods',
+  title: `Our Menu | ${details.store.name}`,
+  description: `Browse our delicious collection of ${details.items.categories.join(' & ')}. Fresh, artisanal baked goods made with care.`,
 }
 
 async function ItemsPage({ params }: { params: Promise<{ locale: string }> }) {

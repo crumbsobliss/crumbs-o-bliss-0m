@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import { getTranslations } from "next-intl/server";
+import details from "@/config/details.json";
 import {
   MapPin,
   Phone,
@@ -30,7 +31,7 @@ const dancing = Dancing_Script({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Contact Us | Crumbs O' Bliss",
-  description: "Visit our bakery or send us a message. We'd love to hear from you.",
+  description: `Get in touch with ${details.store.name}. Call ${details.contact.primaryPhone} or visit us at ${details.location.address}, ${details.location.city}.`,
 };
 
 export default async function ContactPage({
@@ -75,9 +76,12 @@ export default async function ContactPage({
                             <div>
                                 <span className={`block text-xs uppercase tracking-widest opacity-60 mb-1 ${montserrat.className}`}>Visit Us</span>
                                 <p className={`text-lg leading-relaxed ${lora.className}`}>
-                                    78 Baker Street, <br />
-                                    Shyamnagar, West Bengal,<br />
-                                    India
+                                    {details.location.address}, <br />
+                                    {details.location.city}, {details.location.state},<br />
+                                    India {details.location.postalCode}
+                                </p>
+                                <p className={`text-sm mt-2 opacity-70 ${lora.className}`}>
+                                    Landmark: {details.location.landmark}
                                 </p>
                             </div>
                         </div>
@@ -88,8 +92,7 @@ export default async function ContactPage({
                             </div>
                             <div>
                                 <span className={`block text-xs uppercase tracking-widest opacity-60 mb-1 ${montserrat.className}`}>Email Us</span>
-                                <p className={`text-lg ${lora.className}`}>hello@crumbsobliss.com</p>
-                                <p className={`text-lg ${lora.className}`}>orders@crumbsobliss.com</p>
+                                <p className={`text-lg ${lora.className}`}>{details.contact.email}</p>
                             </div>
                         </div>
 
@@ -99,7 +102,8 @@ export default async function ContactPage({
                             </div>
                             <div>
                                 <span className={`block text-xs uppercase tracking-widest opacity-60 mb-1 ${montserrat.className}`}>Call Us</span>
-                                <p className={`text-lg ${lora.className}`}>+91 987 654 3210</p>
+                                <p className={`text-lg ${lora.className}`}>{details.contact.primaryPhone}</p>
+                                <p className={`text-lg ${lora.className}`}>{details.contact.secondaryPhone}</p>
                             </div>
                         </div>
                     </div>

@@ -1,8 +1,9 @@
 import type { Metadata } from "next"
+import details from "@/config/details.json"
 
 export const metadata: Metadata = {
-  title: "Terms & Conditions | Crumbs O' Bliss",
-  description: "Terms and conditions for Crumbs O' Bliss",
+  title: `Terms & Conditions | ${details.store.name}`,
+  description: `Terms and conditions for ${details.store.name}. Artisan bakery in ${details.location.city}, ${details.location.state}.`,
 }
 
 async function TermsPage() {

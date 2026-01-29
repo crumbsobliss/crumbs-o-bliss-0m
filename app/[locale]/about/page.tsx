@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import details from "@/config/details.json";
 import {
   Playfair_Display,
   Cinzel,
@@ -26,8 +27,8 @@ const oswald = Oswald({ subsets: ["latin"] });
 const dancing = Dancing_Script({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "About | Crumbs O' Bliss",
-  description: "Artisan bakery focused on fresh, honest, small-batch baked goods made with time-tested techniques",
+  title: `About ${details.store.name} | Artisan Bakery`,
+  description: `Learn about ${details.store.name} - ${details.store.slogan}. Fresh, honest, small-batch baked goods made with time-tested techniques at our bakery in ${details.location.state}.`,
 };
 
 export default function AboutPage() {

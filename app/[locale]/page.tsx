@@ -3,6 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { getTranslations } from "next-intl/server";
 import { items } from "@/lib/items";
+import details from "@/config/details.json";
 import {
   ArrowRight,
   Star,
@@ -59,29 +60,29 @@ const spaceGrotesk = Space_Grotesk({ subsets: ["latin"], variable: "--font-space
 export const metadata: Metadata = {
   title: "Crumbs O' Bliss | Artisan Pizza & Cake Studio",
   description:
-    "Experience the magic of wood-fired pizzas, artisanal cakes, and fresh organic baked goods in Shyamnagar.",
-  keywords: ["Bakery", "Sourdough", "Pizza", "Cake", "Shyamnagar", "Organic Bakery", "Artisan Bread", "West Bengal Cafe", "Bakery Video"],
-  authors: [{ name: "Crumbs O' Bliss" }],
+    `${details.store.slogan} - Experience the magic of artisanal pizzas and custom cakes in ${details.location.state}. Located near ${details.location.landmark}.`,
+  keywords: details.seo.keywords,
+  authors: [{ name: details.store.name }],
   openGraph: {
-    title: "Crumbs O' Bliss | Artisan Pizza & Cakes",
-    description: "Fresh, honest, small-batch pizzas and cakes made with passion.",
-    url: "https://crumbs-o-bliss.com", 
-    siteName: "Crumbs O' Bliss",
+    title: `${details.store.name} | Artisan Pizza & Cakes`,
+    description: details.store.slogan,
+    url: details.store.fullDomain,
+    siteName: details.store.name,
     images: [
       {
-        url: "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=1200&q=80", 
+        url: "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=1200&q=80",
         width: 1200,
         height: 630,
-        alt: "Crumbs O' Bliss Artisan Pizza",
+        alt: `${details.store.name} Artisan Pizza`,
       },
     ],
-    locale: "en_US",
+    locale: "en_IN",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Crumbs O' Bliss | Artisan Pizza & Cakes",
-    description: "Taste the passion in every bite. 100% Organic, small-batch bakery.",
+    title: `${details.store.name} | Artisan Pizza & Cakes`,
+    description: `Taste the passion in every bite. ${details.store.slogan}`,
     images: ["https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=1200&q=80"],
   },
   robots: {
@@ -104,39 +105,44 @@ const jsonLd = {
   "@graph": [
     {
       "@type": "Bakery",
-      "name": "Crumbs O' Bliss",
+      "name": details.store.name,
       "image": "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=1200&q=80",
-      "description": "Artisan bakery offering fresh sourdough, pizzas, cakes, and organic coffee.",
+      "description": `${details.store.name} - ${details.store.slogan}. Artisan bakery offering fresh pizzas, custom cakes, and organic baked goods.`,
       "address": {
         "@type": "PostalAddress",
-        "streetAddress": "78 Baker Street, Near Central Park",
-        "addressLocality": "Shyamnagar",
-        "addressRegion": "West Bengal",
-        "postalCode": "743127",
+        "streetAddress": details.location.address,
+        "addressLocality": details.location.city,
+        "addressRegion": details.location.state,
+        "postalCode": details.location.postalCode,
         "addressCountry": "IN"
       },
       "geo": {
         "@type": "GeoCoordinates",
-        "latitude": 22.8333, 
-        "longitude": 88.3667
+        "latitude": details.location.latitude,
+        "longitude": details.location.longitude
       },
-      "url": "https://crumbs-o-bliss.com",
-      "telephone": "+919876543210",
+      "url": details.store.fullDomain,
+      "telephone": details.contact.primaryPhone,
+      "email": details.contact.email,
+      "sameAs": [
+        details.social.instagramUrl,
+        details.social.facebookUrl
+      ],
       "openingHoursSpecification": [
         {
           "@type": "OpeningHoursSpecification",
           "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
-          "opens": "07:00",
-          "closes": "20:00"
+          "opens": "09:00",
+          "closes": "21:00"
         }
       ],
       "priceRange": "₹₹",
-      "servesCuisine": "Bakery"
+      "servesCuisine": ["Pizza", "Bakery"]
     },
     {
       "@type": "VideoObject",
-      "name": "Wood Fired Pizza Process",
-      "description": "Watch our master bakers create artisanal pizza.",
+      "name": "Artisanal Baking Process",
+      "description": "Watch our master bakers create artisanal pizzas and cakes at Crumbs O' Bliss.",
       "thumbnailUrl": "https://images.unsplash.com/photo-1590947132387-155cc02f3212?w=1200&q=80",
       "uploadDate": "2024-01-01",
       "contentUrl": "https://assets.mixkit.co/videos/preview/mixkit-chef-putting-pizza-in-oven-41924-large.mp4"
