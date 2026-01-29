@@ -1,188 +1,215 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import Image from 'next/image'
-import { notFound } from 'next/navigation'
-import { useTranslations } from 'next-intl'
-import { X, Loader2, ShoppingCart, Check } from 'lucide-react'
-import type { items } from '@/lib/items'
-import { useCart } from '@/lib/cart-context'
+import { useState, useEffect } from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import { useTranslations } from "next-intl";
+import {
+  X,
+  Loader2,
+  ShoppingCart,
+  Check,
+  ArrowLeft,
+  Flame,
+  Leaf,
+  Tag,
+  MessageCircle,
+  ChevronRight,
+} from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import type { items } from "@/lib/items";
+import { useCart } from "@/lib/cart-context";
+import CustomizationCTA from "@/components/tryCustom";
 
 interface ItemPageClientProps {
-  item: (typeof items)[0] | undefined
-  locale: string
+  item: (typeof items)[0] | undefined;
+  locale: string;
 }
 
 interface UserData {
-  name: string
-  mobile: string
-  address: string
-  pincode: string
+  name: string;
+  mobile: string;
+  address: string;
+  pincode: string;
 }
 
 export default function ItemPageClient({ item, locale }: ItemPageClientProps) {
-  const t = useTranslations()
-  const { addItem } = useCart()
-  const [showModal, setShowModal] = useState(false)
-  const [quantity, setQuantity] = useState(1)
+  const t = useTranslations();
+  const { addItem } = useCart();
+  const [showModal, setShowModal] = useState(false);
+  const [quantity, setQuantity] = useState(1);
   const [formData, setFormData] = useState<UserData>({
-    name: '',
-    mobile: '',
-    address: '',
-    pincode: '',
-  })
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [cartAdded, setCartAdded] = useState(false)
+    name: "",
+    mobile: "",
+    address: "",
+    pincode: "",
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [cartAdded, setCartAdded] = useState(false);
+
+  // Load user data on mount to pre-fill form if available
+  useEffect(() => {
+    const storedUser = localStorage.getItem("bakery_user_info");
+    if (storedUser) {
+      try {
+        setFormData(JSON.parse(storedUser));
+      } catch (e) {
+        console.error("Failed to parse user info");
+      }
+    }
+  }, []);
 
   if (!item) {
-    notFound()
+    notFound();
   }
 
-  const isEnglish = locale === 'en'
-  const name = isEnglish ? item.name.en : item.name.bn
-  const description = isEnglish ? item.description.en : item.description.bn
+  const isEnglish = locale === "en";
+  const name = isEnglish ? item.name.en : item.name.bn;
+  const description = isEnglish ? item.description.en : item.description.bn;
 
   // --- WhatsApp & Storage Logic ---
 
   const generateWhatsAppLink = (data: UserData) => {
-    const phoneNumber = '919593035680'
-
-    // Construct the message
+    const phoneNumber = "919593035680";
     const message = `
 *New Order Request* 🍞
 
 *Item Details:*
 Product: ${item.name.en}
-Id : ${item.id}
+Id: ${item.id}
 Price: ₹${item.price}
-Calories: ${item.calories}
+Qty: ${quantity}
+Total: ₹${item.price * quantity}
 
 *Customer Details:*
 Name: ${data.name}
 Mobile: ${data.mobile}
 Address: ${data.address}
 Pincode: ${data.pincode}
-    `.trim()
+    `.trim();
 
-    return `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`
-  }
+    return `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+  };
 
   const handleBuyClick = () => {
     // Check local storage for existing user info
-    const storedUser = localStorage.getItem('bakery_user_info')
-
+    const storedUser = localStorage.getItem("bakery_user_info");
     if (storedUser) {
-      try {
-        const parsedUser = JSON.parse(storedUser) as UserData
-        // If data exists, redirect immediately
-        const link = generateWhatsAppLink(parsedUser)
-        window.open(link, '_blank')
-      } catch (e) {
-        // If JSON parse fails, show modal
-        setShowModal(true)
-      }
+      setShowModal(true); // Open modal anyway to confirm/edit details, but it will be pre-filled
     } else {
-      // No data, show modal
-      setShowModal(true)
+      setShowModal(true);
     }
-  }
+  };
 
   const handleAddToCart = () => {
-    addItem(item, quantity)
-    setCartAdded(true)
-    // Reset message after 2 seconds
-    setTimeout(() => setCartAdded(false), 2000)
-  }
+    addItem(item, quantity);
+    setCartAdded(true);
+    setTimeout(() => setCartAdded(false), 2000);
+  };
 
   const handleFormSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsSubmitting(true)
+    e.preventDefault();
+    setIsSubmitting(true);
 
-    // Simulate a small delay for UX or save to backend if needed later
     setTimeout(() => {
-      // 1. Save to Local Storage
-      localStorage.setItem('bakery_user_info', JSON.stringify(formData))
-
-      // 2. Generate Link and Redirect
-      const link = generateWhatsAppLink(formData)
-      window.open(link, '_blank')
-
-      // 3. Reset state
-      setIsSubmitting(false)
-      setShowModal(false)
-    }, 500)
-  }
+      localStorage.setItem("bakery_user_info", JSON.stringify(formData));
+      const link = generateWhatsAppLink(formData);
+      window.open(link, "_blank");
+      setIsSubmitting(false);
+      setShowModal(false);
+    }, 800);
+  };
 
   return (
-    <div className="min-h-screen py-12 px-4 relative">
-      <div className="max-w-4xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-start">
-          
-          {/* Image Section - Modified to use Original Ratio */}
-          <div className="w-full bg-muted rounded-xl overflow-hidden shadow-sm border border-border">
+    <div className="min-h-screen bg-background text-foreground pb-20">
+      {/* 1. Navigation Breadcrumb */}
+      <div className="container mx-auto px-4 py-6">
+        <Link
+          href={`/${locale}/items`}
+          className="inline-flex items-center text-muted-foreground hover:text-primary transition-colors text-sm font-medium group"
+        >
+          <ArrowLeft className="w-4 h-4 mr-2 group-hover:-translate-x-1 transition-transform" />
+          Back to Menu
+        </Link>
+      </div>
+
+      <div className="container mx-auto px-4">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+          {/* 2. Image Section with Entrance Animation */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5 }}
+            className="w-full relative aspect-square md:aspect-[4/3] bg-card rounded-2xl overflow-hidden border border-border shadow-sm group"
+          >
             <Image
               src={item.image || "/placeholder.svg"}
               alt={name}
-              // Width/Height set to 0 with w-full h-auto allows the image to define its own aspect ratio
-              width={0}
-              height={0}
-              sizes="(max-width: 768px) 100vw, 50vw"
-              className="w-full h-auto object-contain"
+              fill
+              className="object-contain p-8 group-hover:scale-105 transition-transform duration-500 ease-out"
               priority
             />
-          </div>
+          </motion.div>
 
-          {/* Details Section */}
-          <div className="flex flex-col justify-center">
-            <h1 className="text-4xl md:text-5xl font-bold mb-4 text-primary text-balance leading-tight">
+          {/* 3. Details Section */}
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="flex flex-col h-full"
+          >
+            <h1 className="text-4xl md:text-5xl font-serif font-bold text-primary mb-4 leading-tight">
               {name}
             </h1>
-            <p className="text-lg text-muted-foreground mb-8 text-balance leading-relaxed">
+
+            <div className="flex items-end gap-4 mb-6 border-b border-border pb-6">
+              <p className="text-3xl font-bold text-foreground">
+                ₹{item.price}
+              </p>
+              {item.calories && (
+                <div className="flex items-center gap-1.5 text-muted-foreground text-sm mb-1.5 px-3 py-1 bg-muted rounded-full">
+                  <Flame className="w-4 h-4 text-orange-500" />
+                  <span>{item.calories} kcal</span>
+                </div>
+              )}
+            </div>
+
+            <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
               {description}
             </p>
 
-            <div className="space-y-6 mb-8">
-              {/* Price */}
-              <div className="border-b border-border pb-4">
-                <p className="text-sm font-medium text-muted-foreground mb-2">
-                  {t('itemDetails.price')}
-                </p>
-                <p className="text-3xl font-bold text-primary">₹{item.price}</p>
-              </div>
-
-              {/* Calories */}
-              <div className="border-b border-border pb-4">
-                <p className="text-sm font-medium text-muted-foreground mb-2">
-                  {t('itemDetails.caloriesPerServing')}
-                </p>
-                <p className="text-xl font-medium">{item.calories} kcal</p>
-              </div>
-
+            {/* Info Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
               {/* Ingredients */}
-              <div className="border-b border-border pb-4">
-                <p className="text-sm font-medium text-muted-foreground mb-3">
-                  {t('itemDetails.ingredients')}
-                </p>
-                <ul className="space-y-2">
+              <div className="bg-card p-4 rounded-xl border border-border">
+                <div className="flex items-center gap-2 mb-3 text-sm font-medium text-foreground">
+                  <Leaf className="w-4 h-4 text-green-500" />
+                  {t("itemDetails.ingredients")}
+                </div>
+                <div className="flex flex-wrap gap-2">
                   {item.ingredients.map((ing, idx) => (
-                    <li key={idx} className="text-sm flex items-start gap-2">
-                      <span className="text-accent mt-1.5 h-1.5 w-1.5 rounded-full bg-current shrink-0" />
-                      <span>{ing}</span>
-                    </li>
+                    <span
+                      key={idx}
+                      className="text-xs px-2.5 py-1 rounded-md bg-background border border-border text-muted-foreground"
+                    >
+                      {ing}
+                    </span>
                   ))}
-                </ul>
+                </div>
               </div>
 
               {/* Tags */}
-              <div>
-                <p className="text-sm font-medium text-muted-foreground mb-3">
-                  {t('itemDetails.tags')}
-                </p>
+              <div className="bg-card p-4 rounded-xl border border-border">
+                <div className="flex items-center gap-2 mb-3 text-sm font-medium text-foreground">
+                  <Tag className="w-4 h-4 text-blue-500" />
+                  {t("itemDetails.tags")}
+                </div>
                 <div className="flex flex-wrap gap-2">
                   {item.tags.map((tag) => (
                     <span
                       key={tag}
-                      className="px-3 py-1 bg-accent/10 text-accent-foreground text-sm font-medium rounded-full border border-accent/20"
+                      className="text-xs font-medium px-2.5 py-1 rounded-full bg-accent/20 text-accent-background border border-accent/20"
                     >
                       {tag}
                     </span>
@@ -191,164 +218,217 @@ Pincode: ${data.pincode}
               </div>
             </div>
 
-            {/* Quantity and Add to Cart */}
-            <div className="space-y-4">
-              <div className="flex items-center justify-center gap-4 border border-border rounded-lg p-4">
-                <button
-                  onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                  className="px-4 py-2 text-primary hover:bg-muted rounded transition-colors"
-                >
-                  −
-                </button>
-                <input
-                  type="number"
-                  value={quantity}
-                  onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value) || 1))}
-                  className="w-16 text-center border border-input rounded px-2 py-1"
-                  min="1"
-                />
-                <button
-                  onClick={() => setQuantity(quantity + 1)}
-                  className="px-4 py-2 text-primary hover:bg-muted rounded transition-colors"
-                >
-                  +
-                </button>
+            {/* Actions Area */}
+            <div className="mt-auto space-y-4 pt-4">
+              {/* Quantity Selector */}
+              <div className="flex items-center gap-4 mb-4">
+                <span className="text-sm font-medium text-muted-foreground">
+                  Quantity
+                </span>
+                <div className="flex items-center border border-input rounded-lg bg-card shadow-sm">
+                  <button
+                    onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                    className="w-10 h-10 flex items-center justify-center text-foreground hover:bg-muted transition-colors rounded-l-lg"
+                  >
+                    −
+                  </button>
+                  <span className="w-10 text-center font-medium text-lg">
+                    {quantity}
+                  </span>
+                  <button
+                    onClick={() => setQuantity(quantity + 1)}
+                    className="w-10 h-10 flex items-center justify-center text-foreground hover:bg-muted transition-colors rounded-r-lg"
+                  >
+                    +
+                  </button>
+                </div>
               </div>
 
-              {/* Add to Cart Button */}
-              <button
-                onClick={handleAddToCart}
-                className={`w-full px-8 py-4 bg-accent text-accent-foreground font-bold text-lg rounded-xl hover:bg-accent/90 transition-all shadow-lg hover:shadow-accent/20 active:scale-[0.98] flex items-center justify-center gap-2 ${
-                  cartAdded ? 'bg-green-600' : ''
-                }`}
-              >
-                {cartAdded ? (
-                  <>
-                    <Check className="w-5 h-5" />
-                    {t('itemDetails.cartAdded')}
-                  </>
-                ) : (
-                  <>
-                    <ShoppingCart className="w-5 h-5" />
-                    {t('itemDetails.addToCart')}
-                  </>
-                )}
-              </button>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <motion.button
+                  whileTap={{ scale: 0.98 }}
+                  onClick={handleAddToCart}
+                  className={`relative overflow-hidden h-14 rounded-xl font-bold text-base flex items-center justify-center gap-2 transition-all shadow-md ${
+                    cartAdded
+                      ? "bg-green-600 text-white"
+                      : "bg-card text-foreground border border-border hover:bg-accent hover:text-accent-foreground"
+                  }`}
+                >
+                  <AnimatePresence mode="wait">
+                    {cartAdded ? (
+                      <motion.div
+                        key="check"
+                        initial={{ scale: 0.5, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        exit={{ scale: 0.5, opacity: 0 }}
+                        className="flex items-center gap-2"
+                      >
+                        <Check className="w-5 h-5" />
+                        <span>{t("itemDetails.cartAdded")}</span>
+                      </motion.div>
+                    ) : (
+                      <motion.div
+                        key="cart"
+                        initial={{ scale: 0.5, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        exit={{ scale: 0.5, opacity: 0 }}
+                        className="flex items-center gap-2"
+                      >
+                        <ShoppingCart className="w-5 h-5" />
+                        <span>{t("itemDetails.addToCart")}</span>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </motion.button>
 
-              {/* Order via WhatsApp Button */}
-              <button
-                onClick={handleBuyClick}
-                className="w-full px-8 py-4 bg-primary text-primary-foreground font-bold text-lg rounded-xl hover:bg-primary/90 transition-all shadow-lg hover:shadow-primary/20 active:scale-[0.98]"
-              >
-                {t('itemDetails.orderWhatsApp')}
-              </button>
+                <motion.button
+                  whileTap={{ scale: 0.98 }}
+                  onClick={handleBuyClick}
+                  className="h-14 bg-primary text-primary-foreground font-bold text-base rounded-xl hover:opacity-90 transition-opacity shadow-lg shadow-primary/20 flex items-center justify-center gap-2"
+                >
+                  <MessageCircle className="w-5 h-5" />
+                  {t("itemDetails.orderWhatsApp")}
+                </motion.button>
+              </div>
             </div>
-          </div>
+          </motion.div>
         </div>
       </div>
 
-      {/* User Info Modal */}
-      {showModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="bg-background rounded-xl shadow-2xl w-full max-w-md overflow-hidden animate-in zoom-in-95 duration-200 border border-border">
-            {/* Modal Header */}
-            <div className="flex items-center justify-between p-4 border-b border-border bg-muted/30">
-              <h2 className="text-lg font-semibold">
-                {t('modal.deliveryDetails')}
-              </h2>
-              <button
-                onClick={() => setShowModal(false)}
-                className="text-muted-foreground hover:text-foreground hover:bg-muted p-1 rounded-md transition-colors"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-
-            {/* Modal Form */}
-            <form onSubmit={handleFormSubmit} className="p-6 space-y-4">
-              <p className="text-sm text-muted-foreground mb-2">
-                {t('modal.provideDetails')}
-              </p>
-
-              <div className="space-y-2">
-                <label className="text-sm font-medium">{t('modal.name')}</label>
-                <input
-                  required
-                  type="text"
-                  placeholder={t('modal.yourName')}
-                  className="w-full px-3 py-2 border border-input rounded-md bg-background focus:outline-none focus:ring-2 focus:ring-primary/50"
-                  value={formData.name}
-                  onChange={(e) =>
-                    setFormData({ ...formData, name: e.target.value })
-                  }
-                />
+      {/* 4. Modal with AnimatePresence */}
+      <AnimatePresence>
+        {showModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+          >
+            <motion.div
+              initial={{ scale: 0.95, opacity: 0, y: 20 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.95, opacity: 0, y: 20 }}
+              className="bg-background rounded-2xl shadow-2xl w-full max-w-md overflow-hidden border border-border"
+            >
+              {/* Modal Header */}
+              <div className="flex items-center justify-between p-5 border-b border-border bg-card">
+                <div>
+                  <h2 className="text-xl font-serif font-bold text-primary">
+                    {t("modal.deliveryDetails")}
+                  </h2>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Complete your details to place order via WhatsApp
+                  </p>
+                </div>
+                <button
+                  onClick={() => setShowModal(false)}
+                  className="text-muted-foreground hover:text-foreground hover:bg-muted p-2 rounded-full transition-colors"
+                >
+                  <X className="w-5 h-5" />
+                </button>
               </div>
 
-              <div className="space-y-2">
-                <label className="text-sm font-medium">
-                  {t('modal.mobileNumber')}
-                </label>
-                <input
-                  required
-                  type="tel"
-                  placeholder={t('modal.mobile10Digit')}
-                  pattern="[0-9]{10}"
-                  className="w-full px-3 py-2 border border-input rounded-md bg-background focus:outline-none focus:ring-2 focus:ring-primary/50"
-                  value={formData.mobile}
-                  onChange={(e) =>
-                    setFormData({ ...formData, mobile: e.target.value })
-                  }
-                />
-              </div>
+              {/* Modal Form */}
+              <form onSubmit={handleFormSubmit} className="p-6 space-y-5">
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                      {t("modal.name")}
+                    </label>
+                    <input
+                      required
+                      type="text"
+                      placeholder="e.g. John Doe"
+                      className="w-full px-4 py-3 border border-input rounded-xl bg-background focus:outline-none focus:ring-2 focus:ring-primary/50 transition-shadow"
+                      value={formData.name}
+                      onChange={(e) =>
+                        setFormData({ ...formData, name: e.target.value })
+                      }
+                    />
+                  </div>
 
-              <div className="space-y-2">
-                <label className="text-sm font-medium">
-                  {t('modal.address')}
-                </label>
-                <textarea
-                  required
-                  placeholder={t('modal.fullAddress')}
-                  className="w-full px-3 py-2 border border-input rounded-md bg-background focus:outline-none focus:ring-2 focus:ring-primary/50 min-h-[80px]"
-                  value={formData.address}
-                  onChange={(e) =>
-                    setFormData({ ...formData, address: e.target.value })
-                  }
-                />
-              </div>
+                  <div className="space-y-2">
+                    <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                      {t("modal.mobileNumber")}
+                    </label>
+                    <input
+                      required
+                      type="tel"
+                      placeholder="10-digit number"
+                      pattern="[0-9]{10}"
+                      className="w-full px-4 py-3 border border-input rounded-xl bg-background focus:outline-none focus:ring-2 focus:ring-primary/50 transition-shadow"
+                      value={formData.mobile}
+                      onChange={(e) =>
+                        setFormData({ ...formData, mobile: e.target.value })
+                      }
+                    />
+                  </div>
 
-              <div className="space-y-2">
-                <label className="text-sm font-medium">{t('modal.pincode')}</label>
-                <input
-                  required
-                  type="text"
-                  placeholder={t('modal.pincode6Digit')}
-                  pattern="[0-9]{6}"
-                  className="w-full px-3 py-2 border border-input rounded-md bg-background focus:outline-none focus:ring-2 focus:ring-primary/50"
-                  value={formData.pincode}
-                  onChange={(e) =>
-                    setFormData({ ...formData, pincode: e.target.value })
-                  }
-                />
-              </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2 col-span-2">
+                      <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                        {t("modal.address")}
+                      </label>
+                      <textarea
+                        required
+                        rows={2}
+                        placeholder="House no, Street area..."
+                        className="w-full px-4 py-3 border border-input rounded-xl bg-background focus:outline-none focus:ring-2 focus:ring-primary/50 transition-shadow resize-none"
+                        value={formData.address}
+                        onChange={(e) =>
+                          setFormData({ ...formData, address: e.target.value })
+                        }
+                      />
+                    </div>
+                    <div className="space-y-2 col-span-2">
+                      <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                        {t("modal.pincode")}
+                      </label>
+                      <input
+                        required
+                        type="text"
+                        placeholder="6-digit PIN"
+                        pattern="[0-9]{6}"
+                        className="w-full px-4 py-3 border border-input rounded-xl bg-background focus:outline-none focus:ring-2 focus:ring-primary/50 transition-shadow"
+                        value={formData.pincode}
+                        onChange={(e) =>
+                          setFormData({ ...formData, pincode: e.target.value })
+                        }
+                      />
+                    </div>
+                  </div>
+                </div>
 
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                className="w-full mt-2 py-3 bg-primary text-primary-foreground font-semibold rounded-lg hover:bg-primary/90 transition-colors flex items-center justify-center gap-2"
-              >
-                {isSubmitting ? (
-                  <>
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                    {t('modal.processing')}
-                  </>
-                ) : (
-                  t('modal.proceedWhatsApp')
-                )}
-              </button>
-            </form>
-          </div>
-        </div>
-      )}
+                <div className="pt-2">
+                  <motion.button
+                    whileTap={{ scale: 0.98 }}
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="w-full py-4 bg-primary text-primary-foreground font-bold rounded-xl hover:opacity-90 transition-all flex items-center justify-center gap-2 shadow-lg shadow-primary/20"
+                  >
+                    {isSubmitting ? (
+                      <>
+                        <Loader2 className="w-5 h-5 animate-spin" />
+                        <span>{t("modal.processing")}</span>
+                      </>
+                    ) : (
+                      <>
+                        <span>{t("modal.proceedWhatsApp")}</span>
+                        <ChevronRight className="w-5 h-5" />
+                      </>
+                    )}
+                  </motion.button>
+                </div>
+              </form>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+      <CustomizationCTA
+        title="Need something else"
+        description="Design your own product"
+        buttonText="Order Custom Product"
+      />
     </div>
-  )
+  );
 }
