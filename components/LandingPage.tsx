@@ -164,11 +164,11 @@ export function LandingPage({ locale, featuredItems, bakeryGalleryItems }: Landi
 
           {/* Heading */}
           <motion.div variants={fadeInUp} className="relative inline-block mb-6 md:mb-10 px-4">
-            <h1 className="text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-black text-balance bg-clip-text text-transparent bg-gradient-to-br from-primary via-primary/90 to-secondary tracking-tighter leading-[0.9] drop-shadow-sm font-display">
+            <h1 className="text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-black text-balance bg-clip-text text-transparent bg-primary via-primary/90 to-secondary tracking-tighter leading-[0.9] drop-shadow-sm font-display">
               {t("hero.title")}
             </h1>
             <span className="absolute -top-4 -right-2 md:-top-8 md:-right-12 text-xl md:text-4xl text-primary/40 italic font-elegant rotate-12 hidden sm:block">
-              Est. 2024
+              Est. 2026
             </span>
           </motion.div>
 
@@ -404,7 +404,7 @@ export function LandingPage({ locale, featuredItems, bakeryGalleryItems }: Landi
               </div>
             </div>
             <div className="flex flex-col sm:flex-row gap-5 sm:gap-6 justify-center md:justify-start">
-              <Link href={`/${locale}/contact`} className="px-10 py-5 bg-gradient-to-r from-primary to-primary/80 text-primary-foreground font-bold font-modern uppercase tracking-widest hover:opacity-90 shadow-lg text-center transition-all hover:scale-105">
+              <Link href={`https://share.google/p08I8OODU4upoJy48`} className="px-10 py-5 bg-gradient-to-r from-primary to-primary/80 text-primary-foreground font-bold font-modern uppercase tracking-widest hover:opacity-90 shadow-lg text-center transition-all hover:scale-105">
                 Get Directions
               </Link>
               <Link href={"https://instagram.com/crumbsobliss_official"} className="px-10 py-5 glass-effect border-2 border-primary text-primary font-bold font-modern uppercase tracking-widest hover:bg-primary hover:text-primary-foreground transition-all flex items-center justify-center gap-3 text-center">

@@ -18,11 +18,11 @@ export const SlidingBanner = () => {
           {/* Repeated text for seamless loop */}
           {[...Array(10)].map((_, i) => (
             <span key={i} className="flex items-center gap-4">
-              <span>✨ Freshly Baked Happiness</span>
+              <span>✨ Check Our Social Media For A Special Promocode</span>
               <span className="text-yellow-200">•</span>
-              <span>Order Now & Get 10% Off</span>
+              <span> Get 10% Off</span>
               <span className="text-yellow-200">•</span>
-              <span>Free Delivery on Orders Over $50</span>
+              <span>Free Delivery on Orders Over 999</span>
               <span className="text-yellow-200">•</span>
             </span>
           ))}

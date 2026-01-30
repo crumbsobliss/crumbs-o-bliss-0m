@@ -154,37 +154,29 @@ export default function Navbar() {
 
           {/* Right Side Controls (Desktop & Mobile Header) */}
           <div className="flex items-center gap-4">
-            {/* Language Selector */}
-            <div className="relative hidden sm:block">
-              <button
-                onClick={() => setIsLanguageOpen(!isLanguageOpen)}
-                className="p-2 rounded-lg bg-card hover:bg-muted transition-colors flex items-center gap-2"
-                aria-label="Select language"
-              >
-                <Globe className="w-4 h-4" />
-                <span className="text-sm font-medium uppercase">{currentLocale}</span>
-              </button>
-              {isLanguageOpen && (
-                <div className="absolute right-0 mt-2 w-32 bg-card border border-border rounded-lg shadow-lg py-2 z-50">
-                  <button
-                    onClick={() => switchLanguage("en")}
-                    className={`w-full px-4 py-2 text-sm text-left hover:bg-muted transition-colors ${
-                      currentLocale === "en" ? "bg-primary text-primary-foreground" : ""
-                    }`}
-                  >
-                    English
-                  </button>
-                  <button
-                    onClick={() => switchLanguage("bn")}
-                    className={`w-full px-4 py-2 text-sm text-left hover:bg-muted transition-colors ${
-                      currentLocale === "bn" ? "bg-primary text-primary-foreground" : ""
-                    }`}
-                  >
-                    বাংলা
-                  </button>
-                </div>
-              )}
-            </div>
+            {/* Language Toggle */}
+<div className="hidden sm:flex items-center bg-muted p-1 rounded-full border border-border">
+  <button
+    onClick={() => switchLanguage("en")}
+    className={`px-3 py-1 text-xs font-bold rounded-full transition-all ${
+      currentLocale === "en" 
+        ? "bg-primary text-primary-foreground shadow-sm" 
+        : "text-muted-foreground hover:text-foreground"
+    }`}
+  >
+    EN
+  </button>
+  <button
+    onClick={() => switchLanguage("bn")}
+    className={`px-3 py-1 text-xs font-bold rounded-full transition-all ${
+      currentLocale === "bn" 
+        ? "bg-primary text-primary-foreground shadow-sm" 
+        : "text-muted-foreground hover:text-foreground"
+    }`}
+  >
+    BN
+  </button>
+</div>
 
             {/* Theme Toggle */}
             {mounted && (
