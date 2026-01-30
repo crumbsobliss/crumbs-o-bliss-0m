@@ -289,7 +289,7 @@ export function LandingPage({ locale, featuredItems, bakeryGalleryItems }: Landi
       {/* --- CIRCULAR GALLERY --- */}
       <div className="h-[400px] md:h-[550px] lg:h-[600px] relative bg-gradient-to-b from-transparent to-background/50 overflow-hidden">
         <Suspense fallback={<div className="w-full h-full flex items-center justify-center text-muted-foreground font-modern">Loading Gallery...</div>}>
-          <CircularGallery bend={1} items={bakeryGalleryItems} />
+          <CircularGallery bend={0} items={bakeryGalleryItems} />
         </Suspense>
       </div>
 
