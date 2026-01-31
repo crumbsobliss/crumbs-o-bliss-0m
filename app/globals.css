@@ -206,7 +206,65 @@
   }
 }
 
-/* --- global.css --- */
+/* --- FONTS --- */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Cinzel:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&family=DM+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+.font-display { font-family: 'Playfair Display', serif; }
+.font-elegant { font-family: 'Cormorant Garamond', serif; }
+.font-luxury { font-family: 'Cinzel', serif; }
+.font-modern { font-family: 'Space Grotesk', sans-serif; }
+.font-clean { font-family: 'DM Sans', sans-serif; }
+
+/* --- LANDING PAGE ANIMATIONS --- */
+
+/* Float animation for hero elements */
+@keyframes float {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  25% { transform: translate(30px, -30px) scale(1.05); }
+  50% { transform: translate(-20px, 20px) scale(0.95); }
+  75% { transform: translate(20px, 10px) scale(1.02); }
+}
+
+@keyframes gentle-pulse {
+  0%, 100% { opacity: 0.3; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(1.1); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -1000px 0; }
+  100% { background-position: 1000px 0; }
+}
+
+.animate-float { animation: float 15s infinite ease-in-out; }
+.animate-float-delayed { animation: float 18s infinite ease-in-out reverse; }
+.animate-gentle-pulse { animation: gentle-pulse 4s infinite ease-in-out; }
+
+.gradient-mesh {
+  background: 
+    radial-gradient(at 20% 30%, hsl(var(--primary) / 0.15) 0px, transparent 50%),
+    radial-gradient(at 80% 70%, hsl(var(--secondary) / 0.12) 0px, transparent 50%),
+    radial-gradient(at 40% 80%, hsl(var(--accent) / 0.1) 0px, transparent 50%);
+}
+
+.glass-effect {
+  background: hsl(var(--background) / 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid hsl(var(--border) / 0.3);
+}
+
+.shimmer-effect {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    hsl(var(--primary) / 0.1) 50%,
+    transparent 100%
+  );
+  background-size: 1000px 100%;
+  animation: shimmer 3s infinite;
+}
+
+/* --- UTILITY ANIMATIONS --- */
 
 /* 1. Slow Spin (for the Star icon) */
 @keyframes spin-slow {
@@ -218,17 +276,17 @@
 }
 
 /* 2. Floating Effect (for Images and Icons) */
-@keyframes float {
+@keyframes float-vertical {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-20px); }
 }
-.animate-float {
-  animation: float 6s ease-in-out infinite;
+.animate-float-vertical {
+  animation: float-vertical 6s ease-in-out infinite;
 }
 
 /* 3. Delayed Float (so items don't bob in sync) */
-.animate-float-delayed {
-  animation: float 6s ease-in-out 3s infinite; /* 3s delay */
+.animate-float-vertical-delayed {
+  animation: float-vertical 6s ease-in-out 3s infinite;
 }
 
 /* 4. Slow Pulse (for background blobs) */
@@ -241,11 +299,6 @@
 }
 
 /* 5. Shimmer (for the button sheen) */
-@keyframes shimmer {
-  0% { transform: translateX(-100%); }
-  100% { transform: translateX(100%); }
-}
-/* Note: We use a utility class here to make it easier to toggle on hover */
 .animate-shimmer {
   animation: shimmer 1.5s infinite;
 }
