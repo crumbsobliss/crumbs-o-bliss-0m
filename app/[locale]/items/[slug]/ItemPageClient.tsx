@@ -135,6 +135,10 @@ Pincode: ${data.pincode}
   };
 
   const handleAddToCart = () => {
+    if(item.price === 0){
+      window.alert("This is a special item without a price. Contact us at whatsapp to know the price!")
+      return;
+    }
     addItem(item, quantity);
     setCartAdded(true);
     setTimeout(() => setCartAdded(false), 2000);
@@ -215,13 +219,16 @@ Pincode: ${data.pincode}
             </div>
 
             <div className="flex items-end gap-4 mb-6 border-b border-border pb-6">
-              <p className="text-3xl font-bold text-foreground">
+              {item.price !== 0 && ( <p className="text-3xl font-bold text-foreground">
                 ₹{item.price}
-              </p>
-              {item.calories && (
+              </p>)}
+              {item.price === 0 && ( <p className="text-3xl font-bold text-foreground">
+                Please Contact Us For Price
+              </p>)}
+              {item.weight && (
                 <div className="flex items-center gap-1.5 text-muted-foreground text-sm mb-1.5 px-3 py-1 bg-muted rounded-full">
                   <Flame className="w-4 h-4 text-orange-500" />
-                  <span>{item.calories} kcal</span>
+                  <span>{item.weight} grams</span>
                 </div>
               )}
             </div>
@@ -331,7 +338,7 @@ Pincode: ${data.pincode}
                 <motion.button
                   whileTap={{ scale: 0.98 }}
                   onClick={handleAddToCart}
-                  className={`h-14 rounded-xl font-bold text-base flex items-center justify-center gap-2 transition-all shadow-md ${
+                  className={`${item.price===0?"hidden":""} h-14 rounded-xl font-bold text-base flex items-center justify-center gap-2 transition-all shadow-md ${
                     cartAdded
                       ? "bg-green-600 text-white"
                       : "bg-card text-foreground border border-border hover:bg-accent hover:text-accent-foreground"

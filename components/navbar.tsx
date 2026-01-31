@@ -17,7 +17,8 @@ import {
   Sparkles,
   Info,
   Mail,
-  Menu,
+  Menu, // Used for the Hamburger icon
+  Utensils, // Added for the actual Menu Link
   X,
 } from 'lucide-react'
 import { useState, useEffect } from 'react'
@@ -102,6 +103,16 @@ export default function Navbar() {
               <Home className="w-4 h-4" />
               {t('nav.home')}
             </Link>
+            
+            {/* NEW MENU ITEM */}
+            <Link
+              href={`/${currentLocale}/menu`}
+              className="text-sm font-medium text-foreground hover:text-primary transition-colors flex items-center gap-1"
+            >
+              <Utensils className="w-4 h-4" />
+              Menu
+            </Link>
+
             <Link
               href={`/${currentLocale}/items`}
               className="text-sm font-medium text-foreground hover:text-primary transition-colors flex items-center gap-1"
@@ -155,28 +166,28 @@ export default function Navbar() {
           {/* Right Side Controls (Desktop & Mobile Header) */}
           <div className="flex items-center gap-4">
             {/* Language Toggle */}
-<div className="hidden sm:flex items-center bg-muted p-1 rounded-full border border-border">
-  <button
-    onClick={() => switchLanguage("en")}
-    className={`px-3 py-1 text-xs font-bold rounded-full transition-all ${
-      currentLocale === "en" 
-        ? "bg-primary text-primary-foreground shadow-sm" 
-        : "text-muted-foreground hover:text-foreground"
-    }`}
-  >
-    EN
-  </button>
-  <button
-    onClick={() => switchLanguage("bn")}
-    className={`px-3 py-1 text-xs font-bold rounded-full transition-all ${
-      currentLocale === "bn" 
-        ? "bg-primary text-primary-foreground shadow-sm" 
-        : "text-muted-foreground hover:text-foreground"
-    }`}
-  >
-    BN
-  </button>
-</div>
+            <div className="hidden sm:flex items-center bg-muted p-1 rounded-full border border-border">
+              <button
+                onClick={() => switchLanguage("en")}
+                className={`px-3 py-1 text-xs font-bold rounded-full transition-all ${
+                  currentLocale === "en" 
+                    ? "bg-primary text-primary-foreground shadow-sm" 
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                EN
+              </button>
+              <button
+                onClick={() => switchLanguage("bn")}
+                className={`px-3 py-1 text-xs font-bold rounded-full transition-all ${
+                  currentLocale === "bn" 
+                    ? "bg-primary text-primary-foreground shadow-sm" 
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                BN
+              </button>
+            </div>
 
             {/* Theme Toggle */}
             {mounted && (
@@ -241,6 +252,17 @@ export default function Navbar() {
                   <Home className="w-5 h-5" />
                   {t('nav.home')}
                 </Link>
+
+                {/* NEW MENU ITEM (MOBILE) */}
+                <Link
+                  href={`/${currentLocale}/menu`}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="text-base font-medium flex items-center gap-3 p-2 rounded-md hover:bg-muted transition-colors"
+                >
+                  <Utensils className="w-5 h-5" />
+                  Menu
+                </Link>
+
                 <Link
                   href={`/${currentLocale}/items`}
                   onClick={() => setIsMobileMenuOpen(false)}

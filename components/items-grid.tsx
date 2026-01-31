@@ -75,7 +75,7 @@ interface BakeryItem {
   description: { en: string; bn: string };
   image: string;
   price: number;
-  calories: number;
+  weight: number;
   tags: string[];
   ingredients?: string[];
 }
@@ -128,8 +128,8 @@ export function ItemsGrid({ items, locale }) {
             return a.price - b.price;
           case "price-desc":
             return b.price - a.price;
-          case "calories-asc":
-            return a.calories - b.calories;
+          case "weight-asc":
+            return a.weight - b.weight;
           default:
             return 0;
         }
@@ -144,6 +144,10 @@ export function ItemsGrid({ items, locale }) {
   };
 
   const handleAddToCart = (e, item) => {
+    if(item.price === 0){
+      window.alert("This is a special item! Cannot add to cart. Please order it by contacting us.")
+      return;
+    }
     e.preventDefault();
     e.stopPropagation();
     addItem(item, 1);
@@ -347,7 +351,7 @@ export function ItemsGrid({ items, locale }) {
                     <option value="default">Featured Collection</option>
                     <option value="price-asc">Price: Low to High</option>
                     <option value="price-desc">Price: High to Low</option>
-                    <option value="calories-asc">Calories: Low to High</option>
+                    <option value="weight-asc">weight: Low to High</option>
                   </select>
                   <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 h-4 w-4 text-[var(--muted-foreground)] pointer-events-none group-hover:text-[var(--primary)] transition-colors" />
                 </div>
@@ -595,7 +599,7 @@ export function ItemsGrid({ items, locale }) {
                             whileHover={{ scale: 1.1 }}
                             whileTap={{ scale: 0.9 }}
                             onClick={(e) => handleAddToCart(e, item)}
-                            className={`p-3 rounded-full backdrop-blur-md shadow-lg border transition-all duration-300 ${
+                            className={`${item.price === 0 ? "hidden":""} p-3 rounded-full backdrop-blur-md shadow-lg border transition-all duration-300 ${
                               addedItems.has(item.slug)
                                 ? "bg-[var(--primary)] text-[var(--primary-foreground)] border-[var(--primary)]"
                                 : "bg-[var(--background)]/90 text-[var(--muted-foreground)] border-[var(--border)] hover:text-[var(--primary)] hover:border-[var(--primary)]"
@@ -670,7 +674,7 @@ export function ItemsGrid({ items, locale }) {
                         <div className="mt-auto flex items-center justify-between text-sm border-t border-[var(--border)] pt-4 border-dashed group-hover:border-solid transition-all">
                           <span className="flex items-center gap-1.5 text-[var(--muted-foreground)] font-cinzel text-xs tracking-wide">
                             <Flame className="w-3.5 h-3.5 text-[var(--highlight)]" />
-                            {item.calories} kcal
+                            {item.weight} grams
                           </span>
                           <Link
                             href={`/${locale}/items/${item.slug}`}
@@ -735,7 +739,7 @@ export function ItemsGrid({ items, locale }) {
                                 : `₹${item.price}`}
                             </span>
                             <span className="block text-[var(--muted-foreground)] font-cinzel text-xs flex items-center justify-end gap-1">
-                              <Flame className="w-3 h-3" /> {item.calories} kcal
+                              <Flame className="w-3 h-3" /> {item.weight} grams
                             </span>
                           </div>
 
@@ -764,7 +768,7 @@ export function ItemsGrid({ items, locale }) {
                               whileHover={{ scale: 1.05 }}
                               whileTap={{ scale: 0.95 }}
                               onClick={(e) => handleAddToCart(e, item)}
-                              className={`p-2.5 border rounded-full transition-all duration-300 ${
+                              className={`${item.price === 0 ? "hidden":""} p-2.5 border rounded-full transition-all duration-300 ${
                                 addedItems.has(item.slug)
                                   ? "text-[var(--primary-foreground)] bg-[var(--primary)] border-[var(--primary)] shadow-md"
                                   : "border-[var(--border)] text-[var(--muted-foreground)] hover:border-[var(--primary)] hover:text-[var(--primary)]"
@@ -908,10 +912,10 @@ export function ItemsGrid({ items, locale }) {
                     </div>
                     <div className="flex-1 text-center">
                       <span className="block text-[10px] font-cinzel text-[var(--muted-foreground)] uppercase tracking-widest mb-1">
-                        Energy
+                        Weight
                       </span>
                       <span className="font-old-standard text-2xl text-[var(--text)]">
-                        {selectedItem.calories} kcal
+                        {selectedItem.weight} grams
                       </span>
                     </div>
                   </div>
@@ -929,7 +933,7 @@ export function ItemsGrid({ items, locale }) {
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                     onClick={(e) => handleAddToCart(e, selectedItem)}
-                    className={`flex-1 py-4 rounded-[var(--radius)] border-2 font-cinzel text-sm uppercase tracking-widest flex items-center justify-center gap-2 transition-all duration-300 ${
+                    className={` flex-1 py-4 rounded-[var(--radius)] border-2 font-cinzel text-sm uppercase tracking-widest flex items-center justify-center gap-2 transition-all duration-300 ${
                       addedItems.has(selectedItem.slug)
                         ? "bg-[var(--primary)] border-[var(--primary)] text-[var(--primary-foreground)]"
                         : "border-[var(--border)] hover:border-[var(--primary)] text-[var(--text)] hover:text-[var(--primary)]"
