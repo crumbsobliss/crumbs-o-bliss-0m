@@ -3,6 +3,7 @@ import { items } from "@/lib/items";
 import details from "@/config/details.json";
 import { LandingPage } from "@/components/LandingPage";
 
+
 // --- SEO: Metadata (Server Side) ---
 export const metadata: Metadata = {
   title: "Crumbs O' Bliss | Artisan Pizza & Cake Studio",
@@ -16,7 +17,7 @@ export const metadata: Metadata = {
     siteName: details.store.name,
     images: [
       {
-        url: "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=1200&q=80",
+        url: "/icon.png",
         width: 1200,
         height: 630,
         alt: `${details.store.name} Artisan Pizza`,
