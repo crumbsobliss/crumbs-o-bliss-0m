@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import React, { useState, useMemo } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
@@ -31,6 +31,7 @@ import {
   Unna,
 } from "next/font/google";
 import { useCart } from "@/lib/cart-context";
+import { BakeryItem } from "@/lib/items";
 import CustomizationCTA from "./tryCustom";
 
 // --- Fonts ---
@@ -81,16 +82,16 @@ interface BakeryItem {
 }
 */
 
-export function ItemsGrid({ items, locale }) {
+export function ItemsGrid({ items, locale }: { items: BakeryItem[]; locale: string }) {
   // State
   const { addItem } = useCart();
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedTags, setSelectedTags] = useState([]);
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [sortBy, setSortBy] = useState("default");
   const [showFilters, setShowFilters] = useState(false);
   const [viewMode, setViewMode] = useState("grid");
   const [addedItems, setAddedItems] = useState(new Set());
-  const [selectedItem, setSelectedItem] = useState(null); // For Quick View Modal
+  const [selectedItem, setSelectedItem] = useState<BakeryItem | null>(null); // For Quick View Modal
   const [shareMessage, setShareMessage] = useState("");
 
   // --- Derived Data ---
@@ -137,13 +138,13 @@ export function ItemsGrid({ items, locale }) {
   }, [items, searchQuery, selectedTags, sortBy]);
 
   // --- Handlers ---
-  const toggleTag = (tag) => {
+  const toggleTag = (tag: string) => {
     setSelectedTags((prev) =>
       prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag],
     );
   };
 
-  const handleAddToCart = (e, item) => {
+  const handleAddToCart = (e: React.MouseEvent, item: BakeryItem) => {
     if(item.price === 0){
       window.alert("This is a special item! Cannot add to cart. Please order it by contacting us.")
       return;
@@ -169,7 +170,7 @@ export function ItemsGrid({ items, locale }) {
     }, 2000);
   };
 
-  const openQuickView = (e, item) => {
+  const openQuickView = (e: React.MouseEvent, item: BakeryItem) => {
     e.preventDefault(); // Prevent navigation
     e.stopPropagation();
     setSelectedItem(item);
@@ -181,7 +182,7 @@ export function ItemsGrid({ items, locale }) {
     setSortBy("default");
   };
 
-  const handleShare = async (e, item) => {
+  const handleShare = async (e: React.MouseEvent, item: BakeryItem) => {
     e.preventDefault();
     e.stopPropagation();
     const shareUrl = `${window.location.origin}/${locale}/items/${item.slug}`;
@@ -307,7 +308,7 @@ export function ItemsGrid({ items, locale }) {
         transition={{ duration: 0.6, ease: "easeOut" }}
         className="sticky top-0 z-40 bg-[var(--background)]/80 backdrop-blur-xl border-b border-[var(--border)] shadow-sm"
       >
-        <div className="max-w-[1920px] mx-auto px-6 py-4 md:py-6 space-y-4">
+        <div className="max-w-[1920px] mx-auto px-4 md:px-6 py-3 md:py-6 space-y-3 md:space-y-4">
           <div className="flex flex-col lg:flex-row gap-6 items-end lg:items-center justify-between">
             {/* Search */}
             <div className="w-full lg:w-1/3 relative group">
@@ -321,7 +322,7 @@ export function ItemsGrid({ items, locale }) {
                   }
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-12 pr-12 py-3.5 bg-[var(--card)]/50 text-[var(--foreground)] border border-[var(--border)] rounded-full focus:ring-2 focus:ring-[var(--primary)]/50 focus:border-[var(--primary)] outline-none transition-all font-cormorant text-xl placeholder:text-[var(--muted-foreground)] shadow-inner"
+                  className="w-full pl-10 pr-10 py-2.5 md:pl-12 md:pr-12 md:py-3.5 bg-[var(--card)]/50 text-[var(--foreground)] border border-[var(--border)] rounded-full focus:ring-2 focus:ring-[var(--primary)]/50 focus:border-[var(--primary)] outline-none transition-all font-cormorant text-lg md:text-xl placeholder:text-[var(--muted-foreground)] shadow-inner"
                 />
                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-[var(--muted-foreground)] group-focus-within:text-[var(--primary)] transition-colors" />
                 {searchQuery && (
@@ -346,7 +347,7 @@ export function ItemsGrid({ items, locale }) {
                   <select
                     value={sortBy}
                     onChange={(e) => setSortBy(e.target.value)}
-                    className="w-full appearance-none bg-[var(--card)] text-[var(--foreground)] pl-5 pr-12 py-3.5 rounded-full font-cinzel text-xs tracking-wider border border-[var(--border)] cursor-pointer focus:ring-2 focus:ring-[var(--primary)]/20 focus:border-[var(--primary)] outline-none transition-all hover:bg-[var(--secondary)]/50"
+                    className="w-full appearance-none bg-[var(--card)] text-[var(--foreground)] pl-4 pr-10 py-2 md:pl-5 md:pr-12 md:py-3.5 rounded-full font-cinzel text-[10px] md:text-xs tracking-wider border border-[var(--border)] cursor-pointer focus:ring-2 focus:ring-[var(--primary)]/20 focus:border-[var(--primary)] outline-none transition-all hover:bg-[var(--secondary)]/50"
                   >
                     <option value="default">Featured Collection</option>
                     <option value="price-asc">Price: Low to High</option>
@@ -410,7 +411,7 @@ export function ItemsGrid({ items, locale }) {
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={() => setShowFilters(!showFilters)}
-                className={`px-6 py-3.5 rounded-full flex items-center gap-2.5 font-cinzel text-xs tracking-widest transition-all border shadow-sm ${
+                className={`px-4 py-2 md:px-6 md:py-3.5 rounded-full flex items-center gap-2 font-cinzel text-[10px] md:text-xs tracking-widest transition-all border shadow-sm ${
                   showFilters
                     ? "bg-[var(--primary)] text-[var(--primary-foreground)] border-transparent shadow-[var(--primary)]/20"
                     : "bg-[var(--card)] text-[var(--primary)] border-[var(--border)] hover:border-[var(--primary)]"
@@ -501,7 +502,7 @@ export function ItemsGrid({ items, locale }) {
                         onClick={() => toggleTag(tag)}
                         whileHover={{ scale: 1.05, y: -2 }}
                         whileTap={{ scale: 0.95 }}
-                        className={`px-5 py-2 rounded-full text-sm font-cormorant font-semibold transition-all duration-300 border ${
+                        className={`px-3 py-1.5 md:px-5 md:py-2 rounded-full text-xs md:text-sm font-cormorant font-semibold transition-all duration-300 border ${
                           isSelected
                             ? "bg-[var(--primary)] text-[var(--primary-foreground)] border-[var(--primary)] shadow-md"
                             : "bg-[var(--background)] text-[var(--muted-foreground)] border-[var(--border)] hover:border-[var(--primary)] hover:text-[var(--primary)] hover:shadow-sm"
@@ -519,10 +520,10 @@ export function ItemsGrid({ items, locale }) {
       </motion.div>
 
       {/* --- Main Grid/List Content --- */}
-      <div className="max-w-[1920px] mx-auto p-6 md:p-8 relative z-10">
-        <div className="flex items-center justify-between mb-8 px-2">
-          <span className="font-bodoni text-[var(--muted-foreground)] italic text-lg flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-[var(--highlight)]"></span>
+      <div className="max-w-[1920px] mx-auto p-4 md:p-8 relative z-10">
+        <div className="flex items-center justify-between mb-4 md:mb-8 px-2">
+          <span className="font-bodoni text-[var(--muted-foreground)] italic text-sm md:text-lg flex items-center gap-2">
+            <span className="w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-[var(--highlight)]"></span>
             Displaying {filteredItems.length} curated delights
           </span>
         </div>
@@ -534,7 +535,7 @@ export function ItemsGrid({ items, locale }) {
           animate="visible"
           className={
             viewMode === "grid"
-              ? "grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-3 gap-8"
+              ? "grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-3 gap-3 md:gap-8"
               : "flex flex-col gap-6 max-w-5xl mx-auto"
           }
         >
@@ -576,20 +577,20 @@ export function ItemsGrid({ items, locale }) {
                             whileHover={{ scale: 1.1 }}
                             whileTap={{ scale: 0.9 }}
                             onClick={(e) => openQuickView(e, item)}
-                            className="bg-[var(--background)] text-[var(--foreground)] p-3.5 rounded-full shadow-xl border border-[var(--border)] hover:bg-[var(--primary)] hover:text-[var(--primary-foreground)] hover:border-[var(--primary)] transition-colors"
+                            className="bg-[var(--background)] text-[var(--foreground)] p-2 md:p-3.5 rounded-full shadow-xl border border-[var(--border)] hover:bg-[var(--primary)] hover:text-[var(--primary-foreground)] hover:border-[var(--primary)] transition-colors"
                             title="Quick View"
                           >
-                            <Eye className="w-5 h-5" />
+                            <Eye className="w-4 h-4 md:w-5 md:h-5" />
                           </motion.button>
 
                           <motion.button
                             whileHover={{ scale: 1.1 }}
                             whileTap={{ scale: 0.9 }}
                             onClick={(e) => handleShare(e, item)}
-                            className="bg-[var(--background)] text-[var(--foreground)] p-3.5 rounded-full shadow-xl border border-[var(--border)] hover:bg-[var(--primary)] hover:text-[var(--primary-foreground)] hover:border-[var(--primary)] transition-colors"
+                            className="bg-[var(--background)] text-[var(--foreground)] p-2 md:p-3.5 rounded-full shadow-xl border border-[var(--border)] hover:bg-[var(--primary)] hover:text-[var(--primary-foreground)] hover:border-[var(--primary)] transition-colors"
                             title="Share Delight"
                           >
-                            <Share2 className="w-5 h-5" />
+                            <Share2 className="w-4 h-4 md:w-5 md:h-5" />
                           </motion.button>
                         </div>
 
@@ -599,7 +600,7 @@ export function ItemsGrid({ items, locale }) {
                             whileHover={{ scale: 1.1 }}
                             whileTap={{ scale: 0.9 }}
                             onClick={(e) => handleAddToCart(e, item)}
-                            className={`${item.price === 0 ? "hidden":""} p-3 rounded-full backdrop-blur-md shadow-lg border transition-all duration-300 ${
+                            className={`${item.price === 0 ? "hidden":""} p-2 md:p-3 rounded-full backdrop-blur-md shadow-lg border transition-all duration-300 ${
                               addedItems.has(item.slug)
                                 ? "bg-[var(--primary)] text-[var(--primary-foreground)] border-[var(--primary)]"
                                 : "bg-[var(--background)]/90 text-[var(--muted-foreground)] border-[var(--border)] hover:text-[var(--primary)] hover:border-[var(--primary)]"
@@ -622,7 +623,7 @@ export function ItemsGrid({ items, locale }) {
                                   animate={{ scale: 1 }}
                                   exit={{ scale: 0 }}
                                 >
-                                  <ShoppingCart className="w-5 h-5" />
+                                  <ShoppingCart className="w-4 h-4 md:w-5 md:h-5" />
                                 </motion.div>
                               )}
                             </AnimatePresence>
@@ -634,7 +635,7 @@ export function ItemsGrid({ items, locale }) {
                           {item.tags.slice(0, 2).map((tag) => (
                             <span
                               key={tag}
-                              className="bg-[var(--background)]/90 backdrop-blur-sm text-[var(--foreground)] px-2 py-0.5 text-[10px] font-cinzel uppercase tracking-wider rounded-sm border border-[var(--border)] shadow-sm"
+                              className="bg-[var(--background)]/90 backdrop-blur-sm text-[var(--foreground)] px-1.5 py-0.5 md:px-2 md:py-0.5 text-[8px] md:text-[10px] font-cinzel uppercase tracking-wider rounded-sm border border-[var(--border)] shadow-sm"
                             >
                               {tag}
                             </span>
@@ -643,44 +644,44 @@ export function ItemsGrid({ items, locale }) {
                       </div>
 
                       {/* Content */}
-                      <div className="p-6 flex-1 flex flex-col relative bg-[var(--card)]">
+                      <div className="p-3 md:p-6 flex-1 flex flex-col relative bg-[var(--card)]">
                         {/* Decorative Line */}
-                        <div className="w-12 h-0.5 bg-[var(--primary)] mb-4 opacity-50 group-hover:w-full transition-all duration-500 ease-out" />
+                        <div className="w-8 md:w-12 h-0.5 bg-[var(--primary)] mb-2 md:mb-4 opacity-50 group-hover:w-full transition-all duration-500 ease-out" />
 
                         <div className="flex justify-between items-start gap-4 mb-2">
                           <Link
                             href={`/${locale}/items/${item.slug}`}
                             className="block group/title"
                           >
-                            <h3 className="font-playfair text-xl font-bold text-[var(--text)] leading-tight group-hover/title:text-[var(--primary)] transition-colors">
+                            <h3 className="font-playfair text-sm md:text-xl font-bold text-[var(--text)] leading-tight group-hover/title:text-[var(--primary)] line-clamp-2 transition-colors">
                               {locale === "en" ? item.name.en : item.name.bn}
                             </h3>
                           </Link>
-                          <span className="font-prata font-bold text-[var(--highlight)] text-xl whitespace-nowrap">
+                          <span className="font-prata font-bold text-[var(--highlight)] text-sm w-max md:text-xl whitespace-wrap">
                             {item.price === 0
                               ? locale === "en"
-                                ? "Contact for price"
-                                : "মূল্যের জন্য যোগাযোগ"
+                                ? "Contact Us"
+                                : "যোগাযোগ"
                               : `₹${item.price}`}
                           </span>
                         </div>
 
-                        <p className="font-cormorant text-[var(--muted-foreground)] text-lg line-clamp-2 mb-5 leading-relaxed group-hover:text-[var(--foreground)] transition-colors duration-300">
+                        <p className="font-cormorant text-[var(--muted-foreground)] text-xs md:text-lg line-clamp-2 mb-3 md:mb-5 leading-relaxed group-hover:text-[var(--foreground)] transition-colors duration-300">
                           {locale === "en"
                             ? item.description.en
                             : item.description.bn}
                         </p>
 
                         <div className="mt-auto flex items-center justify-between text-sm border-t border-[var(--border)] pt-4 border-dashed group-hover:border-solid transition-all">
-                          <span className="flex items-center gap-1.5 text-[var(--muted-foreground)] font-cinzel text-xs tracking-wide">
-                            <Flame className="w-3.5 h-3.5 text-[var(--highlight)]" />
-                            {item.weight} grams
+                          <span className="flex items-center gap-1 text-[var(--muted-foreground)] font-cinzel text-[8px] md:text-xs tracking-wide">
+                            <Flame className="w-2.5 h-2.5 md:w-3.5 md:h-3.5 text-[var(--highlight)]" />
+                            {item.weight}g
                           </span>
                           <Link
                             href={`/${locale}/items/${item.slug}`}
-                            className="text-[var(--primary)] font-bold font-cinzel text-[10px] uppercase tracking-[0.2em] group-hover:translate-x-1 transition-transform"
+                            className="text-[var(--primary)] font-bold font-cinzel text-[8px] md:text-[10px] uppercase tracking-[0.1em] md:tracking-[0.2em] group-hover:translate-x-1 transition-transform"
                           >
-                            View Details &rarr;
+                            Details &rarr;
                           </Link>
                         </div>
                       </div>
@@ -703,16 +704,16 @@ export function ItemsGrid({ items, locale }) {
                         <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors" />
                       </div>
 
-                      <div className="p-6 flex flex-col sm:flex-row flex-grow gap-6 justify-between items-center">
+                       <div className="p-4 md:p-6 flex flex-col sm:flex-row flex-grow gap-4 md:gap-6 justify-between items-center">
                         <div className="space-y-3 flex-grow w-full">
                           <div className="flex items-center gap-3">
                             <Link href={`/${locale}/items/${item.slug}`}>
-                              <h3 className="font-playfair text-2xl font-bold text-[var(--text)] group-hover:text-[var(--primary)] transition-colors">
+                               <h3 className="font-playfair text-lg md:text-2xl font-bold text-[var(--text)] group-hover:text-[var(--primary)] transition-colors">
                                 {locale === "en" ? item.name.en : item.name.bn}
                               </h3>
                             </Link>
                           </div>
-                          <p className="font-cormorant text-[var(--muted-foreground)] text-lg line-clamp-2 max-w-2xl leading-relaxed">
+                           <p className="font-cormorant text-[var(--muted-foreground)] text-sm md:text-lg line-clamp-2 max-w-2xl leading-relaxed">
                             {locale === "en"
                               ? item.description.en
                               : item.description.bn}
@@ -731,7 +732,7 @@ export function ItemsGrid({ items, locale }) {
 
                         <div className="flex sm:flex-col justify-between items-center sm:items-end gap-5 shrink-0 w-full sm:w-auto border-t sm:border-t-0 sm:border-l border-[var(--border)] pt-4 sm:pt-0 sm:pl-8 border-dashed">
                           <div className="text-right">
-                            <span className="block font-prata text-3xl text-[var(--highlight)] font-bold mb-1">
+                             <span className="block font-prata text-xl md:text-3xl text-[var(--highlight)] font-bold mb-1">
                               {item.price === 0
                                 ? locale === "en"
                                   ? "Contact for price"
@@ -863,7 +864,7 @@ export function ItemsGrid({ items, locale }) {
               </div>
 
               {/* Modal Content */}
-              <div className="w-full md:w-1/2 p-8 md:p-12 flex flex-col overflow-y-auto bg-[var(--card)] relative">
+               <div className="w-full md:w-1/2 p-5 md:p-12 flex flex-col overflow-y-auto bg-[var(--card)] relative">
                 {/* Background watermark */}
                 <div className="absolute top-0 right-0 p-10 opacity-[0.03] pointer-events-none">
                   <Heart className="w-64 h-64 text-[var(--foreground)]" />
@@ -871,7 +872,7 @@ export function ItemsGrid({ items, locale }) {
 
                 <div className="flex justify-between items-start mb-6 relative z-10">
                   <div className="space-y-3">
-                    <h2 className="font-playfair text-4xl font-bold text-[var(--text)]">
+                     <h2 className="font-playfair text-2xl md:text-4xl font-bold text-[var(--text)]">
                       {locale === "en"
                         ? selectedItem.name.en
                         : selectedItem.name.bn}
@@ -902,7 +903,7 @@ export function ItemsGrid({ items, locale }) {
                       <span className="block text-[10px] font-cinzel text-[var(--muted-foreground)] uppercase tracking-widest mb-1">
                         Price
                       </span>
-                      <span className="font-prata text-3xl text-[var(--highlight)]">
+                       <span className="font-prata text-xl md:text-3xl text-[var(--highlight)]">
                         {selectedItem.price === 0
                           ? locale === "en"
                             ? "Contact for price"
@@ -920,7 +921,7 @@ export function ItemsGrid({ items, locale }) {
                     </div>
                   </div>
 
-                  <p className="font-cormorant text-xl text-[var(--muted-foreground)] leading-relaxed">
+                   <p className="font-cormorant text-base md:text-xl text-[var(--muted-foreground)] leading-relaxed">
                     {locale === "en"
                       ? selectedItem.description.en
                       : selectedItem.description.bn}

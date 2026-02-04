@@ -7,11 +7,11 @@ import {
   X, 
   ChevronLeft, 
   ChevronRight, 
-  Download, 
   ZoomIn, 
   ZoomOut
 } from "lucide-react";
 import details from "@/config/details.json"
+
 /**
  * TYPE DEFINITIONS
  */
@@ -29,29 +29,28 @@ interface MenuItem {
 const MENU_PAGES: MenuItem[] = [
   {
     id: 1,
-    title: "Signature Viennoiserie",
-    subtitle: "Hand-rolled pastries & croissants",
-    url: "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&q=80&w=1200",
-    description: "Our world-class selection of buttery, flaky treats."
+    title: "Artisan Pizzas",
+    subtitle: "Wood-fired & hand-stretched dough",
+    url: "/assets/images/menu-1.jpeg",
+    description: "Our signature selection of artisanal pizzas, crafted with passion and fresh ingredients."
   },
   {
     id: 2,
-    title: "Artisan Breads",
-    subtitle: "Stone-baked & naturally leavened",
-    url: "https://images.unsplash.com/photo-1549931319-a545dcf3bc73?auto=format&fit=crop&q=80&w=1200",
-    description: "Hand-crafted loaves using heritage grains and long fermentation."
+    title: "Custom Cakes",
+    subtitle: "Exquisite designs for any occasion",
+    url: "/assets/images/menu-2.jpeg",
+    description: "Beautifully decorated cakes made for your special celebrations, from birthdays to weddings."
   },
   {
     id: 3,
-    title: "Patisserie & Sweets",
-    subtitle: "Exquisite cakes and desserts",
-    url: "https://images.unsplash.com/photo-1488477181946-6428a0291777?auto=format&fit=crop&q=80&w=1200",
-    description: "The perfect ending to any occasion, designed by our master chefs."
+    title: "Sweet Delights",
+    subtitle: "Pastries, tarts & desserts",
+    url: "/assets/images/menu-3.jpeg",
+    description: "A delightful assortment of sweet treats and desserts to satisfy your cravings."
   }
 ];
 
 export default function App() {
-  // Explicitly type the state to allow null or a MenuItem object
   const [selectedImage, setSelectedImage] = useState<MenuItem | null>(null);
   const [zoomLevel, setZoomLevel] = useState<number>(1);
 
@@ -66,7 +65,7 @@ export default function App() {
 
   const handleNext = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (!selectedImage) return; // Guard clause for TypeScript
+    if (!selectedImage) return;
     
     const currentIndex = MENU_PAGES.findIndex(img => img.id === selectedImage.id);
     const nextIndex = (currentIndex + 1) % MENU_PAGES.length;
@@ -76,7 +75,7 @@ export default function App() {
 
   const handlePrev = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (!selectedImage) return; // Guard clause for TypeScript
+    if (!selectedImage) return;
 
     const currentIndex = MENU_PAGES.findIndex(img => img.id === selectedImage.id);
     const prevIndex = (currentIndex - 1 + MENU_PAGES.length) % MENU_PAGES.length;
@@ -85,19 +84,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#faf9f6] text-[#1a1a1a] font-sans pb-20">
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;600&display=swap');
-        
-        :root {
-          --brand-gold: #c29958;
-          --brand-dark: #1a1a1a;
-        }
-
-        .font-serif { font-family: 'Playfair Display', serif; }
-        .font-sans { font-family: 'Inter', sans-serif; }
-      `}</style>
-
+    <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)] font-sans pb-20">
       {/* Header Section */}
       <header className="pt-20 pb-16 px-6 text-center max-w-4xl mx-auto">
         <motion.div
@@ -105,13 +92,13 @@ export default function App() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
         >
-          <span className="inline-block px-4 py-1.5 mb-6 border border-[#c29958] text-[#c29958] text-[10px] uppercase tracking-[0.3em] font-semibold rounded-full">
-            The Digital Menu
+          <span className="inline-block px-4 py-1.5 mb-6 border border-[var(--accent)] text-[var(--accent)] text-[10px] uppercase tracking-[0.3em] font-bold rounded-full">
+            Our Digital Menu
           </span>
-          <h1 className="font-serif text-5xl md:text-7xl mb-6 italic">
+          <h1 className="font-display text-5xl md:text-7xl mb-6 italic text-[var(--primary)]">
             Crumbs O' Bliss Menu
           </h1>
-          <p className="font-sans text-gray-500 text-lg leading-relaxed max-w-2xl mx-auto">
+          <p className="font-elegant text-[var(--muted-foreground)] text-xl leading-relaxed max-w-2xl mx-auto">
             Explore our artisanal collection. Click on any page to view full details in high resolution.
           </p>
         </motion.div>
@@ -129,24 +116,24 @@ export default function App() {
               className="group cursor-pointer"
               onClick={() => setSelectedImage(page)}
             >
-              <div className="relative aspect-[3/4] overflow-hidden rounded-sm bg-white shadow-2xl transition-all duration-500 group-hover:shadow-orange-100/50 group-hover:-translate-y-2">
+              <div className="relative overflow-hidden rounded-sm bg-[var(--card)] shadow-2xl transition-all duration-500 group-hover:shadow-[var(--accent)]/20 group-hover:-translate-y-2 border border-[var(--border)]">
                 {/* Overlay with details */}
-                <div className="absolute inset-0 z-10 bg-black/0 group-hover:bg-black/40 transition-all duration-500 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100">
+                <div className="absolute inset-0 z-10 bg-black/0 group-hover:bg-[var(--primary)]/40 transition-all duration-500 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100">
                   <Maximize2 className="text-white w-12 h-12 mb-4 stroke-1" />
-                  <span className="text-white font-sans text-xs uppercase tracking-widest">View Page {page.id}</span>
+                  <span className="text-white font-luxury text-xs uppercase tracking-widest">View Page {page.id}</span>
                 </div>
                 
                 {/* The Image */}
                 <img 
                   src={page.url} 
                   alt={page.title}
-                  className="w-full h-full object-cover grayscale-[20%] group-hover:grayscale-0 transition-all duration-700"
+                  className="w-full h-auto block transition-all duration-700"
                 />
               </div>
 
               <div className="mt-8 text-center">
-                <h3 className="font-serif text-2xl mb-1">{page.title}</h3>
-                <p className="text-[#c29958] font-sans text-xs uppercase tracking-widest">{page.subtitle}</p>
+                <h3 className="font-display text-2xl mb-1 text-[var(--primary)]">{page.title}</h3>
+                <p className="text-[var(--accent)] font-luxury text-xs uppercase tracking-widest">{page.subtitle}</p>
               </div>
             </motion.div>
           ))}
@@ -160,24 +147,24 @@ export default function App() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[100] bg-[#1a1a1a] flex flex-col items-center justify-center overflow-hidden"
+            className="fixed inset-0 z-[100] bg-[var(--background)] flex flex-col items-center justify-center overflow-hidden"
           >
             {/* Top Bar */}
-            <div className="absolute top-0 inset-x-0 h-20 px-8 flex items-center justify-between text-white bg-gradient-to-b from-black/50 to-transparent z-10">
+            <div className="absolute top-0 inset-x-0 h-20 px-8 flex items-center justify-between text-[var(--foreground)] bg-gradient-to-b from-[var(--background)] to-transparent z-10">
               <div className="flex flex-col">
-                <span className="font-serif text-xl italic">{selectedImage.title}</span>
-                <span className="text-[10px] uppercase tracking-widest text-gray-400">Page {selectedImage.id} of {MENU_PAGES.length}</span>
+                <span className="font-display text-xl italic text-[var(--primary)]">{selectedImage.title}</span>
+                <span className="text-[10px] uppercase tracking-widest text-[var(--muted-foreground)]">Page {selectedImage.id} of {MENU_PAGES.length}</span>
               </div>
               
               <div className="flex items-center gap-6">
-                <div className="flex items-center gap-3 bg-white/10 rounded-full px-4 py-2 border border-white/10">
-                  <button onClick={() => setZoomLevel(prev => Math.max(1, prev - 0.5))} className="hover:text-[#c29958] transition-colors"><ZoomOut size={18}/></button>
-                  <span className="text-xs font-mono w-10 text-center">{Math.round(zoomLevel * 100)}%</span>
-                  <button onClick={() => setZoomLevel(prev => Math.min(3, prev + 0.5))} className="hover:text-[#c29958] transition-colors"><ZoomIn size={18}/></button>
+                <div className="flex items-center gap-3 bg-[var(--card)] rounded-full px-4 py-2 border border-[var(--border)]">
+                  <button onClick={() => setZoomLevel(prev => Math.max(1, prev - 0.5))} className="hover:text-[var(--accent)] transition-colors text-[var(--muted-foreground)]"><ZoomOut size={18}/></button>
+                  <span className="text-xs font-mono w-10 text-center text-[var(--foreground)]">{Math.round(zoomLevel * 100)}%</span>
+                  <button onClick={() => setZoomLevel(prev => Math.min(3, prev + 0.5))} className="hover:text-[var(--accent)] transition-colors text-[var(--muted-foreground)]"><ZoomIn size={18}/></button>
                 </div>
                 <button 
                   onClick={() => setSelectedImage(null)}
-                  className="p-2 hover:bg-white/10 rounded-full transition-all"
+                  className="p-2 hover:bg-[var(--card)] rounded-full transition-all text-[var(--foreground)]"
                 >
                   <X size={28} />
                 </button>
@@ -185,7 +172,7 @@ export default function App() {
             </div>
 
             {/* Main Image Container */}
-            <div className="relative w-full h-full flex items-center justify-center p-4 md:p-12 overflow-auto scrollbar-hide">
+            <div className="relative w-full h-full flex items-center justify-center p-4 md:p-12 overflow-auto">
               <motion.img
                 key={selectedImage.id}
                 src={selectedImage.url}
@@ -199,13 +186,13 @@ export default function App() {
               {/* Navigation Arrows */}
               <button 
                 onClick={handlePrev}
-                className="absolute left-8 p-4 bg-black/20 hover:bg-black/50 text-white rounded-full backdrop-blur-md border border-white/10 transition-all hidden md:block"
+                className="absolute left-8 p-4 bg-[var(--card)]/80 hover:bg-[var(--card)] text-[var(--foreground)] rounded-full backdrop-blur-md border border-[var(--border)] transition-all hidden md:block"
               >
                 <ChevronLeft size={32} />
               </button>
               <button 
                 onClick={handleNext}
-                className="absolute right-8 p-4 bg-black/20 hover:bg-black/50 text-white rounded-full backdrop-blur-md border border-white/10 transition-all hidden md:block"
+                className="absolute right-8 p-4 bg-[var(--card)]/80 hover:bg-[var(--card)] text-[var(--foreground)] rounded-full backdrop-blur-md border border-[var(--border)] transition-all hidden md:block"
               >
                 <ChevronRight size={32} />
               </button>
@@ -215,13 +202,12 @@ export default function App() {
             <motion.div 
               initial={{ y: 50 }}
               animate={{ y: 0 }}
-              className="absolute bottom-0 inset-x-0 p-8 bg-gradient-to-t from-black/80 to-transparent text-white"
+              className="absolute bottom-0 inset-x-0 p-8 bg-gradient-to-t from-[var(--background)] to-transparent text-[var(--foreground)]"
             >
               <div className="max-w-xl mx-auto text-center">
-                <p className="text-sm font-light text-gray-300 italic mb-4">
+                <p className="text-lg font-elegant italic text-[var(--muted-foreground)] mb-4 bg-[var(--background)]/60 backdrop-blur-sm inline-block px-4 py-2 rounded-lg">
                   "{selectedImage.description}"
                 </p>
-                
               </div>
             </motion.div>
           </motion.div>
@@ -229,13 +215,13 @@ export default function App() {
       </AnimatePresence>
 
       {/* Footer Branding */}
-      <footer className="mt-20 py-12 px-10 border-t border-gray-100 text-center">
-        <p className="font-serif italic text-2xl text-gray-500">Crumbs O' Bliss</p>
-        <div className="mt-4 flex justify-center gap-6 text-[10px] font-bold uppercase tracking-widest text-gray-400">
+      <footer className="mt-20 py-12 px-10 border-t border-[var(--border)] text-center">
+        <p className="font-display italic text-2xl text-[var(--primary)]">Crumbs O' Bliss</p>
+        <div className="mt-4 flex flex-col md:flex-row justify-center gap-4 md:gap-6 text-[10px] font-bold uppercase tracking-widest text-[var(--muted-foreground)]">
           <span> {details.contact.email} </span>
-          <span className="text-[#c29958]">•</span>
+          <span className="hidden md:inline text-[var(--accent)]">•</span>
           <span>{details.contact.primaryPhone}</span>
-          <span className="text-[#c29958]">•</span>
+          <span className="hidden md:inline text-[var(--accent)]">•</span>
           <span> {details.location.address} </span>
         </div>
       </footer>

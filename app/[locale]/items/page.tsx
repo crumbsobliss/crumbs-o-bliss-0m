@@ -19,14 +19,14 @@ async function ItemsPage({ params }: { params: Promise<{ locale: string }> }) {
   return (
     <div className="min-h-screen py-12 px-4 bg-background">
       <div className="max-w-6xl mx-auto">
-        <div className="mb-12 text-center md:text-left">
+        {/* <div className="mb-12 text-center md:text-left">
           <h1 className="text-4xl md:text-5xl font-bold mb-4 text-primary">
             {t('items.title')}
           </h1>
           <p className="text-lg text-muted-foreground text-balance max-w-2xl">
             {t('items.description')}
           </p>
-        </div>
+        </div> */}
 
         {/* We pass the raw items to the Client Component.
           The Client Component handles the search, sort, and filtering logic.
