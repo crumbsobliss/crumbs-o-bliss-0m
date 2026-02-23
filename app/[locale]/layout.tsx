@@ -13,6 +13,7 @@ import ThemeProvider from "@/components/theme-provider"
 import { CartProvider } from "@/lib/cart-context"
 import details from "@/config/details.json"
 import PublicLayoutWrapper from "@/components/public-layout-wrapper"
+import ViewTracker from "@/components/view-tracker"
 
 // Optimize fonts: Use 'swap' to ensure text is visible during font load
 // and define variables for CSS usage
@@ -115,6 +116,7 @@ export default async function LocaleLayout({
         <ThemeProvider>
           <NextIntlClientProvider messages={messages}>
             <CartProvider>
+                <ViewTracker />
                 <PublicLayoutWrapper>{children}</PublicLayoutWrapper>
             </CartProvider>
           </NextIntlClientProvider>

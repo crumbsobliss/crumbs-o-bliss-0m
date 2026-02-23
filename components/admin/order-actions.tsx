@@ -6,7 +6,7 @@ import { createClient } from '@/utils/supabase/client'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Loader2, Send, Save } from 'lucide-react'
+import { Loader2, Send, Save, Download } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
@@ -112,7 +112,12 @@ Thank you for choosing CrumsOBliss!`
 
         <Button variant="outline" onClick={handleWhatsApp} className="w-full border-green-500 text-green-600 hover:bg-green-50">
            <Send className="h-4 w-4 mr-2" />
-           Send E-Bill on WhatsApp
+           Send Bill Link on WhatsApp
+        </Button>
+
+        <Button variant="outline" onClick={() => window.open(`/api/generate-bill?ticket_id=${order.ticket_id}`, '_blank')} className="w-full border-primary text-primary hover:bg-primary/5">
+           <Download className="h-4 w-4 mr-2" />
+           Download PDF Bill
         </Button>
       </CardContent>
     </Card>

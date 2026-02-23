@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Loader2, Search, CheckCircle2, Clock, XCircle, Package } from 'lucide-react'
+import { Loader2, Search, CheckCircle2, Clock, XCircle, Package, Download } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 
 type OrderData = {
@@ -148,12 +148,12 @@ export default function OrderTrackingClient({ ticket }: { ticket: string }) {
                           </div>
                       </div>
                       
-                      <div className="flex justify-end">
-                            {/* E-Bill Download could go here */}
-                           <Button variant="outline" onClick={() => window.print()}>
-                                Download/Print Bill
+                       <div className="flex justify-end mt-6">
+                           <Button variant="outline" className="shadow-sm" onClick={() => window.open(`/api/generate-bill?ticket_id=${orderData.order.ticket_id}`, '_blank')}>
+                                <Download className="h-4 w-4 mr-2" />
+                                Download PDF Bill
                            </Button>
-                      </div>
+                       </div>
                   </CardContent>
               </Card>
           </div>

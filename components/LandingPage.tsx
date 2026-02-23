@@ -12,6 +12,7 @@ import { TestimonialSection } from "./landing/TestimonialSection";
 import { BrandStory } from "./landing/BrandStory";
 import { VisitSection } from "./landing/VisitSection";
 import { VideoGallery } from "./landing/VideoGallery";
+import { FeaturedSection } from "./landing/FeaturedSection";
 
 // Lazy load heavy 3D components with dynamic import
 const CircularGallery = dynamic(() => import("./CircularGallery"), {
@@ -44,6 +45,9 @@ export function LandingPage({ locale, featuredItems, bakeryGalleryItems }: Landi
 
       {/* Hero Section */}
       <HeroSection locale={locale} t={t} />
+
+      {/* Featured Products */}
+      <FeaturedSection items={featuredItems} locale={locale} />
 
       {/* Stats Bar */}
       <StatsBar />

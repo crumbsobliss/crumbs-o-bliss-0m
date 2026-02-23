@@ -119,7 +119,9 @@ export default async function HomePage({
       price: p.price,
       currency: "INR",
       image: p.image_url || "/assets/products/landing-card-1.webp",
-      tags: [p.category || 'general']
+      tags: [p.category || 'general'],
+      weight: 100, // adding dummy values to satisfy BakeryItem interface if needed
+      ingredients: []
   })) || [];
 
   const bakeryGalleryItems = [

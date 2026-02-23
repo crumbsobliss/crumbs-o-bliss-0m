@@ -21,7 +21,12 @@ export default function ExportCsvButton() {
                 user_phone,
                 total_amount,
                 status,
-                created_at
+                delivery_address,
+                created_at,
+                order_items (
+                    product_name,
+                    quantity
+                )
             `)
             .order('created_at', { ascending: false })
             
@@ -32,17 +37,33 @@ export default function ExportCsvButton() {
         }
 
         // Convert to CSV
-        const headers = ['Ticket ID', 'Customer', 'Phone', 'Total', 'Status', 'Date']
+        const headers = ['Date', 'Ticket ID', 'Customer', 'Phone', 'Status', 'Total (INR)', 'Items Ordered', 'Delivery Address']
         const csvContent = [
             headers.join(','),
-            ...orders.map(order => [
-                order.ticket_id,
-                `"${order.user_name || ''}"`, // Wrap in quotes for commas
-                order.user_phone,
-                order.total_amount,
-                order.status,
-                new Date(order.created_at).toISOString().split('T')[0]
-            ].join(','))
+            ...orders.map(order => {
+                // Format items beautifully: "2x Pizza, 1x Cake"
+                const itemsStr = order.order_items 
+                    ? order.order_items.map((i: any) => `${i.quantity}x ${i.product_name}`).join(' | ') 
+                    : 'No items';
+
+                // Escape commas and quotes for CSV
+                const escapeCsv = (str: string | null) => {
+                    if (!str) return '""';
+                    const s = String(str).replace(/"/g, '""');
+                    return `"${s}"`;
+                };
+
+                return [
+                    new Date(order.created_at).toLocaleString(),
+                    escapeCsv(order.ticket_id),
+                    escapeCsv(order.user_name),
+                    escapeCsv(order.user_phone),
+                    escapeCsv(order.status),
+                    order.total_amount,
+                    escapeCsv(itemsStr),
+                    escapeCsv(order.delivery_address)
+                ].join(',')
+            })
         ].join('\n')
 
         // Download
