@@ -6,12 +6,13 @@
 
 /* Bakery color system for light mode */
 :root {
-  --primary: #164a3e;
-  --accent: #acd038;
-  --highlight: #fcb042;
-  --background: #ffffff;
-  --text: #164a3e;
-  --border-light: #e8e8e8;
+  --primary: #0b4a2d; /* Vivid Dark Green */
+  --accent: #f2668b; /* Vivid Pink */
+  --highlight: #fbbd16; /* Vivid Yellow */
+  --vivid-pink: #f2668b;
+  --background: #fffcf8; /* Warm off-white */
+  --text: #0b4a2d;
+  --border-light: #f0e6d2;
 
   --foreground: var(--text);
   --card: #fafaf9;
@@ -83,10 +84,11 @@
 
 /* Bakery color system for dark mode */
 .dark {
-  --primary: #acd038;
-  --accent: #fcb042;
-  --highlight: #fcb042;
-  --background: #0f1f1b;
+  --primary: #125e3b;
+  --accent: #f2668b;
+  --highlight: #fbbd16;
+  --vivid-pink: #f2668b;
+  --background: #0d1a16;
   --text: #eaf5f2;
   --border-light: #1f3a33;
 

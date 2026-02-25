@@ -30,7 +30,7 @@ function CartPageContent({ locale }: { locale: string }) {
     // Check for profile data
     const storedUser = localStorage.getItem('bakery_user_info');
     let userDetails = null;
-    
+
     if (storedUser) {
       try {
         userDetails = JSON.parse(storedUser);
@@ -46,18 +46,18 @@ function CartPageContent({ locale }: { locale: string }) {
     }
 
     setIsSubmitting(true);
-    
+
     try {
       const subtotal = getTotal();
       const shippingCost = subtotal > 500 ? 0 : 50;
       const totalAmount = subtotal + shippingCost;
-      
-      const orderId = typeof crypto !== 'undefined' && crypto.randomUUID 
-          ? crypto.randomUUID() 
-          : 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-              const r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
-              return v.toString(16);
-            });
+
+      const orderId = typeof crypto !== 'undefined' && crypto.randomUUID
+        ? crypto.randomUUID()
+        : 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+          const r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
+          return v.toString(16);
+        });
 
       const ticketId = `ORD-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
 
@@ -77,7 +77,7 @@ function CartPageContent({ locale }: { locale: string }) {
 
       const orderItemsToInsert = items.map(cartItem => ({
         order_id: orderId,
-        product_id: typeof cartItem.item.id === 'string' ? cartItem.item.id : null, 
+        product_id: typeof cartItem.item.id === 'string' ? cartItem.item.id : null,
         product_name: locale === 'bn' ? cartItem.item.name.bn : cartItem.item.name.en,
         quantity: cartItem.quantity,
         price_at_time: cartItem.item.price
@@ -88,6 +88,16 @@ function CartPageContent({ locale }: { locale: string }) {
         .insert(orderItemsToInsert);
 
       if (itemsError) throw itemsError;
+
+      // Decrement stock for each item
+      for (const cartItem of items) {
+        if (typeof cartItem.item.id === 'string') {
+          await supabase.rpc('decrement_stock', {
+            product_id: cartItem.item.id,
+            quantity_to_subtract: cartItem.quantity
+          });
+        }
+      }
 
       // Save to local storage order history
       const localHistoryKey = 'bakery_order_history';
@@ -105,7 +115,7 @@ function CartPageContent({ locale }: { locale: string }) {
 
       clearCart();
       router.push(`/${locale}/track/${ticketId}`);
-      
+
     } catch (error) {
       console.error("Checkout failed:", error);
       alert("Failed to place order. Please try again.");

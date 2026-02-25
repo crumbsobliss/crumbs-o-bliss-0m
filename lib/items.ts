@@ -1,15 +1,20 @@
-// export interface BakeryItem {
-//   id: number;
-//   slug: string;
-//   name: { en: string; bn: string };
-//   description: { en: string; bn: string };
-//   price: number;
-//   currency: "INR";
-//   ingredients: string[];
-//   weight: number;
-//   image: string;
-//   tags: string[];
-// }
+export interface BakeryItem {
+    id: number | string;
+    slug: string;
+    name: { en: string; bn: string };
+    description: { en: string; bn: string };
+    price: number;
+    discounted_price?: number;
+    currency: "INR";
+    ingredients?: string[];
+    weight?: number;
+    image: string;
+    tags: string[];
+    calories?: number;
+    prep_time?: string;
+    is_veg?: boolean;
+    stock?: number;
+}
 
 // export const items: BakeryItem[] = [
 //   {

@@ -39,7 +39,7 @@ export function HeroSection({ locale, t }: HeroSectionProps) {
       </div>
 
       {/* Content */}
-      <motion.div 
+      <motion.div
         initial="hidden"
         animate="visible"
         variants={staggerContainer}
@@ -54,58 +54,46 @@ export function HeroSection({ locale, t }: HeroSectionProps) {
         </motion.div>
 
         {/* Heading */}
-        <motion.div variants={fadeInUp} className="relative inline-block mb-6 md:mb-10 px-4 py-4">
-          <h1 className="py-6 text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-black text-balance bg-clip-text text-transparent bg-primary via-primary/90 to-secondary tracking-tighter leading-[0.9] drop-shadow-sm font-display">
-            {t("hero.title")}
+        <motion.div variants={fadeInUp} className="relative inline-block mb-4 md:mb-6 px-4 py-4 w-full">
+          <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black text-balance bg-clip-text text-transparent bg-gradient-to-br from-[var(--vivid-pink)] to-[var(--accent)] tracking-tighter leading-tight drop-shadow-sm font-modern">
+            Explore Our Cake Haven!
           </h1>
-          <span className="absolute -top-4 -right-2 md:-top-8 md:-right-12 text-xl md:text-4xl text-primary/40 italic font-elegant rotate-12 hidden sm:block">
-            Est. 2026
-          </span>
         </motion.div>
 
-        {/* Subtitle */}
-        <motion.p 
-          variants={fadeInUp}
-          className="text-lg sm:text-xl md:text-3xl lg:text-4xl text-muted-foreground mb-10 md:mb-16 text-balance max-w-4xl mx-auto leading-relaxed font-elegant italic px-4"
-        >
-          {t("hero.subtitle")}
-        </motion.p>
-
-        {/* CTA Buttons */}
-        <motion.div variants={fadeInUp} className="flex flex-col sm:flex-row items-center justify-center gap-4 md:gap-6 px-4">
-          <Link
-            href={`/${locale}/items`}
-            className="group relative px-10 py-4 md:px-14 md:py-5 bg-gradient-to-r from-primary to-primary/80 text-primary-foreground font-bold shadow-lg shadow-primary/25 hover:shadow-primary/40 transition-all duration-300 hover:scale-105 w-full sm:w-auto text-center overflow-hidden"
-          >
-            <span className="absolute inset-0 shimmer-effect"></span>
-            <span className="relative z-10 flex items-center justify-center gap-2 md:gap-3 text-sm md:text-base lg:text-lg uppercase tracking-widest font-modern">
-              Shop Now <ArrowRight className="w-4 h-4 md:w-5 md:h-5 group-hover:translate-x-1 transition-transform" />
-            </span>
-          </Link>
-
-          <Link
-            href={`/${locale}/about`}
-            className="group px-10 py-4 md:px-14 md:py-5 glass-effect text-foreground font-bold hover:bg-primary/10 transition-all duration-300 text-sm md:text-base lg:text-lg tracking-widest uppercase font-modern w-full sm:w-auto text-center"
-          >
-            Our Story
-          </Link>
-        </motion.div>
-
-        {/* Hero Image */}
-        <motion.div 
+        {/* Giant Arch & Cake Image */}
+        <motion.div
           style={{ y: heroY }}
           variants={fadeInUp}
-          className="mt-16 md:mt-28 relative h-64 md:h-[28rem] lg:h-[32rem] w-full flex justify-center"
+          className="mt-6 md:mt-10 relative flex flex-col items-center w-full max-w-3xl mx-auto"
         >
-          <div className="relative w-64 h-64 md:w-[28rem] md:h-[28rem] lg:w-[32rem] lg:h-[32rem] animate-float">
+          {/* Main Cake Image placed overlapping the arch */}
+          <div className="relative w-56 h-56 md:w-[22rem] md:h-[22rem] lg:w-[26rem] lg:h-[26rem] z-20 -mb-24 md:-mb-32">
             <Image
               src="/icon.png"
-              alt="Artisan Bread"
+              alt="Artisan Cake"
               fill
-              sizes="(max-width: 768px) 300px, 500px" 
+              sizes="(max-width: 768px) 250px, 400px"
               className="object-contain drop-shadow-2xl"
-              priority={true} 
+              priority={true}
             />
+          </div>
+
+          {/* Massive Curvy Dark Green Arch */}
+          <div className="relative w-full bg-primary pt-32 pb-16 md:pt-40 md:pb-20 px-6 rounded-t-[50%] flex flex-col items-center z-10 shadow-2xl">
+            <h2 className="text-2xl md:text-4xl font-bold text-white mb-2 font-modern max-w-md text-balance leading-snug">
+              When you share a cake, you share love!
+            </h2>
+            <p className="text-primary-foreground/80 text-sm md:text-base font-medium mb-10 max-w-sm">
+              Fresh bakes made with the best ingredients
+            </p>
+
+            {/* Yellow CTA Button inside the arch taking up width */}
+            <Link
+              href={`/${locale}/items`}
+              className="relative group w-full max-w-xs md:max-w-sm bg-[var(--highlight)] text-[#4b3000] font-bold rounded-full py-4 px-8 text-center text-lg md:text-xl shadow-[0_8px_30px_rgb(251,189,22,0.4)] hover:shadow-[0_8px_30px_rgb(251,189,22,0.6)] hover:scale-105 transition-all duration-300 font-modern flex justify-center items-center gap-2"
+            >
+              Buy Now & Get Offers <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+            </Link>
           </div>
         </motion.div>
       </motion.div>

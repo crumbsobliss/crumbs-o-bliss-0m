@@ -19,6 +19,8 @@ import {
   ShoppingCart,
   Check,
   Share2,
+  MessageCircle,
+  Leaf,
 } from "lucide-react";
 import {
   Playfair_Display,
@@ -130,7 +132,7 @@ export function ItemsGrid({ items, locale }: { items: BakeryItem[]; locale: stri
           case "price-desc":
             return b.price - a.price;
           case "weight-asc":
-            return a.weight - b.weight;
+            return (a.weight || 0) - (b.weight || 0);
           default:
             return 0;
         }
@@ -138,6 +140,8 @@ export function ItemsGrid({ items, locale }: { items: BakeryItem[]; locale: stri
   }, [items, searchQuery, selectedTags, sortBy]);
 
   // --- Handlers ---
+  const isSpecialItem = (item: BakeryItem) => item.price === 0 || (item as any).discounted_price === 0;
+
   const toggleTag = (tag: string) => {
     setSelectedTags((prev) =>
       prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag],
@@ -145,10 +149,6 @@ export function ItemsGrid({ items, locale }: { items: BakeryItem[]; locale: stri
   };
 
   const handleAddToCart = (e: React.MouseEvent, item: BakeryItem) => {
-    if(item.price === 0){
-      window.alert("This is a special item! Cannot add to cart. Please order it by contacting us.")
-      return;
-    }
     e.preventDefault();
     e.stopPropagation();
     addItem(item, 1);
@@ -362,11 +362,10 @@ export function ItemsGrid({ items, locale }: { items: BakeryItem[]; locale: stri
               <div className="flex bg-[var(--card)] border border-[var(--border)] p-1.5 rounded-full shadow-sm">
                 <button
                   onClick={() => setViewMode("grid")}
-                  className={`p-2.5 rounded-full transition-all duration-300 relative ${
-                    viewMode === "grid"
-                      ? "text-[var(--primary-foreground)]"
-                      : "text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:bg-[var(--secondary)]"
-                  }`}
+                  className={`p-2.5 rounded-full transition-all duration-300 relative ${viewMode === "grid"
+                    ? "text-[var(--primary-foreground)]"
+                    : "text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:bg-[var(--secondary)]"
+                    }`}
                   title="Grid View"
                 >
                   {viewMode === "grid" && (
@@ -384,11 +383,10 @@ export function ItemsGrid({ items, locale }: { items: BakeryItem[]; locale: stri
                 </button>
                 <button
                   onClick={() => setViewMode("list")}
-                  className={`p-2.5 rounded-full transition-all duration-300 relative ${
-                    viewMode === "list"
-                      ? "text-[var(--primary-foreground)]"
-                      : "text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:bg-[var(--secondary)]"
-                  }`}
+                  className={`p-2.5 rounded-full transition-all duration-300 relative ${viewMode === "list"
+                    ? "text-[var(--primary-foreground)]"
+                    : "text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:bg-[var(--secondary)]"
+                    }`}
                   title="List View"
                 >
                   {viewMode === "list" && (
@@ -411,11 +409,10 @@ export function ItemsGrid({ items, locale }: { items: BakeryItem[]; locale: stri
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={() => setShowFilters(!showFilters)}
-                className={`px-4 py-2 md:px-6 md:py-3.5 rounded-full flex items-center gap-2 font-cinzel text-[10px] md:text-xs tracking-widest transition-all border shadow-sm ${
-                  showFilters
-                    ? "bg-[var(--primary)] text-[var(--primary-foreground)] border-transparent shadow-[var(--primary)]/20"
-                    : "bg-[var(--card)] text-[var(--primary)] border-[var(--border)] hover:border-[var(--primary)]"
-                }`}
+                className={`px-4 py-2 md:px-6 md:py-3.5 rounded-full flex items-center gap-2 font-cinzel text-[10px] md:text-xs tracking-widest transition-all border shadow-sm ${showFilters
+                  ? "bg-[var(--primary)] text-[var(--primary-foreground)] border-transparent shadow-[var(--primary)]/20"
+                  : "bg-[var(--card)] text-[var(--primary)] border-[var(--border)] hover:border-[var(--primary)]"
+                  }`}
               >
                 <SlidersHorizontal className="h-4 w-4" />
                 <span className="hidden sm:inline">Filter</span>
@@ -502,11 +499,10 @@ export function ItemsGrid({ items, locale }: { items: BakeryItem[]; locale: stri
                         onClick={() => toggleTag(tag)}
                         whileHover={{ scale: 1.05, y: -2 }}
                         whileTap={{ scale: 0.95 }}
-                        className={`px-3 py-1.5 md:px-5 md:py-2 rounded-full text-xs md:text-sm font-cormorant font-semibold transition-all duration-300 border ${
-                          isSelected
-                            ? "bg-[var(--primary)] text-[var(--primary-foreground)] border-[var(--primary)] shadow-md"
-                            : "bg-[var(--background)] text-[var(--muted-foreground)] border-[var(--border)] hover:border-[var(--primary)] hover:text-[var(--primary)] hover:shadow-sm"
-                        }`}
+                        className={`px-3 py-1.5 md:px-5 md:py-2 rounded-full text-xs md:text-sm font-cormorant font-semibold transition-all duration-300 border ${isSelected
+                          ? "bg-[var(--primary)] text-[var(--primary-foreground)] border-[var(--primary)] shadow-md"
+                          : "bg-[var(--background)] text-[var(--muted-foreground)] border-[var(--border)] hover:border-[var(--primary)] hover:text-[var(--primary)] hover:shadow-sm"
+                          }`}
                       >
                         {tag}
                       </motion.button>
@@ -557,27 +553,33 @@ export function ItemsGrid({ items, locale }: { items: BakeryItem[]; locale: stri
                       variants={cardHoverVariants}
                       initial="rest"
                       whileHover="hover"
-                      className="group relative bg-[var(--card)] rounded-[var(--radius)] overflow-hidden h-full flex flex-col border border-[var(--border)] transition-colors duration-300 hover:border-[var(--primary)]/30"
+                      onClick={() => { window.location.href = `/${locale}/items/${item.slug}`; }}
+                      className="group relative h-full flex flex-col pt-12 cursor-pointer" // leave space for cake to pop out
                     >
-                      {/* Image Area */}
-                      <div className="relative aspect-[4/5] overflow-hidden bg-[var(--secondary)]">
-                        <Image
-                          src={item.image}
-                          alt={item.name.en}
-                          fill
-                          className="object-cover transition-transform duration-700 ease-in-out group-hover:scale-110"
-                        />
+                      {/* Pill/Arch Background */}
+                      <div className={`absolute bottom-0 left-0 w-full h-[88%] rounded-[2rem] rounded-t-[50%] z-0 overflow-hidden transition-all duration-300 ${isSpecialItem(item) ? 'bg-gradient-to-t from-[var(--primary)] via-[var(--primary)] to-[var(--primary)]/90 shadow-[0_15px_40px_rgba(11,74,45,0.4)]' : 'bg-[var(--card)] border border-[var(--border)] group-hover:border-[var(--primary)]/30 group-hover:shadow-md'}`}>
+                      </div>
 
-                        {/* Gradient Overlay */}
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500" />
+                      {/* Image Area (Popping out) */}
+                      <div className="relative h-48 sm:h-56 w-full z-20 flex items-center justify-center mb-2 -mt-8 transition-transform duration-500 ease-out group-hover:scale-105 pointer-events-none">
+                        <div className="relative w-40 h-40 sm:w-48 sm:h-48 drop-shadow-[0_15px_25px_rgba(0,0,0,0.25)]">
+                          <Image
+                            src={item.image}
+                            alt={item.name.en}
+                            fill
+                            className="object-contain"
+                          />
+                        </div>
+                      </div>
 
+                      <div className="absolute inset-0 z-30 pointer-events-none">
                         {/* Hover Quick Actions */}
-                        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-4">
+                        <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-4 pointer-events-auto">
                           <motion.button
                             whileHover={{ scale: 1.1 }}
                             whileTap={{ scale: 0.9 }}
                             onClick={(e) => openQuickView(e, item)}
-                            className="bg-[var(--background)] text-[var(--foreground)] p-2 md:p-3.5 rounded-full shadow-xl border border-[var(--border)] hover:bg-[var(--primary)] hover:text-[var(--primary-foreground)] hover:border-[var(--primary)] transition-colors"
+                            className="bg-[var(--card)] text-[var(--foreground)] p-2 md:p-3.5 rounded-full shadow-xl border border-[var(--border)] hover:border-[var(--highlight)] transition-colors"
                             title="Quick View"
                           >
                             <Eye className="w-4 h-4 md:w-5 md:h-5" />
@@ -587,7 +589,7 @@ export function ItemsGrid({ items, locale }: { items: BakeryItem[]; locale: stri
                             whileHover={{ scale: 1.1 }}
                             whileTap={{ scale: 0.9 }}
                             onClick={(e) => handleShare(e, item)}
-                            className="bg-[var(--background)] text-[var(--foreground)] p-2 md:p-3.5 rounded-full shadow-xl border border-[var(--border)] hover:bg-[var(--primary)] hover:text-[var(--primary-foreground)] hover:border-[var(--primary)] transition-colors"
+                            className="bg-[var(--card)] text-[var(--foreground)] p-2 md:p-3.5 rounded-full shadow-xl border border-[var(--border)] hover:border-[var(--highlight)] transition-colors"
                             title="Share Delight"
                           >
                             <Share2 className="w-4 h-4 md:w-5 md:h-5" />
@@ -595,47 +597,63 @@ export function ItemsGrid({ items, locale }: { items: BakeryItem[]; locale: stri
                         </div>
 
                         {/* Floating Top Right Action */}
-                        <div className="absolute top-4 right-4 z-20">
-                          <motion.button
-                            whileHover={{ scale: 1.1 }}
-                            whileTap={{ scale: 0.9 }}
-                            onClick={(e) => handleAddToCart(e, item)}
-                            className={`${item.price === 0 ? "hidden":""} p-2 md:p-3 rounded-full backdrop-blur-md shadow-lg border transition-all duration-300 ${
-                              addedItems.has(item.slug)
-                                ? "bg-[var(--primary)] text-[var(--primary-foreground)] border-[var(--primary)]"
-                                : "bg-[var(--background)]/90 text-[var(--muted-foreground)] border-[var(--border)] hover:text-[var(--primary)] hover:border-[var(--primary)]"
-                            }`}
-                          >
-                            <AnimatePresence mode="wait">
-                              {addedItems.has(item.slug) ? (
-                                <motion.div
-                                  key="check"
-                                  initial={{ scale: 0 }}
-                                  animate={{ scale: 1 }}
-                                  exit={{ scale: 0 }}
-                                >
-                                  <Check className="w-5 h-5" />
-                                </motion.div>
-                              ) : (
-                                <motion.div
-                                  key="cart"
-                                  initial={{ scale: 0 }}
-                                  animate={{ scale: 1 }}
-                                  exit={{ scale: 0 }}
-                                >
-                                  <ShoppingCart className="w-4 h-4 md:w-5 md:h-5" />
-                                </motion.div>
-                              )}
-                            </AnimatePresence>
-                          </motion.button>
+                        <div className="absolute top-12 right-2 pointer-events-auto">
+                          {isSpecialItem(item) ? (
+                            <motion.button
+                              whileHover={{ scale: 1.1 }}
+                              whileTap={{ scale: 0.9 }}
+                              onClick={(e) => { e.preventDefault(); e.stopPropagation(); window.location.href = `/${locale}/items/${item.slug}`; }}
+                              className="p-2 md:p-3 flex items-center justify-center rounded-full shadow-lg transition-all duration-300 bg-[var(--background)] text-green-600 border border-[var(--border)] hover:bg-[var(--secondary)]"
+                              title="Order Special Item"
+                            >
+                              <MessageCircle className="w-4 h-4 md:w-5 md:h-5" />
+                            </motion.button>
+                          ) : (
+                            <motion.button
+                              whileHover={{ scale: 1.1 }}
+                              whileTap={{ scale: 0.9 }}
+                              onClick={(e) => handleAddToCart(e, item)}
+                              className={`p-2 md:p-3 flex items-center justify-center rounded-full shadow-lg transition-all duration-300 ${addedItems.has(item.slug)
+                                ? "bg-green-600 text-white border-transparent"
+                                : "bg-[var(--background)] text-[var(--foreground)] border border-[var(--border)] hover:border-[var(--primary)] hover:text-[var(--primary)]"
+                                }`}
+                            >
+                              <AnimatePresence mode="wait">
+                                {addedItems.has(item.slug) ? (
+                                  <motion.div
+                                    key="check"
+                                    initial={{ scale: 0 }}
+                                    animate={{ scale: 1 }}
+                                    exit={{ scale: 0 }}
+                                  >
+                                    <Check className="w-5 h-5" />
+                                  </motion.div>
+                                ) : (
+                                  <motion.div
+                                    key="cart"
+                                    initial={{ scale: 0 }}
+                                    animate={{ scale: 1 }}
+                                    exit={{ scale: 0 }}
+                                  >
+                                    <ShoppingCart className="w-4 h-4 md:w-5 md:h-5" />
+                                  </motion.div>
+                                )}
+                              </AnimatePresence>
+                            </motion.button>
+                          )}
                         </div>
 
                         {/* Tags floating on image */}
-                        <div className="absolute top-4 left-4 flex flex-col gap-1.5 items-start">
-                          {item.tags.slice(0, 2).map((tag) => (
+                        <div className="absolute top-12 left-2 flex flex-col gap-1.5 items-start pointer-events-auto">
+                          {isSpecialItem(item) && (
+                            <span className="bg-[var(--highlight)] text-[var(--primary)] px-2 py-0.5 md:px-3 md:py-1 text-[9px] md:text-[11px] font-modern font-black uppercase tracking-wider rounded-full shadow-[0_4px_10px_rgba(251,189,22,0.4)] mb-1 border-2 border-[var(--highlight)]/50">
+                              Special
+                            </span>
+                          )}
+                          {item.tags.slice(0, 2).map((tag: string) => (
                             <span
                               key={tag}
-                              className="bg-[var(--background)]/90 backdrop-blur-sm text-[var(--foreground)] px-1.5 py-0.5 md:px-2 md:py-0.5 text-[8px] md:text-[10px] font-cinzel uppercase tracking-wider rounded-sm border border-[var(--border)] shadow-sm"
+                              className="bg-white/95 backdrop-blur-sm text-[var(--primary)] font-bold px-2 py-0.5 md:px-3 md:py-1 text-[9px] md:text-[11px] font-modern uppercase tracking-wider rounded-full shadow-sm"
                             >
                               {tag}
                             </span>
@@ -644,45 +662,57 @@ export function ItemsGrid({ items, locale }: { items: BakeryItem[]; locale: stri
                       </div>
 
                       {/* Content */}
-                      <div className="p-3 md:p-6 flex-1 flex flex-col relative bg-[var(--card)]">
-                        {/* Decorative Line */}
-                        <div className="w-8 md:w-12 h-0.5 bg-[var(--primary)] mb-2 md:mb-4 opacity-50 group-hover:w-full transition-all duration-500 ease-out" />
+                      <div className="p-4 md:p-6 flex-1 flex flex-col relative z-10 text-center">
+                        <Link
+                          href={`/${locale}/items/${item.slug}`}
+                          className="block group/title mb-2 mx-auto"
+                        >
+                          <h3 className={`font-modern text-base md:text-xl lg:text-2xl font-black leading-tight group-hover/title:-translate-y-1 transition-transform ${isSpecialItem(item) ? 'text-white' : 'text-[var(--text)] group-hover/title:text-[var(--primary)]'}`}>
+                            {locale === "en" ? item.name.en : item.name.bn}
+                          </h3>
+                        </Link>
 
-                        <div className="flex justify-between items-start gap-4 mb-2">
-                          <Link
-                            href={`/${locale}/items/${item.slug}`}
-                            className="block group/title"
-                          >
-                            <h3 className="font-playfair text-sm md:text-xl font-bold text-[var(--text)] leading-tight group-hover/title:text-[var(--primary)] line-clamp-2 transition-colors">
-                              {locale === "en" ? item.name.en : item.name.bn}
-                            </h3>
-                          </Link>
-                          <span className="font-prata font-bold text-[var(--highlight)] text-sm w-max md:text-xl whitespace-wrap">
-                            {item.price === 0
-                              ? locale === "en"
-                                ? "Contact Us"
-                                : "যোগাযোগ"
-                              : `₹${item.price}`}
-                          </span>
-                        </div>
-
-                        <p className="font-cormorant text-[var(--muted-foreground)] text-xs md:text-lg line-clamp-2 mb-3 md:mb-5 leading-relaxed group-hover:text-[var(--foreground)] transition-colors duration-300">
+                        <p className={`font-clean text-xs md:text-sm line-clamp-2 mb-4 leading-relaxed mx-auto max-w-[90%] ${isSpecialItem(item) ? 'text-white/80' : 'text-[var(--muted-foreground)]'}`}>
                           {locale === "en"
                             ? item.description.en
                             : item.description.bn}
                         </p>
 
-                        <div className="mt-auto flex items-center justify-between text-sm border-t border-[var(--border)] pt-4 border-dashed group-hover:border-solid transition-all">
-                          <span className="flex items-center gap-1 text-[var(--muted-foreground)] font-cinzel text-[8px] md:text-xs tracking-wide">
-                            <Flame className="w-2.5 h-2.5 md:w-3.5 md:h-3.5 text-[var(--highlight)]" />
-                            {item.weight}g
-                          </span>
-                          <Link
-                            href={`/${locale}/items/${item.slug}`}
-                            className="text-[var(--primary)] font-bold font-cinzel text-[8px] md:text-[10px] uppercase tracking-[0.1em] md:tracking-[0.2em] group-hover:translate-x-1 transition-transform"
-                          >
-                            Details &rarr;
-                          </Link>
+                        <div className="mt-auto flex flex-wrap items-center justify-center gap-2 mb-4">
+                          <div className={`flex items-center gap-1.5 px-3 py-1 rounded-full border ${isSpecialItem(item) ? 'bg-white/10 border-white/20 text-white' : 'bg-[var(--background)] border-[var(--border)] text-[var(--foreground)]'}`}>
+                            <Flame className={`w-3.5 h-3.5 ${isSpecialItem(item) ? 'text-orange-300' : 'text-orange-500'}`} />
+                            <span className="text-xs font-bold font-modern">{item.calories || "180"} Cal</span>
+                          </div>
+                          <div className={`flex items-center gap-1.5 px-3 py-1 rounded-full border ${isSpecialItem(item) ? 'bg-white/10 border-white/20 text-white' : 'bg-[var(--background)] border-[var(--border)] text-[var(--foreground)]'}`}>
+                            <svg className={`w-3.5 h-3.5 ${isSpecialItem(item) ? 'text-blue-300' : 'text-blue-500'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <span className="text-xs font-bold font-modern">{item.prep_time || "40m"}</span>
+                          </div>
+                          <div className={`flex items-center gap-1.5 px-3 py-1 rounded-full border ${isSpecialItem(item) ? 'bg-white/10 border-white/20 text-white' : 'bg-[var(--background)] border-[var(--border)] text-[var(--foreground)]'}`}>
+                            {item.is_veg !== false ? <Leaf className="w-3.5 h-3.5 text-green-500" /> : <Flame className="w-3.5 h-3.5 text-red-500" />}
+                            <span className="text-xs font-bold font-modern">{item.is_veg !== false ? "Veg" : "Non-Veg"}</span>
+                          </div>
+                        </div>
+
+                        {item.stock !== undefined && item.stock < 10 && (
+                          <div className={`text-[10px] font-bold animate-pulse mb-2 ${isSpecialItem(item) ? 'text-red-200' : 'text-red-500'}`}>
+                            Hurry! Only {item.stock} left
+                          </div>
+                        )}
+
+                        <div className="mt-2 w-full mx-auto">
+                          {isSpecialItem(item) ? (
+                            <div className="w-full bg-[var(--highlight)] text-[#4b3000] font-black font-modern rounded-full py-3 flex items-center justify-center gap-2 text-sm md:text-base shadow-sm hover:scale-[1.02] transition-transform">
+                              {locale === "en" ? "Contact Us" : "যোগাযোগ"} <MessageCircle className="w-4 h-4 flex-shrink-0" />
+                            </div>
+                          ) : (
+                            <div className="w-full bg-[var(--highlight)] text-[#4b3000] font-black font-modern rounded-full py-3 flex justify-center gap-2 text-sm md:text-base pr-4 shadow-sm border-2 border-[var(--highlight)] hover:bg-[var(--background)] hover:text-[var(--foreground)] transition-colors">
+                              <span className="opacity-90 tracking-widest uppercase text-xs self-center">₹</span>
+                              <span className="leading-none text-lg">{item.price}</span>
+                              <span className="text-[10px] tracking-widest font-bold self-center opacity-70 uppercase">/ ITEM</span>
+                            </div>
+                          )}
                         </div>
                       </div>
                     </motion.div>
@@ -692,96 +722,97 @@ export function ItemsGrid({ items, locale }: { items: BakeryItem[]; locale: stri
                       variants={cardHoverVariants}
                       initial="rest"
                       whileHover="hover"
-                      className="group flex flex-col sm:flex-row bg-[var(--card)] rounded-[var(--radius)] border border-[var(--border)] overflow-hidden transition-all duration-300 hover:border-[var(--primary)]/30 hover:shadow-lg"
+                      className={`group flex flex-col sm:flex-row rounded-[2rem] border overflow-hidden transition-all duration-300 relative ${isSpecialItem(item)
+                        ? "bg-[var(--primary)] text-[var(--primary-foreground)] border-[var(--primary)] shadow-[0_15px_40px_rgba(11,74,45,0.3)]"
+                        : "bg-[var(--card)] border-[var(--border)] hover:border-[var(--primary)]/30 hover:shadow-lg"
+                        }`}
                     >
-                      <div className="relative w-full sm:w-64 aspect-[4/3] sm:aspect-auto shrink-0 bg-[var(--secondary)] overflow-hidden">
+                      <div className="relative w-full sm:w-64 aspect-[4/3] sm:aspect-auto shrink-0 flex items-center justify-center overflow-hidden z-20 py-4 sm:py-0">
+                        {/* Glowy Background for list view */}
+                        {isSpecialItem(item) ? (
+                          <div className="absolute inset-x-4 top-4 bottom-4 bg-gradient-to-r from-[var(--primary)] via-[var(--primary)] to-[var(--primary)]/90 rounded-[2rem] shadow-[0_10px_50px_rgba(11,74,45,0.4)] pointer-events-none"></div>
+                        ) : (
+                          <div className="absolute inset-x-4 top-4 bottom-4 bg-[var(--background)] rounded-full z-0 group-hover:bg-[var(--primary)]/5 transition-colors pointer-events-none"></div>
+                        )}
                         <Image
                           src={item.image}
                           alt={item.name.en}
                           fill
-                          className="object-cover transition-transform duration-700 group-hover:scale-105"
+                          className="object-contain p-6 md:p-8 transition-transform duration-700 ease-out group-hover:scale-110 drop-shadow-[0_15px_25px_rgba(0,0,0,0.3)] z-10"
                         />
-                        <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors" />
                       </div>
 
-                       <div className="p-4 md:p-6 flex flex-col sm:flex-row flex-grow gap-4 md:gap-6 justify-between items-center">
-                        <div className="space-y-3 flex-grow w-full">
-                          <div className="flex items-center gap-3">
-                            <Link href={`/${locale}/items/${item.slug}`}>
-                               <h3 className="font-playfair text-lg md:text-2xl font-bold text-[var(--text)] group-hover:text-[var(--primary)] transition-colors">
-                                {locale === "en" ? item.name.en : item.name.bn}
-                              </h3>
-                            </Link>
-                          </div>
-                           <p className="font-cormorant text-[var(--muted-foreground)] text-sm md:text-lg line-clamp-2 max-w-2xl leading-relaxed">
-                            {locale === "en"
-                              ? item.description.en
-                              : item.description.bn}
-                          </p>
-                          <div className="flex flex-wrap gap-2 pt-1">
-                            {item.tags.map((t) => (
-                              <span
-                                key={t}
-                                className="text-[10px] bg-[var(--secondary)] text-[var(--secondary-foreground)] px-2.5 py-1 rounded-sm uppercase font-cinzel tracking-wider"
-                              >
-                                {t}
-                              </span>
-                            ))}
-                          </div>
-                        </div>
-
-                        <div className="flex sm:flex-col justify-between items-center sm:items-end gap-5 shrink-0 w-full sm:w-auto border-t sm:border-t-0 sm:border-l border-[var(--border)] pt-4 sm:pt-0 sm:pl-8 border-dashed">
-                          <div className="text-right">
-                             <span className="block font-prata text-xl md:text-3xl text-[var(--highlight)] font-bold mb-1">
-                              {item.price === 0
-                                ? locale === "en"
-                                  ? "Contact for price"
-                                  : "মূল্যের জন্য যোগাযোগ"
-                                : `₹${item.price}`}
-                            </span>
-                            <span className="block text-[var(--muted-foreground)] font-cinzel text-xs flex items-center justify-end gap-1">
-                              <Flame className="w-3 h-3" /> {item.weight} grams
-                            </span>
-                          </div>
-
-                          <div className="flex gap-3">
-                            <motion.button
-                              whileHover={{ scale: 1.05 }}
-                              whileTap={{ scale: 0.95 }}
-                              onClick={(e) => openQuickView(e, item)}
-                              className="p-2.5 border border-[var(--border)] rounded-full hover:bg-[var(--secondary)] text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors"
-                              title="Quick View"
-                            >
-                              <Eye className="w-5 h-5" />
-                            </motion.button>
-
-                            <motion.button
-                              whileHover={{ scale: 1.05 }}
-                              whileTap={{ scale: 0.95 }}
-                              onClick={(e) => handleShare(e, item)}
-                              className="p-2.5 border border-[var(--border)] rounded-full hover:bg-[var(--secondary)] text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors"
-                              title="Share"
-                            >
-                              <Share2 className="w-5 h-5" />
-                            </motion.button>
-
-                            <motion.button
-                              whileHover={{ scale: 1.05 }}
-                              whileTap={{ scale: 0.95 }}
-                              onClick={(e) => handleAddToCart(e, item)}
-                              className={`${item.price === 0 ? "hidden":""} p-2.5 border rounded-full transition-all duration-300 ${
-                                addedItems.has(item.slug)
-                                  ? "text-[var(--primary-foreground)] bg-[var(--primary)] border-[var(--primary)] shadow-md"
-                                  : "border-[var(--border)] text-[var(--muted-foreground)] hover:border-[var(--primary)] hover:text-[var(--primary)]"
-                              }`}
-                              title="Add to Cart"
-                            >
-                              {addedItems.has(item.slug) ? (
-                                <Check className="w-5 h-5" />
-                              ) : (
-                                <ShoppingCart className="w-5 h-5" />
+                      <div className="p-4 md:p-8 flex flex-col justify-center flex-grow gap-4 relative z-20">
+                        <div className="space-y-4 w-full">
+                          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                            <div className="space-y-2">
+                              {isSpecialItem(item) && (
+                                <span className="bg-[var(--highlight)] text-[var(--primary)] px-2 py-0.5 md:px-3 md:py-1 text-[9px] md:text-[11px] font-modern font-black uppercase tracking-wider rounded-full shadow-[0_4px_10px_rgba(251,189,22,0.4)] mb-2 inline-block border border-[var(--highlight)]/50">
+                                  Special Item
+                                </span>
                               )}
-                            </motion.button>
+                              <Link href={`/${locale}/items/${item.slug}`}>
+                                <h3 className={`font-modern text-xl md:text-3xl font-black leading-tight group-hover:translate-x-1 transition-transform ${isSpecialItem(item) ? 'text-white' : 'text-[var(--text)] group-hover:text-[var(--primary)]'}`}>
+                                  {locale === "en" ? item.name.en : item.name.bn}
+                                </h3>
+                              </Link>
+
+                              <p className={`font-clean text-sm md:text-base max-w-2xl leading-relaxed line-clamp-2 ${isSpecialItem(item) ? 'text-white/80' : 'text-[var(--muted-foreground)]'}`}>
+                                {locale === "en"
+                                  ? item.description.en
+                                  : item.description.bn}
+                              </p>
+
+                              <div className="flex flex-wrap items-center gap-2 mt-2">
+                                <span className={`text-[10px] font-bold px-2 py-1 rounded-sm uppercase font-cinzel tracking-wider border ${isSpecialItem(item) ? 'bg-white/10 text-white/90 border-white/20' : 'bg-[var(--secondary)] text-[var(--secondary-foreground)] border-[var(--border)]'}`}>
+                                  {item.calories || 180} Cal
+                                </span>
+                                <span className={`text-[10px] font-bold px-2 py-1 rounded-sm uppercase font-cinzel tracking-wider border ${isSpecialItem(item) ? 'bg-white/10 text-white/90 border-white/20' : 'bg-[var(--secondary)] text-[var(--secondary-foreground)] border-[var(--border)]'}`}>
+                                  {item.prep_time || "40-50m"}
+                                </span>
+                                <span className={`flex items-center gap-1 text-[10px] font-bold px-2 py-1 rounded-sm uppercase font-cinzel tracking-wider border ${isSpecialItem(item) ? 'bg-white/10 text-white/90 border-white/20' : 'bg-[var(--secondary)] text-[var(--secondary-foreground)] border-[var(--border)]'}`}>
+                                  {item.is_veg !== false ? <Leaf className="w-3 h-3 text-green-500" /> : <Flame className="w-3 h-3 text-red-500" />}
+                                  {item.is_veg !== false ? "Veg" : "Non-Veg"}
+                                </span>
+                              </div>
+
+                              {item.stock !== undefined && item.stock < 10 && (
+                                <div className={`text-xs font-bold animate-pulse mt-1 ${isSpecialItem(item) ? 'text-red-300' : 'text-red-500'}`}>
+                                  Hurry! Only {item.stock} left in stock.
+                                </div>
+                              )}
+                            </div>
+
+                            <div className="flex md:flex-col items-center justify-between gap-4 border-t border-[var(--border)] md:border-none pt-4 md:pt-0 mt-4 md:mt-0 w-full md:w-auto">
+                              <span className={`font-modern font-black text-xl md:text-3xl ${isSpecialItem(item) ? 'text-[var(--highlight)]' : 'text-[var(--primary)]'}`}>
+                                {isSpecialItem(item)
+                                  ? locale === "en"
+                                    ? "Details >>"
+                                    : "বিবরণ"
+                                  : `₹${item.price}`}
+                              </span>
+
+                              {isSpecialItem(item) ? (
+                                <motion.button
+                                  whileTap={{ scale: 0.95 }}
+                                  onClick={(e) => { e.preventDefault(); window.location.href = `/${locale}/items/${item.slug}`; }}
+                                  className="w-full bg-[var(--highlight)] text-[#4b3000] font-modern font-bold px-6 py-3 rounded-full flex items-center justify-center gap-2 hover:bg-white transition-colors"
+                                >
+                                  Order via WhatsApp
+                                </motion.button>
+                              ) : (
+                                <motion.button
+                                  whileTap={{ scale: 0.95 }}
+                                  onClick={(e) => handleAddToCart(e, item)}
+                                  className={`w-full font-modern font-bold px-6 py-3 rounded-full flex items-center justify-center gap-2 transition-all shadow-md stroke-2 ${addedItems.has(item.slug)
+                                    ? "bg-green-600 text-white"
+                                    : "bg-[var(--primary)] text-[var(--primary-foreground)] hover:opacity-90"
+                                    }`}
+                                >
+                                  {addedItems.has(item.slug) ? "Added" : "Add to Cart"}
+                                </motion.button>
+                              )}
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -864,7 +895,7 @@ export function ItemsGrid({ items, locale }: { items: BakeryItem[]; locale: stri
               </div>
 
               {/* Modal Content */}
-               <div className="w-full md:w-1/2 p-5 md:p-12 flex flex-col overflow-y-auto bg-[var(--card)] relative">
+              <div className="w-full md:w-1/2 p-5 md:p-12 flex flex-col overflow-y-auto bg-[var(--card)] relative">
                 {/* Background watermark */}
                 <div className="absolute top-0 right-0 p-10 opacity-[0.03] pointer-events-none">
                   <Heart className="w-64 h-64 text-[var(--foreground)]" />
@@ -872,7 +903,7 @@ export function ItemsGrid({ items, locale }: { items: BakeryItem[]; locale: stri
 
                 <div className="flex justify-between items-start mb-6 relative z-10">
                   <div className="space-y-3">
-                     <h2 className="font-playfair text-2xl md:text-4xl font-bold text-[var(--text)]">
+                    <h2 className="font-playfair text-2xl md:text-4xl font-bold text-[var(--text)]">
                       {locale === "en"
                         ? selectedItem.name.en
                         : selectedItem.name.bn}
@@ -903,7 +934,7 @@ export function ItemsGrid({ items, locale }: { items: BakeryItem[]; locale: stri
                       <span className="block text-[10px] font-cinzel text-[var(--muted-foreground)] uppercase tracking-widest mb-1">
                         Price
                       </span>
-                       <span className="font-prata text-xl md:text-3xl text-[var(--highlight)]">
+                      <span className="font-prata text-xl md:text-3xl text-[var(--highlight)]">
                         {selectedItem.price === 0
                           ? locale === "en"
                             ? "Contact for price"
@@ -921,7 +952,7 @@ export function ItemsGrid({ items, locale }: { items: BakeryItem[]; locale: stri
                     </div>
                   </div>
 
-                   <p className="font-cormorant text-base md:text-xl text-[var(--muted-foreground)] leading-relaxed">
+                  <p className="font-cormorant text-base md:text-xl text-[var(--muted-foreground)] leading-relaxed">
                     {locale === "en"
                       ? selectedItem.description.en
                       : selectedItem.description.bn}
@@ -934,11 +965,10 @@ export function ItemsGrid({ items, locale }: { items: BakeryItem[]; locale: stri
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                     onClick={(e) => handleAddToCart(e, selectedItem)}
-                    className={` flex-1 py-4 rounded-[var(--radius)] border-2 font-cinzel text-sm uppercase tracking-widest flex items-center justify-center gap-2 transition-all duration-300 ${
-                      addedItems.has(selectedItem.slug)
-                        ? "bg-[var(--primary)] border-[var(--primary)] text-[var(--primary-foreground)]"
-                        : "border-[var(--border)] hover:border-[var(--primary)] text-[var(--text)] hover:text-[var(--primary)]"
-                    }`}
+                    className={` flex-1 py-4 rounded-[var(--radius)] border-2 font-cinzel text-sm uppercase tracking-widest flex items-center justify-center gap-2 transition-all duration-300 ${addedItems.has(selectedItem.slug)
+                      ? "bg-[var(--primary)] border-[var(--primary)] text-[var(--primary-foreground)]"
+                      : "border-[var(--border)] hover:border-[var(--primary)] text-[var(--text)] hover:text-[var(--primary)]"
+                      }`}
                   >
                     <AnimatePresence mode="wait">
                       {addedItems.has(selectedItem.slug) ? (

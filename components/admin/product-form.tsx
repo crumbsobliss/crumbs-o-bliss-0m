@@ -33,8 +33,11 @@ const formSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters'),
   description: z.string().optional(),
   price: z.coerce.number().min(0, 'Price must be positive'),
+  discounted_price: z.coerce.number().min(0, 'Discounted Price must be positive').optional(),
   stock: z.coerce.number().int().min(0, 'Stock must be positive'),
   category: z.string().min(1, 'Category is required'),
+  calories: z.string().optional(),
+  is_veg: z.boolean().default(false),
 })
 
 type ProductFormProps = {
@@ -57,8 +60,11 @@ export default function ProductForm({ product, onSuccess }: ProductFormProps) {
       name: product?.name || '',
       description: product?.description || '',
       price: product?.price || 0,
+      discounted_price: product?.discounted_price || 0,
       stock: product?.stock || 0,
       category: product?.category || '',
+      calories: product?.calories || '',
+      is_veg: product?.is_veg || false,
     },
   })
 
@@ -89,28 +95,28 @@ export default function ProductForm({ product, onSuccess }: ProductFormProps) {
 
     let error
     let data
-    
+
     console.log('Submitting product data:', productData)
 
     if (product?.id) {
-       console.log('Updating product ID:', product.id)
-       const { data: updateData, error: updateError } = await supabase
+      console.log('Updating product ID:', product.id)
+      const { data: updateData, error: updateError } = await supabase
         .from('products')
         .update(productData)
         .eq('id', product.id)
         .select()
-       error = updateError
-       data = updateData
+      error = updateError
+      data = updateData
     } else {
-       console.log('Inserting new product')
-       const { data: insertData, error: insertError } = await supabase
+      console.log('Inserting new product')
+      const { data: insertData, error: insertError } = await supabase
         .from('products')
         .insert([productData])
         .select()
-       error = insertError
-       data = insertData
+      error = insertError
+      data = insertData
     }
-    
+
     console.log('Supabase Operation Result:', { data, error })
 
     setLoading(false)
@@ -154,36 +160,36 @@ export default function ProductForm({ product, onSuccess }: ProductFormProps) {
         authenticator={authenticator}
       >
         <div className="space-y-2">
-            <Label>Product Image</Label>
-            {image ? (
-                <div className="relative w-40 h-40 border rounded-lg overflow-hidden group">
-                    <Image src={image.url} alt="Product" fill className="object-cover" />
-                    <button
-                        type="button"
-                        onClick={() => setImage(null)}
-                        className="absolute top-1 right-1 bg-red-500 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
-                    >
-                        <X className="h-4 w-4" />
-                    </button>
+          <Label>Product Image</Label>
+          {image ? (
+            <div className="relative w-40 h-40 border rounded-lg overflow-hidden group">
+              <Image src={image.url} alt="Product" fill className="object-cover" />
+              <button
+                type="button"
+                onClick={() => setImage(null)}
+                className="absolute top-1 right-1 bg-red-500 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+          ) : (
+            <div className="border border-dashed rounded-lg p-4 text-center">
+              {uploading ? (
+                <div className="flex items-center justify-center gap-2 text-muted-foreground">
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  Uploading...
                 </div>
-            ) : (
-                <div className="border border-dashed rounded-lg p-4 text-center">
-                    {uploading ? (
-                        <div className="flex items-center justify-center gap-2 text-muted-foreground">
-                            <Loader2 className="h-4 w-4 animate-spin" />
-                            Uploading...
-                        </div>
-                    ) : (
-                        <IKUpload
-                            fileName="product_"
-                            onError={onError}
-                            onSuccess={onSuccessUpload}
-                            onUploadStart={() => setUploading(true)}
-                            className="w-full text-sm text-muted-foreground file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-primary-foreground hover:file:bg-primary/90"
-                        />
-                    )}
-                </div>
-            )}
+              ) : (
+                <IKUpload
+                  fileName="product_"
+                  onError={onError}
+                  onSuccess={onSuccessUpload}
+                  onUploadStart={() => setUploading(true)}
+                  className="w-full text-sm text-muted-foreground file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-primary-foreground hover:file:bg-primary/90"
+                />
+              )}
+            </div>
+          )}
         </div>
       </IKContext>
 
@@ -202,59 +208,110 @@ export default function ProductForm({ product, onSuccess }: ProductFormProps) {
               </FormItem>
             )}
           />
-          
-          <div className="grid grid-cols-2 gap-4">
-              <FormField
-                control={form.control}
-                name="price"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Price</FormLabel>
-                    <FormControl>
-                      <Input type="number" step="0.01" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="stock"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Stock</FormLabel>
-                    <FormControl>
-                      <Input type="number" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <FormField
+              control={form.control}
+              name="price"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Price</FormLabel>
+                  <FormControl>
+                    <Input type="number" step="0.01" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="discounted_price"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Discounted Price</FormLabel>
+                  <FormControl>
+                    <Input type="number" step="0.01" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="stock"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Stock</FormLabel>
+                  <FormControl>
+                    <Input type="number" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="calories"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Calories (kcal)</FormLabel>
+                  <FormControl>
+                    <Input placeholder="E.g. 250" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
           </div>
 
-          <FormField
-            control={form.control}
-            name="category"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Category</FormLabel>
-                <Select onValueChange={field.onChange} defaultValue={field.value}>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
+            <FormField
+              control={form.control}
+              name="category"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Category</FormLabel>
+                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select a category" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="cakes">Cakes</SelectItem>
+                      <SelectItem value="pizzas">Pizzas</SelectItem>
+                      <SelectItem value="beverages">Beverages</SelectItem>
+                      <SelectItem value="custom">Custom</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="is_veg"
+              render={({ field }) => (
+                <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 md:mt-6">
+                  <div className="space-y-0.5">
+                    <FormLabel>Vegetarian</FormLabel>
+                    <div className="text-sm text-muted-foreground">Is this product vegetarian?</div>
+                  </div>
                   <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select a category" />
-                    </SelectTrigger>
+                    <div className="flex items-center space-x-2">
+                      <input
+                        type="checkbox"
+                        className="h-5 w-5 rounded border-gray-300 text-primary focus:ring-primary"
+                        checked={field.value}
+                        onChange={field.onChange}
+                      />
+                    </div>
                   </FormControl>
-                  <SelectContent>
-                    <SelectItem value="cakes">Cakes</SelectItem>
-                    <SelectItem value="pizzas">Pizzas</SelectItem>
-                    <SelectItem value="beverages">Beverages</SelectItem>
-                    <SelectItem value="custom">Custom</SelectItem>
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+                </FormItem>
+              )}
+            />
+          </div>
 
           <FormField
             control={form.control}

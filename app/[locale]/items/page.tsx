@@ -21,19 +21,24 @@ async function ItemsPage({ params }: { params: Promise<{ locale: string }> }) {
     .from('products')
     .select('*')
     .eq('is_active', true)
-    
+
   // Map Supabase products to the format expected by ItemsGrid (BakeryItem)
   const mappedItems = (products || []).map(p => ({
-      id: p.id,
-      slug: p.id,
-      name: { en: p.name, bn: p.name },
-      description: { en: p.description, bn: p.description },
-      image: p.image_url || '/assets/placeholder.jpg',
-      price: p.price,
-      weight: 100, // Hardcoded for now unless added to schema
-      tags: p.category ? [p.category] : [],
-      currency: "INR" as const,
-      ingredients: []
+    ...p,
+    id: p.id,
+    slug: p.slug || p.id,
+    name: { en: p.name, bn: p.name },
+    description: { en: p.description, bn: p.description },
+    image: p.image_url || '/assets/placeholder.jpg',
+    price: p.price,
+    weight: p.weight || 100, // Hardcoded for now unless added to schema
+    tags: p.category ? [p.category] : [],
+    currency: "INR" as const,
+    ingredients: p.ingredients || [],
+    calories: p.calories,
+    prep_time: p.prep_time,
+    is_veg: p.is_veg,
+    stock: p.stock
   }))
 
   return (

@@ -60,11 +60,11 @@ async function ItemPage({ params }: ItemPageProps) {
   if (error || !item) {
     notFound()
   }
-  
+
   // Increment view_count asynchronously 
   // We can just increment it using a direct RPC if concurrency matters, or simple update:
-  supabase.rpc('increment_product_view', { p_id: item.id }).then(({error})=> {
-    if(error){
+  supabase.rpc('increment_product_view', { p_id: item.id }).then(({ error }) => {
+    if (error) {
       // Fallback if RPC doesn't exist yet
       supabase.from('products').update({ view_count: (item.view_count || 0) + 1 }).eq('id', item.id).then();
     }
@@ -72,16 +72,21 @@ async function ItemPage({ params }: ItemPageProps) {
 
   // Map to the shape expected by ItemPageClient
   const mappedItem = {
+    ...item,
     id: item.id,
-    slug: item.id,
+    slug: item.slug || item.id,
     name: { en: item.name, bn: item.name },
     description: { en: item.description, bn: item.description },
     image: item.image_url || "/assets/placeholder.jpg",
     price: item.price,
     currency: "INR" as const,
-    weight: 100, // Default or fetch from DB if added later
+    weight: item.weight || 100, // Default or fetch from DB if added later
     tags: item.category ? [item.category] : [],
-    ingredients: [],
+    ingredients: item.ingredients || [],
+    calories: item.calories,
+    prep_time: item.prep_time,
+    is_veg: item.is_veg,
+    stock: item.stock
   }
 
   return <ItemPageClient item={mappedItem} locale={locale} />

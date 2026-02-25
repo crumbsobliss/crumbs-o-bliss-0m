@@ -18,15 +18,16 @@ import {
   ChevronRight,
   Share2,
   Copy,
+  ArrowRight,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import type { items } from "@/lib/items";
+import { BakeryItem } from "@/lib/items";
 import { useCart } from "@/lib/cart-context";
 import CustomizationCTA from "@/components/tryCustom";
 import details from '@/config/details.json'
 
 interface ItemPageClientProps {
-  item: (typeof items)[0] | undefined;
+  item: BakeryItem | undefined;
   locale: string;
 }
 
@@ -71,6 +72,7 @@ export default function ItemPageClient({ item, locale }: ItemPageClientProps) {
   const isEnglish = locale === "en";
   const name = isEnglish ? item.name.en : item.name.bn;
   const description = isEnglish ? item.description.en : item.description.bn;
+  const isSpecialItem = item.price === 0 || (item as any).discounted_price === 0;
 
   // --- Share Logic ---
   const handleShare = async () => {
@@ -98,7 +100,7 @@ export default function ItemPageClient({ item, locale }: ItemPageClientProps) {
         textArea.select();
         document.execCommand("copy");
         document.body.removeChild(textArea);
-        
+
         setIsShared(true);
         setTimeout(() => setIsShared(false), 3000);
       } catch (err) {
@@ -135,10 +137,6 @@ Pincode: ${data.pincode}
   };
 
   const handleAddToCart = () => {
-    if(item.price === 0){
-      window.alert("This is a special item without a price. Contact us at whatsapp to know the price!")
-      return;
-    }
     addItem(item, quantity);
     setCartAdded(true);
     setTimeout(() => setCartAdded(false), 2000);
@@ -158,41 +156,66 @@ Pincode: ${data.pincode}
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground pb-20">
+    <div className="min-h-screen bg-background text-foreground pb-32 relative">
+      {/* Layered Curvy Background */}
+      <div className="absolute top-0 left-0 w-full overflow-hidden leading-none z-0">
+        <svg
+          viewBox="0 0 1440 500"
+          className="w-full h-[60vh]"
+          preserveAspectRatio="none"
+        >
+          <path
+            d="M0,200 C400,350 900,50 1440,200 L1440,0 L0,0 Z"
+            fill="var(--primary)"
+            opacity="0.9"
+          />
+          <path
+            d="M0,260 C400,420 900,120 1440,260 L1440,0 L0,0 Z"
+            fill="var(--primary)"
+            opacity="0.6"
+          />
+          <path
+            d="M0,320 C400,500 900,200 1440,320 L1440,0 L0,0 Z"
+            fill="var(--primary)"
+            opacity="0.35"
+          />
+        </svg>
+      </div>
+
       {/* 1. Navigation Breadcrumb */}
-      <div className="container mx-auto px-4 py-6 flex items-center justify-between">
+      <div className="container mx-auto px-4 py-6 flex items-center justify-between relative z-20">
         <Link
           href={`/${locale}/items`}
-          className="inline-flex items-center text-muted-foreground hover:text-primary transition-colors text-sm font-medium group"
+          className="inline-flex items-center text-primary-foreground/90 hover:text-white transition-colors text-sm font-medium group bg-black/10 backdrop-blur-sm px-4 py-2 rounded-full"
         >
           <ArrowLeft className="w-4 h-4 mr-2 group-hover:-translate-x-1 transition-transform" />
           Back to Menu
         </Link>
-        
+
         {/* Secondary Share Button for Mobile Header */}
-        <button 
+        <button
           onClick={handleShare}
-          className="lg:hidden p-2 rounded-full bg-muted hover:bg-primary/10 text-muted-foreground hover:text-primary transition-colors"
+          className="lg:hidden p-3 rounded-full bg-black/10 backdrop-blur-sm hover:bg-black/20 text-white transition-colors"
           aria-label="Share"
         >
-          <Share2 className="w-5 h-5" />
+          <Share2 className="w-4 h-4" />
         </button>
       </div>
 
-      <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
-          {/* 2. Image Section */}
+      <div className="container mx-auto px-4 relative z-10">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start pt-6 lg:pt-12">
+          {/* 2. Image Section (Floating transparently over the curve) */}
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5 }}
-            className="w-full relative aspect-square md:aspect-[4/3] bg-card rounded-2xl overflow-hidden border border-border shadow-sm group"
+            className="w-full relative aspect-square lg:aspect-[4/3] flex items-center justify-center group z-10"
           >
             <Image
               src={item.image || "/placeholder.svg"}
               alt={name}
               fill
-              className="object-contain p-8 group-hover:scale-105 transition-transform duration-500 ease-out"
+              className="object-contain p-2 max-w-[85%] max-h-[85%] sm:max-w-[70%] sm:max-h-[70%] md:max-w-[60%] md:max-h-[60%] lg:max-w-[85%] lg:max-h-[85%] xl:max-w-[75%] xl:max-h-[75%] m-auto group-hover:scale-110 transition-transform duration-500 ease-out z-10 relative drop-shadow-[0_20px_40px_rgba(0,0,0,0.5)]"
               priority
             />
           </motion.div>
@@ -202,172 +225,143 @@ Pincode: ${data.pincode}
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="flex flex-col h-full"
+            className="flex flex-col h-full bg-card rounded-[2rem] p-6 md:p-8 lg:p-10 shadow-xl border border-border/50 relative lg:-mt-12"
           >
             <div className="flex justify-between items-start gap-4 mb-4">
-              <h1 className="text-4xl md:text-5xl font-serif font-bold text-primary leading-tight">
+              <h1 className="text-3xl md:text-4xl lg:text-5xl font-black font-modern text-[var(--primary)] leading-tight">
                 {name}
               </h1>
               {/* Desktop Share Button */}
-              <button 
+              <button
                 onClick={handleShare}
-                className="hidden lg:flex items-center gap-2 px-4 py-2 rounded-full border border-border text-sm font-medium hover:bg-muted transition-colors"
+                className="hidden lg:flex items-center justify-center p-3 rounded-full bg-muted text-muted-foreground hover:bg-[var(--primary)]/10 hover:text-[var(--primary)] transition-colors"
+                aria-label="Share"
               >
-                <Share2 className="w-4 h-4 text-primary" />
-                Share
+                <Share2 className="w-5 h-5" />
               </button>
             </div>
 
-            <div className="flex items-end gap-4 mb-6 border-b border-border pb-6">
-              {item.price !== 0 && ( <p className="text-3xl font-bold text-foreground">
-                ₹{item.price}
-              </p>)}
-              {item.price === 0 && ( <p className="text-3xl font-bold text-foreground">
-                Please Contact Us For Price
-              </p>)}
-              {item.weight && (
-                <div className="flex items-center gap-1.5 text-muted-foreground text-sm mb-1.5 px-3 py-1 bg-muted rounded-full">
-                  <Flame className="w-4 h-4 text-orange-500" />
-                  <span>{item.weight} grams</span>
-                </div>
-              )}
-            </div>
-
-            <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
+            <p className="text-base md:text-lg text-muted-foreground mb-8 leading-relaxed font-clean">
               {description}
             </p>
 
-            {/* Info Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-              <div className="bg-card p-4 rounded-xl border border-border">
-                <div className="flex items-center gap-2 mb-3 text-sm font-medium text-foreground">
-                  <Leaf className="w-4 h-4 text-green-500" />
-                  {t("itemDetails.ingredients")}
+            {/* Cinematic Info Presentation: Calories, Time, Veg */}
+            <div className="flex flex-wrap items-center gap-3 md:gap-5 mb-8 mt-2">
+              {/* Calories */}
+              <div className="flex items-center gap-3 bg-[var(--background)] px-5 py-2.5 rounded-full border border-[var(--border)] shadow-sm hover:shadow-md transition-shadow">
+                <div className="p-2 bg-orange-100 dark:bg-orange-900/30 rounded-full">
+                  <Flame className="w-5 h-5 text-orange-500" />
                 </div>
-                <div className="flex flex-wrap gap-2">
-                  {item.ingredients.map((ing, idx) => (
-                    <span
-                      key={idx}
-                      className="text-xs px-2.5 py-1 rounded-md bg-background border border-border text-muted-foreground"
-                    >
-                      {ing}
-                    </span>
-                  ))}
+                <div className="flex flex-col">
+                  <span className="text-[10px] text-[var(--muted-foreground)] uppercase tracking-widest font-bold">Energy</span>
+                  <span className="text-sm font-bold text-[var(--foreground)] font-modern">{item.calories || "180"} kcal</span>
                 </div>
               </div>
 
-              <div className="bg-card p-4 rounded-xl border border-border">
-                <div className="flex items-center gap-2 mb-3 text-sm font-medium text-foreground">
-                  <Tag className="w-4 h-4 text-blue-500" />
-                  {t("itemDetails.tags")}
+              {/* Prep Time */}
+              <div className="flex items-center gap-3 bg-[var(--background)] px-5 py-2.5 rounded-full border border-[var(--border)] shadow-sm hover:shadow-md transition-shadow">
+                <div className="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-full">
+                  <svg className="w-5 h-5 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
                 </div>
-                <div className="flex flex-wrap gap-2">
-                  {item.tags.map((tag) => (
-                    <span
-                      key={tag}
-                      className="text-xs font-medium px-2.5 py-1 rounded-full bg-accent/20 text-accent-background border border-accent/20"
-                    >
-                      {tag}
-                    </span>
-                  ))}
+                <div className="flex flex-col">
+                  <span className="text-[10px] text-[var(--muted-foreground)] uppercase tracking-widest font-bold">Prep Time</span>
+                  <span className="text-sm font-bold text-[var(--foreground)] font-modern">{item.prep_time || "40-50 Min"}</span>
+                </div>
+              </div>
+
+              {/* Veg/Non-Veg */}
+              <div className="flex items-center gap-3 bg-[var(--background)] px-5 py-2.5 rounded-full border border-[var(--border)] shadow-sm hover:shadow-md transition-shadow">
+                <div className={`p-2 rounded-full ${item.is_veg !== false ? 'bg-green-100 dark:bg-green-900/30' : 'bg-red-100 dark:bg-red-900/30'}`}>
+                  {item.is_veg !== false ? <Leaf className="w-5 h-5 text-green-600" /> : <Flame className="w-5 h-5 text-red-600" />}
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-[10px] text-[var(--muted-foreground)] uppercase tracking-widest font-bold">Type</span>
+                  <span className={`text-sm font-bold font-modern ${item.is_veg !== false ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
+                    {item.is_veg !== false ? "100% Veg" : "Non-Veg"}
+                  </span>
                 </div>
               </div>
             </div>
 
-            {/* Actions Area */}
-            <div className="mt-auto space-y-4 pt-4">
-              <div className="flex items-center gap-4 mb-4">
-                <span className="text-sm font-medium text-muted-foreground">
-                  Quantity
-                </span>
-                <div className="flex items-center border border-input rounded-lg bg-card shadow-sm">
-                  <button
-                    onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                    className="w-10 h-10 flex items-center justify-center text-foreground hover:bg-muted transition-colors rounded-l-lg"
-                  >
-                    −
-                  </button>
-                  <span className="w-10 text-center font-medium text-lg">
-                    {quantity}
-                  </span>
-                  <button
-                    onClick={() => setQuantity(quantity + 1)}
-                    className="w-10 h-10 flex items-center justify-center text-foreground hover:bg-muted transition-colors rounded-r-lg"
-                  >
-                    +
-                  </button>
-                </div>
+            {/* Stock Warning */}
+            {item.stock !== undefined && item.stock < 10 && (
+              <div className="flex items-center gap-2 text-red-600 dark:text-red-400 font-bold mb-6 animate-pulse bg-red-50 dark:bg-red-900/20 w-fit px-4 py-2 rounded-full border border-red-200 dark:border-red-800">
+                <Flame className="w-4 h-4" />
+                Hurry up! Only {item.stock} left in stock.
               </div>
+            )}
 
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                {/* Share Button (Action Row) */}
-                <motion.button
-                  whileTap={{ scale: 0.98 }}
-                  onClick={handleShare}
-                  className={`h-14 rounded-xl font-bold text-base flex items-center justify-center gap-2 transition-all border border-border ${
-                    isShared ? "bg-blue-50 text-blue-600 border-blue-200" : "bg-card text-foreground hover:bg-muted"
-                  }`}
-                >
-                  <AnimatePresence mode="wait">
-                    {isShared ? (
-                      <motion.div
-                        key="copied"
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -10 }}
-                        className="flex items-center gap-2"
-                      >
-                        <Copy className="w-5 h-5" />
-                        <span>Link Copied!</span>
-                      </motion.div>
-                    ) : (
-                      <motion.div
-                        key="share-btn"
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -10 }}
-                        className="flex items-center gap-2"
-                      >
-                        <Share2 className="w-5 h-5 text-primary" />
-                        <span>Share</span>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </motion.button>
 
-                <motion.button
-                  whileTap={{ scale: 0.98 }}
-                  onClick={handleAddToCart}
-                  className={`${item.price===0?"hidden":""} h-14 rounded-xl font-bold text-base flex items-center justify-center gap-2 transition-all shadow-md ${
-                    cartAdded
-                      ? "bg-green-600 text-white"
-                      : "bg-card text-foreground border border-border hover:bg-accent hover:text-accent-foreground"
-                  }`}
-                >
-                  {cartAdded ? (
-                    <div className="flex items-center gap-2">
-                      <Check className="w-5 h-5" />
-                      <span>{t("itemDetails.cartAdded")}</span>
-                    </div>
-                  ) : (
-                    <div className="flex items-center gap-2">
-                      <ShoppingCart className="w-5 h-5" />
-                      <span>{t("itemDetails.addToCart")}</span>
+            {/* Actions Area */}
+            {/* Actions Area (Quantity only in the card) */}
+            <div className="mt-auto pt-6 border-t border-border">
+              <div className="flex flex-col gap-2">
+                <span className="text-sm font-bold text-foreground font-modern uppercase tracking-wider mb-2">
+                  Select Variant / Quantity
+                </span>
+                <div className="flex flex-wrap items-center gap-3">
+                  <div className="flex items-center border-[3px] border-[var(--primary)] rounded-full bg-card overflow-hidden">
+                    <button
+                      onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                      className="w-12 h-10 flex items-center justify-center text-foreground hover:bg-[var(--primary)]/10 transition-colors"
+                    >
+                      −
+                    </button>
+                    <span className="w-10 text-center font-bold text-lg bg-[var(--primary)] text-white h-full flex items-center justify-center">
+                      {quantity}
+                    </span>
+                    <button
+                      onClick={() => setQuantity(quantity + 1)}
+                      className="w-12 h-10 flex items-center justify-center text-foreground hover:bg-[var(--primary)]/10 transition-colors"
+                    >
+                      +
+                    </button>
+                  </div>
+                  {item.weight && (
+                    <div className="px-4 py-2 bg-[var(--primary)]/10 text-[var(--primary)] font-bold rounded-full text-sm">
+                      {item.weight}g
                     </div>
                   )}
-                </motion.button>
-
-                <motion.button
-                  whileTap={{ scale: 0.98 }}
-                  onClick={handleBuyClick}
-                  className="h-14 bg-primary text-primary-foreground font-bold text-base rounded-xl hover:opacity-90 transition-opacity shadow-lg shadow-primary/20 flex items-center justify-center gap-2"
-                >
-                  <MessageCircle className="w-5 h-5" />
-                  {t("itemDetails.orderWhatsApp")}
-                </motion.button>
+                </div>
               </div>
             </div>
           </motion.div>
+        </div>
+      </div>
+
+      {/* Sticky Bottom Action Bar */}
+      <div className="fixed bottom-4 left-0 right-0 z-50 px-4 pointer-events-none pb-safe">
+        <div className="max-w-[28rem] mx-auto bg-[var(--highlight)] text-[#4b3000] p-3 rounded-[2rem] shadow-[0_10px_40px_rgba(251,189,22,0.4)] flex items-center justify-between pointer-events-auto transition-colors">
+          <div className="pl-4 flex flex-col justify-center">
+            {isSpecialItem ? (
+              <span className="text-lg font-black font-modern leading-tight">
+                Contact Us
+              </span>
+            ) : (
+              <div className="flex items-baseline gap-1">
+                <span className="text-2xl font-black font-modern leading-tight pr-1">₹{item.price * quantity}</span>
+                <span className="text-[10px] font-bold opacity-75 uppercase tracking-widest pl-2 border-l border-[#4b3000]/20 hidden sm:block">Total</span>
+              </div>
+            )}
+          </div>
+
+          {isSpecialItem ? (
+            <button
+              onClick={() => setShowModal(true)}
+              className="bg-[var(--card)] text-[var(--foreground)] font-bold px-6 py-3 rounded-full flex items-center gap-2 hover:scale-105 transition-transform border border-[var(--border)]"
+            >
+              Order via WhatsApp <MessageCircle className="w-5 h-5 text-green-600" />
+            </button>
+          ) : (
+            <button
+              onClick={handleAddToCart}
+              className="bg-[var(--card)] text-[var(--foreground)] font-bold px-8 py-3 rounded-full flex items-center gap-2 shadow-sm hover:scale-105 hover:shadow-md transition-all whitespace-nowrap border border-[var(--border)]"
+            >
+              Order Now! <ArrowRight className="w-5 h-5" />
+            </button>
+          )}
         </div>
       </div>
 
