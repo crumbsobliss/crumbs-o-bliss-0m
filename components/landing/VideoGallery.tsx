@@ -31,7 +31,7 @@ export function VideoGallery() {
             Featured Reel
           </div>
           <h2 className="text-4xl md:text-5xl xl:text-7xl font-bold text-foreground font-display leading-[1.1] mb-6 drop-shadow-sm">
-            Watch the <br /><span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">Experience</span>
+            Watch the <br /><span className="text-transparent bg-clip-text bg-yellow-500">Experience</span>
           </h2>
           <p className="text-muted-foreground text-lg md:text-xl font-light max-w-lg mx-auto lg:mx-0">
             Dive into the art of exquisite baking. Discover the meticulous passion and behind-the-scenes magic of Crumbs O Bliss.

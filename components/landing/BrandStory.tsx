@@ -11,12 +11,12 @@ interface BrandStoryProps {
 
 export function BrandStory({ locale, t }: BrandStoryProps) {
   return (
-    <section className="relative py-28 md:py-40 lg:py-48 px-4 md:px-6 lg:px-8 bg-gradient-to-br from-primary via-primary/90 to-secondary text-primary-foreground overflow-hidden">
+    <section className="relative py-28 md:py-40 lg:py-48 px-4 md:px-6 lg:px-8 bg-primary text-primary-foreground overflow-hidden">
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-0 left-0 w-full h-full bg-[url('/noise.png')] opacity-10 mix-blend-overlay"></div>
       </div>
-      
-      <motion.div 
+
+      <motion.div
         initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}

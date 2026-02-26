@@ -1,7 +1,7 @@
 "use client";
 
 import { Suspense, useRef } from "react";
-import dynamic from "next/dynamic"; 
+import dynamic from "next/dynamic";
 import { useTranslations } from "next-intl";
 import { useInView } from "framer-motion";
 import { CategoryShowcase } from "./CategoryShowcase";
@@ -13,6 +13,7 @@ import { BrandStory } from "./landing/BrandStory";
 import { VisitSection } from "./landing/VisitSection";
 import { VideoGallery } from "./landing/VideoGallery";
 import { FeaturedSection } from "./landing/FeaturedSection";
+import { SvgDivider } from "./ui/SvgDivider";
 
 // Lazy load heavy 3D components with dynamic import
 const CircularGallery = dynamic(() => import("./CircularGallery"), {
@@ -46,22 +47,45 @@ export function LandingPage({ locale, featuredItems, bakeryGalleryItems }: Landi
       {/* Hero Section */}
       <HeroSection locale={locale} t={t} />
 
-      {/* Featured Products */}
-      <FeaturedSection items={featuredItems} locale={locale} />
+      {/* 2. Featured Products - Green */}
+      <div className="bg-[var(--primary)] text-primary-foreground relative pt-12 pb-8 z-20">
+        <div className="absolute top-0 left-0 w-full -translate-y-[98%]">
+          <SvgDivider type="smoothBlue" className="w-full h-[60px] md:h-[120px]" />
+        </div>
+        <FeaturedSection items={featuredItems} locale={locale} />
+      </div>
 
-      {/* Stats Bar */}
-      <StatsBar />
+      {/* 3. Stats Bar - Yellow */}
+      <div className="bg-[var(--highlight)] text-[#4b3000] relative py-8 z-30">
+        {/* Top drippy transition (Yellow pointing UP over Green) */}
+        <div className="absolute top-0 left-0 w-full -translate-y-[98%] rotate-180">
+          <SvgDivider type="drippyPink" className="w-full h-[60px] md:h-[120px]" />
+        </div>
+        <StatsBar />
+        {/* Bottom drippy transition (Yellow pointing DOWN over Pink) */}
+        <div className="absolute bottom-0 left-0 w-full translate-y-[98%]">
+          <SvgDivider type="drippyPink" className="w-full h-[60px] md:h-[120px]" />
+        </div>
+      </div>
 
-      {/* Featured Categories */}
-      <CategoryShowcase />
+      {/* 4. Featured Categories - Pink */}
+      <div className="bg-[var(--accent)] text-white relative pt-24 pb-12 z-10">
+        <CategoryShowcase />
+        {/* Bottom wavy transition (Pink pointing DOWN over White Video section) */}
+        <div className="absolute bottom-0 left-0 w-full translate-y-[98%]">
+          <SvgDivider type="wavyRed" className="w-full h-[60px] md:h-[120px]" />
+        </div>
+      </div>
 
       {/* Video Gallery - Lazy loaded on scroll */}
-      <Suspense fallback={<div className="h-96 md:h-[600px] bg-muted animate-pulse" />}>
-        <VideoGallery />
-      </Suspense>
+      <div className="pt-32 md:pt-48 relative z-0">
+        <Suspense fallback={<div className="h-96 md:h-[600px] bg-muted animate-pulse" />}>
+          <VideoGallery />
+        </Suspense>
+      </div>
 
       {/* Circular Gallery - Lazy loaded with dynamic import and scroll detection */}
-      <div 
+      <div
         ref={galleryRef}
         className="h-[400px] md:h-[550px] lg:h-[600px] relative bg-gradient-to-b from-transparent to-background/50 overflow-hidden"
       >
@@ -77,13 +101,31 @@ export function LandingPage({ locale, featuredItems, bakeryGalleryItems }: Landi
       </div>
 
       {/* Testimonials */}
-      <TestimonialSection testimonials={testimonials} />
+      <div className="relative z-10">
+        <TestimonialSection testimonials={testimonials} />
+      </div>
 
       {/* Brand Story */}
-      <BrandStory locale={locale} t={t} />
+      <div className="relative z-20">
+        {/* Wavy top transition (Green waving UP into Testimonials White) */}
+        <div className="absolute top-0 left-0 w-full -translate-y-[98%]">
+          <SvgDivider type="smoothBlue" className="w-full h-[60px] md:h-[120px]" />
+        </div>
+        <BrandStory locale={locale} t={t} />
+        {/* Wavy bottom transition (Green waving DOWN into Visit White) */}
+        <div className="absolute bottom-0 left-0 w-full translate-y-[98%] rotate-180">
+          <SvgDivider type="smoothBlue" className="w-full h-[60px] md:h-[120px]" />
+        </div>
+      </div>
 
       {/* Visit Section */}
-      <VisitSection locale={locale} />
+      <div className="relative z-10 pt-20 md:pt-32">
+        {/* Decorative outline wave above the visit section */}
+        <div className="absolute top-32 left-0 w-full flex items-end justify-center pointer-events-none opacity-40">
+          <SvgDivider type="outlineWavy" className="h-[40px] md:h-[80px] text-[var(--accent)]" />
+        </div>
+        <VisitSection locale={locale} />
+      </div>
     </div>
   );
 }

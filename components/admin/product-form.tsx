@@ -38,6 +38,7 @@ const formSchema = z.object({
   category: z.string().min(1, 'Category is required'),
   calories: z.string().optional(),
   is_veg: z.boolean().default(false),
+  color: z.string().optional(),
 })
 
 type ProductFormProps = {
@@ -65,6 +66,7 @@ export default function ProductForm({ product, onSuccess }: ProductFormProps) {
       category: product?.category || '',
       calories: product?.calories || '',
       is_veg: product?.is_veg || false,
+      color: product?.color || '',
     },
   })
 
@@ -312,6 +314,34 @@ export default function ProductForm({ product, onSuccess }: ProductFormProps) {
               )}
             />
           </div>
+
+          <FormField
+            control={form.control}
+            name="color"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Background Color</FormLabel>
+                <FormControl>
+                  <div className="flex items-center gap-3">
+                    <Input
+                      type="color"
+                      {...field}
+                      value={field.value || "#ffffff"}
+                      className="w-14 h-10 p-1 cursor-pointer"
+                    />
+                    <Input
+                      type="text"
+                      placeholder="#HexCode (Optional)"
+                      {...field}
+                      value={field.value || ""}
+                      className="flex-1"
+                    />
+                  </div>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
           <FormField
             control={form.control}

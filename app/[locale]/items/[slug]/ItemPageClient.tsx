@@ -112,15 +112,16 @@ export default function ItemPageClient({ item, locale }: ItemPageClientProps) {
   // --- WhatsApp & Storage Logic ---
   const generateWhatsAppLink = (data: UserData) => {
     const phoneNumber = details.contact.primaryPhone;
+    const currentPrice = item.discounted_price && item.discounted_price > 0 && item.discounted_price < item.price ? item.discounted_price : item.price;
     const message = `
 *New Order Request* 🍞
 
 *Item Details:*
 Product: ${item.name.en}
 Id: ${item.id}
-Price: ₹${item.price}
+Price: ₹${currentPrice}
 Qty: ${quantity}
-Total: ₹${item.price * quantity}
+Total: ₹${currentPrice * quantity}
 
 *Customer Details:*
 Name: ${data.name}
@@ -166,17 +167,17 @@ Pincode: ${data.pincode}
         >
           <path
             d="M0,200 C400,350 900,50 1440,200 L1440,0 L0,0 Z"
-            fill="var(--primary)"
+            fill={item.color || "var(--primary)"}
             opacity="0.9"
           />
           <path
             d="M0,260 C400,420 900,120 1440,260 L1440,0 L0,0 Z"
-            fill="var(--primary)"
+            fill={item.color || "var(--primary)"}
             opacity="0.6"
           />
           <path
             d="M0,320 C400,500 900,200 1440,320 L1440,0 L0,0 Z"
-            fill="var(--primary)"
+            fill={item.color || "var(--primary)"}
             opacity="0.35"
           />
         </svg>
@@ -340,8 +341,15 @@ Pincode: ${data.pincode}
                 Contact Us
               </span>
             ) : (
-              <div className="flex items-baseline gap-1">
-                <span className="text-2xl font-black font-modern leading-tight pr-1">₹{item.price * quantity}</span>
+              <div className="flex items-baseline gap-2">
+                {item.discounted_price && item.discounted_price > 0 && item.discounted_price < item.price ? (
+                  <>
+                    <span className="text-sm font-bold opacity-60 line-through decoration-2 decoration-red-500/50 pr-1">₹{item.price * quantity}</span>
+                    <span className="text-2xl font-black font-modern leading-tight pr-1 text-yellow-900 drop-shadow-sm">₹{item.discounted_price * quantity}</span>
+                  </>
+                ) : (
+                  <span className="text-2xl font-black font-modern leading-tight pr-1">₹{item.price * quantity}</span>
+                )}
                 <span className="text-[10px] font-bold opacity-75 uppercase tracking-widest pl-2 border-l border-[#4b3000]/20 hidden sm:block">Total</span>
               </div>
             )}
@@ -359,7 +367,7 @@ Pincode: ${data.pincode}
               onClick={handleAddToCart}
               className="bg-[var(--card)] text-[var(--foreground)] font-bold px-8 py-3 rounded-full flex items-center gap-2 shadow-sm hover:scale-105 hover:shadow-md transition-all whitespace-nowrap border border-[var(--border)]"
             >
-              Order Now! <ArrowRight className="w-5 h-5" />
+              Add to cart! <ArrowRight className="w-5 h-5" />
             </button>
           )}
         </div>

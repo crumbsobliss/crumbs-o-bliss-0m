@@ -14,6 +14,7 @@ export interface BakeryItem {
     prep_time?: string;
     is_veg?: boolean;
     stock?: number;
+    color?: string;
 }
 
 // export const items: BakeryItem[] = [

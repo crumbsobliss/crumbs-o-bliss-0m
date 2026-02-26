@@ -40,7 +40,7 @@ function CartPageContent({ locale }: { locale: string }) {
     }
 
     if (!userDetails || !userDetails.name || !userDetails.mobile || !userDetails.address) {
-      alert(t("cart.empty") || "Please fill your profile details first to place an order.");
+      alert("Please fill your profile details first to place an order.");
       router.push(`/${locale}/profile`);
       return;
     }

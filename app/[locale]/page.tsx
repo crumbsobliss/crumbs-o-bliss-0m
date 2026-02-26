@@ -90,7 +90,7 @@ const jsonLd = {
         },
       ],
       priceRange: "₹₹",
-      servesCuisine: ["Cake","Pizza", "Bakery"],
+      servesCuisine: ["Cake", "Pizza", "Bakery"],
     },
   ],
 };
@@ -112,16 +112,18 @@ export default async function HomePage({
   // Prepare data for the client component
   // Map Supabase product to the expected format (BakeryItem interface match)
   const featuredItems = products?.map((p: any) => ({
-      id: p.id,
-      slug: p.id, // using id as slug for now or we need a slug field in DB
-      name: { en: p.name, bn: p.name }, // naive localization if DB doesn't support it yet
-      description: { en: p.description || '', bn: p.description || '' },
-      price: p.price,
-      currency: "INR",
-      image: p.image_url || "/assets/products/landing-card-1.webp",
-      tags: [p.category || 'general'],
-      weight: 100, // adding dummy values to satisfy BakeryItem interface if needed
-      ingredients: []
+    id: p.id,
+    slug: p.id, // using id as slug for now or we need a slug field in DB
+    name: { en: p.name, bn: p.name }, // naive localization if DB doesn't support it yet
+    description: { en: p.description || '', bn: p.description || '' },
+    price: p.price,
+    color: p.color,
+    discounted_price: p.discounted_price,
+    currency: "INR",
+    image: p.image_url || "/assets/products/landing-card-1.webp",
+    tags: [p.category || 'general'],
+    weight: 100, // adding dummy values to satisfy BakeryItem interface if needed
+    ingredients: []
   })) || [];
 
   const bakeryGalleryItems = [

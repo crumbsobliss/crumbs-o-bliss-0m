@@ -45,18 +45,18 @@ export function HeroSection({ locale, t }: HeroSectionProps) {
         variants={staggerContainer}
         className="relative z-10 max-w-7xl mx-auto text-center pt-20 md:pt-24 pb-12"
       >
-        {/* Badge */}
+        {/* Badge
         <motion.div className="flex justify-center mb-8 md:mb-12" variants={fadeInUp}>
           <div className="group inline-flex items-center gap-2 md:gap-3 px-6 py-2.5 md:px-8 md:py-3 glass-effect text-primary text-xs md:text-sm tracking-[0.15em] md:tracking-[0.2em] uppercase font-bold shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 font-luxury">
             <Star className="w-3.5 h-3.5 md:w-4 md:h-4 text-primary" />
             <span>{t("hero.cta")}</span>
           </div>
-        </motion.div>
+        </motion.div> */}
 
         {/* Heading */}
         <motion.div variants={fadeInUp} className="relative inline-block mb-4 md:mb-6 px-4 py-4 w-full">
           <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black text-balance bg-clip-text text-transparent bg-gradient-to-br from-[var(--vivid-pink)] to-[var(--accent)] tracking-tighter leading-tight drop-shadow-sm font-modern">
-            Explore Our Cake Haven!
+            Let's Bliss Together
           </h1>
         </motion.div>
 
@@ -70,7 +70,7 @@ export function HeroSection({ locale, t }: HeroSectionProps) {
           <div className="relative w-56 h-56 md:w-[22rem] md:h-[22rem] lg:w-[26rem] lg:h-[26rem] z-20 -mb-24 md:-mb-32">
             <Image
               src="/icon.png"
-              alt="Artisan Cake"
+              alt="Crumbs O' Bliss"
               fill
               sizes="(max-width: 768px) 250px, 400px"
               className="object-contain drop-shadow-2xl"

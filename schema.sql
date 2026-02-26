@@ -15,6 +15,7 @@ create table products (
   stock integer default 0,
   image_url text, -- Store the full ImageKit URL
   image_file_path text, -- Store the file path in ImageKit for easier deletion
+  color text, -- Store the product background color
   category text,
   view_count integer default 0,
   is_active boolean default true,
