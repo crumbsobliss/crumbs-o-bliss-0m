@@ -130,65 +130,68 @@ export default async function DashboardPage() {
     .limit(5);
 
   return (
-    <div className="flex flex-col gap-6 w-full pb-12 animate-in fade-in duration-500">
-      {/* Header Section */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b">
+    <div className="flex flex-col gap-8 w-full pb-12 animate-in fade-in slide-in-from-bottom-4 duration-700">
+      {/* Friendly Header */}
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight text-foreground">
-            System Overview
+          <h1 className="text-3xl font-bold tracking-tight text-foreground">
+            Hello, Admin 👋
           </h1>
-          <p className="text-sm text-muted-foreground mt-1">
-            Real-time administrative metrics and status
+          <p className="text-muted-foreground mt-2 max-w-lg">
+            Here's what's happening with Crumbs O' Bliss today. You're doing great!
           </p>
         </div>
-        <div className="self-start sm:self-auto">
-          <ExportCsvButton />
+        <div className="flex items-center gap-3">
+            <ExportCsvButton />
         </div>
       </div>
 
-      {/* Primary Metrics */}
-      <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
-        <Card className="rounded-sm shadow-none border">
+      {/* Key Stats Grid */}
+      <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
+        <Card className="rounded-2xl shadow-sm border-none bg-gradient-to-br from-blue-500/10 to-transparent">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground uppercase tracking-wider">Revenue (Today)</CardTitle>
-            <DollarSign className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-[10px] font-bold text-blue-600 uppercase tracking-widest">Today's Sales</CardTitle>
+            <DollarSign className="h-4 w-4 text-blue-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">₹{revenueToday.toLocaleString()}</div>
-            <p className="text-xs text-muted-foreground mt-1">Since 00:00</p>
+            <div className="text-3xl font-bold italic">₹{revenueToday.toLocaleString()}</div>
+            <p className="text-xs text-muted-foreground mt-2 flex items-center gap-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" />
+                Updating live
+            </p>
           </CardContent>
         </Card>
 
-        <Card className="rounded-sm shadow-none border">
+        <Card className="rounded-2xl shadow-sm border-none bg-gradient-to-br from-purple-500/10 to-transparent">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground uppercase tracking-wider">Revenue (Month)</CardTitle>
-            <Activity className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-[10px] font-bold text-purple-600 uppercase tracking-widest">Monthly Goal</CardTitle>
+            <Activity className="h-4 w-4 text-purple-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">₹{revenueMonth.toLocaleString()}</div>
-            <p className="text-xs text-muted-foreground mt-1">Current billing cycle</p>
+            <div className="text-3xl font-bold italic">₹{revenueMonth.toLocaleString()}</div>
+            <p className="text-xs text-muted-foreground mt-2">Current month total</p>
           </CardContent>
         </Card>
 
-        <Card className="rounded-sm shadow-none border">
+        <Card className="rounded-2xl shadow-sm border-none bg-gradient-to-br from-orange-500/10 to-transparent">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground uppercase tracking-wider">Total Orders</CardTitle>
-            <CreditCard className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-[10px] font-bold text-orange-600 uppercase tracking-widest">Total Orders</CardTitle>
+            <ShoppingBag className="h-4 w-4 text-orange-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{allOrders?.length || 0}</div>
-            <p className="text-xs text-muted-foreground mt-1">System total records</p>
+            <div className="text-3xl font-bold italic">{allOrders?.length || 0}</div>
+            <p className="text-xs text-muted-foreground mt-2">Lifetime successful orders</p>
           </CardContent>
         </Card>
 
-        <Card className="rounded-sm shadow-none border">
+        <Card className="rounded-2xl shadow-sm border-none bg-gradient-to-br from-green-500/10 to-transparent">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground uppercase tracking-wider">Traffic</CardTitle>
-            <Eye className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-[10px] font-bold text-green-600 uppercase tracking-widest">Our Visitors</CardTitle>
+            <Users className="h-4 w-4 text-green-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{totalPageViews > 0 ? totalPageViews.toLocaleString() : '---'}</div>
-            <p className="text-xs text-muted-foreground mt-1">Total impressions</p>
+            <div className="text-3xl font-bold italic">{totalPageViews > 0 ? totalPageViews.toLocaleString() : '---'}</div>
+            <p className="text-xs text-muted-foreground mt-2">Total page impressions</p>
           </CardContent>
         </Card>
       </div>
@@ -198,84 +201,90 @@ export default async function DashboardPage() {
         <DashboardCharts revenueByDay={revenueChartData} ordersByStatus={statusChartData} />
       </div>
 
-      {/* Lists Row */}
-      <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
-        <Card className="rounded-sm shadow-none border col-span-1 lg:col-span-1">
-          <CardHeader className="border-b pb-4 mb-4">
-            <CardTitle className="text-base font-semibold">Recent Transactions</CardTitle>
+      {/* Informative Lists */}
+      <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
+        <Card className="rounded-2xl shadow-sm border-none bg-card">
+          <CardHeader className="pb-4">
+            <CardTitle className="text-lg font-bold">Latest Orders</CardTitle>
+            <CardDescription className="text-xs">Your most recent customers</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
+            <div className="space-y-5">
               {recentOrders?.map((order: any) => (
-                <div key={order.id} className="flex justify-between items-start text-sm pb-3 border-b last:border-0 last:pb-0">
-                  <div className="space-y-1">
-                    <span className="font-medium">{order.user_name || 'System User'}</span>
-                    <p className="text-xs text-muted-foreground font-mono">ID: {order.ticket_id}</p>
+                <div key={order.id} className="flex justify-between items-start text-sm group">
+                  <div className="space-y-0.5">
+                    <span className="font-bold text-foreground block group-hover:text-primary transition-colors">{order.user_name || 'Anonymous'}</span>
+                    <p className="text-[10px] text-muted-foreground font-mono">#{order.ticket_id}</p>
                   </div>
                   <div className="text-right">
-                    <span className="font-medium">₹{order.total_amount}</span>
-                    <p className="text-[10px] text-muted-foreground mt-0.5">{new Date(order.created_at).toLocaleDateString()}</p>
+                    <span className="font-bold text-primary">₹{order.total_amount}</span>
+                    <p className="text-[10px] text-muted-foreground mt-0.5 uppercase tracking-tighter">{new Date(order.created_at).toLocaleDateString()}</p>
                   </div>
                 </div>
               ))}
-              {!recentOrders?.length && <div className="text-sm text-muted-foreground">No records.</div>}
+              {!recentOrders?.length && <div className="text-sm text-muted-foreground py-10 text-center italic">No orders yet.</div>}
             </div>
           </CardContent>
         </Card>
 
-        <Card className="rounded-sm shadow-none border col-span-1 lg:col-span-1">
-          <CardHeader className="border-b pb-4 mb-4">
-            <CardTitle className="text-base font-semibold">Volume Leaders</CardTitle>
-            <CardDescription className="text-xs">Based on cleared orders</CardDescription>
+        <Card className="rounded-2xl shadow-sm border-none bg-card">
+          <CardHeader className="pb-4">
+            <CardTitle className="text-lg font-bold">Top Sellers</CardTitle>
+            <CardDescription className="text-xs">Items people love the most</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
               {topSelling.map((item: { name: string, count: number }, i: number) => (
                 <div key={i} className="flex justify-between items-center text-sm">
-                  <span className="truncate pr-2 font-medium">{item.name}</span>
-                  <span className="text-[10px] text-muted-foreground border px-1.5 py-0.5 rounded-[2px] bg-muted/30 whitespace-nowrap">{item.count} units</span>
+                  <span className="truncate pr-4 font-medium">{item.name}</span>
+                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-primary/10 text-primary whitespace-nowrap">{item.count} Sold</span>
                 </div>
               ))}
-              {!topSelling.length && <div className="text-sm text-muted-foreground">No data.</div>}
+              {!topSelling.length && <div className="text-sm text-muted-foreground py-10 text-center italic">No sales data.</div>}
             </div>
           </CardContent>
         </Card>
 
-        <Card className="rounded-sm shadow-none border col-span-1 lg:col-span-1">
-          <CardHeader className="border-b pb-4 mb-4">
-            <CardTitle className="text-base font-semibold">Traffic Leaders</CardTitle>
-            <CardDescription className="text-xs">Based on views metric</CardDescription>
+        <Card className="rounded-2xl shadow-sm border-none bg-card">
+          <CardHeader className="pb-4">
+            <CardTitle className="text-lg font-bold">Popular Items</CardTitle>
+            <CardDescription className="text-xs">Most viewed menu items</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
               {topViewed?.map((item: any) => (
                 <div key={item.id} className="flex justify-between items-center text-sm">
-                  <span className="truncate pr-2 font-medium">{item.name}</span>
-                  <span className="text-[10px] text-muted-foreground border px-1.5 py-0.5 rounded-[2px] bg-muted/30 whitespace-nowrap">{item.view_count || 0} hits</span>
+                  <span className="truncate pr-4 font-medium">{item.name}</span>
+                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-600 whitespace-nowrap">{item.view_count || 0} Views</span>
                 </div>
               ))}
-              {!topViewed?.length && <div className="text-sm text-muted-foreground">No data.</div>}
+              {!topViewed?.length && <div className="text-sm text-muted-foreground py-10 text-center italic">No views yet.</div>}
             </div>
           </CardContent>
         </Card>
 
-        <Card className="rounded-sm shadow-none border col-span-1 lg:col-span-1">
-          <CardHeader className="border-b pb-4 mb-4">
-            <CardTitle className="text-base font-semibold flex items-center gap-2">
-              <AlertTriangle className="h-4 w-4" />
-              Stock Flags
+        <Card className="rounded-2xl shadow-sm border-none bg-card border-l-4 border-l-red-500/20">
+          <CardHeader className="pb-4">
+            <CardTitle className="text-lg font-bold flex items-center gap-2">
+              <AlertTriangle className="h-5 w-5 text-red-500" />
+              Stock Alerts
             </CardTitle>
-            <CardDescription className="text-xs">Inventory depletion detected</CardDescription>
+            <CardDescription className="text-xs">Items running out soon</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
               {lowStockItems?.map((item: any) => (
-                <div key={item.id} className="flex justify-between items-center text-sm">
-                  <span className="truncate pr-2 font-medium">{item.name}</span>
-                  <span className="text-[10px] text-red-600 border border-red-200 bg-red-50/50 px-1.5 py-0.5 rounded-[2px] whitespace-nowrap">{item.stock} left</span>
+                <div key={item.id} className="flex justify-between items-center text-sm p-2 rounded-lg bg-red-50/50 dark:bg-red-950/10">
+                  <span className="truncate pr-4 font-medium">{item.name}</span>
+                  <span className="text-[10px] font-bold text-red-600 uppercase tracking-widest">{item.stock} left</span>
                 </div>
               ))}
-              {(!lowStockItems || lowStockItems.length === 0) && <div className="text-sm text-muted-foreground">All levels optimal.</div>}
+              {(!lowStockItems || lowStockItems.length === 0) && (
+                <div className="text-sm text-green-600 py-10 text-center italic flex flex-col items-center gap-2">
+                    <span className="text-lg">✨</span>
+                    All levels optimal.
+                </div>
+              )}
             </div>
           </CardContent>
         </Card>

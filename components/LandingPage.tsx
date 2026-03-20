@@ -25,9 +25,10 @@ interface LandingPageProps {
   locale: string;
   featuredItems: any[];
   bakeryGalleryItems: any[];
+  specialImages: any[];
 }
 
-export function LandingPage({ locale, featuredItems, bakeryGalleryItems }: LandingPageProps) {
+export function LandingPage({ locale, featuredItems, bakeryGalleryItems, specialImages }: LandingPageProps) {
   const t = useTranslations();
   const galleryRef = useRef(null);
   const shouldLoadGallery = useInView(galleryRef, { margin: "200px" });
@@ -45,7 +46,7 @@ export function LandingPage({ locale, featuredItems, bakeryGalleryItems }: Landi
       <SlidingBanner />
 
       {/* Hero Section */}
-      <HeroSection locale={locale} t={t} />
+      <HeroSection locale={locale} t={t} specialImages={specialImages} />
 
       {/* 2. Featured Products - Green */}
       <div className="bg-[var(--primary)] text-primary-foreground relative pt-12 pb-8 z-20">
@@ -91,7 +92,7 @@ export function LandingPage({ locale, featuredItems, bakeryGalleryItems }: Landi
       >
         {shouldLoadGallery ? (
           <Suspense fallback={<div className="w-full h-full flex items-center justify-center text-muted-foreground font-modern">Loading Gallery...</div>}>
-            <CircularGallery bend={0} items={bakeryGalleryItems} />
+            <CircularGallery bend={0} items={specialImages.length > 0 ? specialImages.map(img => ({ image: img.image_url, text: img.name })) : bakeryGalleryItems} />
           </Suspense>
         ) : (
           <div className="w-full h-full flex items-center justify-center text-muted-foreground font-modern bg-primary/5 animate-pulse">

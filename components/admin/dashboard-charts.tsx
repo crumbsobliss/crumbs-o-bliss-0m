@@ -35,12 +35,12 @@ export default function DashboardCharts({ revenueByDay, ordersByStatus }: ChartD
 
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-      <Card className="col-span-1 lg:col-span-4 rounded-sm shadow-none border">
-        <CardHeader className="border-b pb-4 mb-4">
-          <CardTitle className="text-base font-semibold uppercase tracking-wider">Revenue Overview</CardTitle>
-          <CardDescription className="text-xs">Trailing 7-day performance</CardDescription>
+      <Card className="col-span-1 lg:col-span-4 rounded-3xl shadow-sm border-none overflow-hidden h-full">
+        <CardHeader className="bg-muted/30 border-b border-border/40 px-6 py-4">
+          <CardTitle className="text-sm font-bold uppercase tracking-[0.2em] text-muted-foreground">Sales Trend</CardTitle>
+          <CardDescription className="text-[10px] font-bold uppercase tracking-widest text-primary/60 mt-1">Last 7 days</CardDescription>
         </CardHeader>
-        <CardContent className="h-[300px] w-full pt-0">
+        <CardContent className="h-[300px] w-full p-6">
           {formattedRevenue.length > 0 ? (
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={formattedRevenue} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
@@ -66,8 +66,8 @@ export default function DashboardCharts({ revenueByDay, ordersByStatus }: ChartD
                   width={60}
                 />
                 <Tooltip
-                  formatter={(value: number) => [formatCurrency(value), 'Revenue']}
-                  contentStyle={{ backgroundColor: 'hsl(var(--card))', borderColor: 'hsl(var(--border))', borderRadius: '2px', fontSize: '12px' }}
+                  formatter={(value: number) => [formatCurrency(value), 'Sales']}
+                  contentStyle={{ backgroundColor: 'hsl(var(--popover))', borderColor: 'hsl(var(--border))', borderRadius: '16px', fontSize: '12px', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)' }}
                 />
                 <Area
                   type="monotone"
@@ -85,12 +85,12 @@ export default function DashboardCharts({ revenueByDay, ordersByStatus }: ChartD
         </CardContent>
       </Card>
 
-      <Card className="col-span-1 lg:col-span-3 rounded-sm shadow-none border">
-        <CardHeader className="border-b pb-4 mb-4">
-          <CardTitle className="text-base font-semibold uppercase tracking-wider">Order States</CardTitle>
-          <CardDescription className="text-xs">Current systematic distribution</CardDescription>
+      <Card className="col-span-1 lg:col-span-3 rounded-3xl shadow-sm border-none overflow-hidden h-full">
+        <CardHeader className="bg-muted/30 border-b border-border/40 px-6 py-4">
+          <CardTitle className="text-sm font-bold uppercase tracking-[0.2em] text-muted-foreground">Order Progress</CardTitle>
+          <CardDescription className="text-[10px] font-bold uppercase tracking-widest text-primary/60 mt-1">Status distribution</CardDescription>
         </CardHeader>
-        <CardContent className="h-[300px] w-full pt-0">
+        <CardContent className="h-[300px] w-full p-6">
           {ordersByStatus.length > 0 ? (
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={ordersByStatus} layout="vertical" margin={{ top: 0, right: 20, left: 20, bottom: 0 }}>
@@ -101,18 +101,18 @@ export default function DashboardCharts({ revenueByDay, ordersByStatus }: ChartD
                   type="category"
                   axisLine={false}
                   tickLine={false}
-                  tick={{ fontSize: 10, fill: 'var(--foreground)' }}
-                  tickFormatter={(val: string) => val.toUpperCase()}
+                  tick={{ fontSize: 10, fill: 'var(--foreground)', fontWeight: 'bold' }}
+                  tickFormatter={(val: string) => val.charAt(0).toUpperCase() + val.slice(1)}
                 />
                 <Tooltip
-                  contentStyle={{ backgroundColor: 'hsl(var(--card))', borderColor: 'hsl(var(--border))', borderRadius: '2px', fontSize: '12px', color: 'var(--foreground)' }}
-                  cursor={{ fill: 'hsl(var(--muted))' }}
+                  contentStyle={{ backgroundColor: 'hsl(var(--popover))', borderColor: 'hsl(var(--border))', borderRadius: '16px', fontSize: '12px', color: 'var(--foreground)', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)' }}
+                  cursor={{ fill: 'hsl(var(--muted))', opacity: 0.4 }}
                 />
-                <Bar dataKey="count" fill="var(--primary)" radius={[2, 2, 2, 2]} barSize={20} label={{ position: 'right', fill: 'var(--foreground)', fontSize: 10 }} />
+                <Bar dataKey="count" fill="var(--primary)" radius={[0, 8, 8, 0]} barSize={24} label={{ position: 'right', fill: 'var(--foreground)', fontSize: 10, fontWeight: 'bold' }} />
               </BarChart>
             </ResponsiveContainer>
           ) : (
-            <div className="flex h-full items-center justify-center text-xs text-muted-foreground">No data available.</div>
+            <div className="flex h-full items-center justify-center text-[10px] font-bold uppercase tracking-widest text-muted-foreground/50 italic">Waiting for more data...</div>
           )}
         </CardContent>
       </Card>

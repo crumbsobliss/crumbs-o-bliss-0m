@@ -28,6 +28,7 @@ create table custom_catalogues (
   id uuid default gen_random_uuid() primary key,
   name text not null,
   description text,
+  price numeric, -- Price for the combined pack
   image_url text,
   is_active boolean default true,
   created_at timestamp with time zone default timezone('utc'::text, now()) not null
@@ -66,6 +67,20 @@ create table order_items (
   created_at timestamp with time zone default timezone('utc'::text, now()) not null
 );
 
+-- Create a table for special images (menu, landing page, etc.)
+create table special_images (
+  id uuid default gen_random_uuid() primary key,
+  name text not null,
+  category text check (category in ('landing', 'menu', 'other')) not null,
+  image_url text not null,
+  link_url text,
+  description text,
+  is_active boolean default true,
+  display_order integer default 0,
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null,
+  updated_at timestamp with time zone default timezone('utc'::text, now()) not null
+);
+
 -- Enable Row Level Security (RLS)
 alter table profiles enable row level security;
 alter table products enable row level security;
@@ -73,6 +88,7 @@ alter table custom_catalogues enable row level security;
 alter table catalogue_items enable row level security;
 alter table orders enable row level security;
 alter table order_items enable row level security;
+alter table special_images enable row level security;
 
 -- Policies
 
@@ -124,6 +140,11 @@ create policy "Public can create order items" on order_items for insert with che
 -- Admins/Managers can view.
 create policy "Admins/Managers view order items" on order_items for select using (
   exists (select 1 from profiles where id = auth.uid() and role in ('admin', 'manager'))
+);
+-- Special Images: Public read, Admin write
+create policy "Public special images viewable" on special_images for select using (is_active = true);
+create policy "Admins manage special images" on special_images for all using (
+  auth.uid() in (select id from profiles where role = 'admin')
 );
 
 

@@ -24,6 +24,7 @@ import { useRouter } from 'next/navigation'
 const formSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters'),
   description: z.string().optional(),
+  price: z.preprocess((val) => val === '' ? undefined : Number(val), z.number().optional()),
   image_url: z.string().optional(), // Could add image upload here too if needed
   is_active: z.boolean().default(true),
 })
@@ -43,6 +44,7 @@ export default function CatalogueForm({ catalogue, onSuccess }: CatalogueFormPro
     defaultValues: {
       name: catalogue?.name || '',
       description: catalogue?.description || '',
+      price: catalogue?.price || '',
       image_url: catalogue?.image_url || '',
       is_active: catalogue?.is_active ?? true,
     },
@@ -81,15 +83,29 @@ export default function CatalogueForm({ catalogue, onSuccess }: CatalogueFormPro
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <FormField
           control={form.control}
           name="name"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Name</FormLabel>
+            <FormItem className="space-y-2">
+              <FormLabel className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">Pack Name</FormLabel>
               <FormControl>
-                <Input placeholder="Summer Sale" {...field} />
+                <Input placeholder="E.g. Weekend Special" className="h-12 rounded-xl bg-muted/20 border-border/40 focus:bg-background transition-all" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="price"
+          render={({ field }) => (
+            <FormItem className="space-y-2">
+              <FormLabel className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">Price (Optional)</FormLabel>
+              <FormControl>
+                <Input type="number" placeholder="0.00" className="h-12 rounded-xl bg-muted/20 border-border/40" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -100,10 +116,10 @@ export default function CatalogueForm({ catalogue, onSuccess }: CatalogueFormPro
           control={form.control}
           name="description"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Description</FormLabel>
+            <FormItem className="space-y-2">
+              <FormLabel className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">Details</FormLabel>
               <FormControl>
-                <Textarea placeholder="Catalogue description..." {...field} />
+                <Textarea placeholder="What's in this pack?" className="rounded-2xl min-h-[100px] bg-muted/20 border-border/40 focus:bg-background transition-all" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -114,10 +130,10 @@ export default function CatalogueForm({ catalogue, onSuccess }: CatalogueFormPro
           control={form.control}
           name="image_url"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Cover Image URL (Optional)</FormLabel>
+            <FormItem className="space-y-2">
+              <FormLabel className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">Photo URL (Optional)</FormLabel>
               <FormControl>
-                <Input placeholder="https://..." {...field} />
+                <Input placeholder="https://..." className="h-12 rounded-xl bg-muted/20 border-border/40" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -128,23 +144,24 @@ export default function CatalogueForm({ catalogue, onSuccess }: CatalogueFormPro
           control={form.control}
           name="is_active"
           render={({ field }) => (
-            <FormItem className="flex flex-row items-center space-x-3 space-y-0 rounded-md border p-4">
+            <FormItem className="flex flex-row items-center justify-between rounded-2xl border border-border/40 p-4 transition-colors hover:bg-muted/5">
+              <div className="space-y-0.5">
+                <FormLabel className="text-xs font-bold uppercase tracking-widest">Show on Website</FormLabel>
+              </div>
               <FormControl>
                 <Checkbox
                   checked={field.value}
                   onCheckedChange={field.onChange}
+                  className="h-6 w-6 rounded-lg border-primary/20"
                 />
               </FormControl>
-              <div className="space-y-1 leading-none">
-                <FormLabel>Active</FormLabel>
-              </div>
             </FormItem>
           )}
         />
 
-        <Button type="submit" disabled={loading} className="w-full rounded-sm h-10 text-xs font-semibold uppercase tracking-wider">
-          {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-          {loading ? "COMMITTING..." : "COMMIT CHANGES"}
+        <Button type="submit" disabled={loading} className="w-full rounded-2xl h-14 text-sm font-bold uppercase tracking-[0.2em] shadow-lg shadow-primary/20 transition-all hover:scale-[1.01] active:scale-[0.99] mt-4">
+          {loading && <Loader2 className="mr-2 h-5 w-5 animate-spin" />}
+          {loading ? "Saving..." : "Save Pack"}
         </Button>
       </form>
     </Form>

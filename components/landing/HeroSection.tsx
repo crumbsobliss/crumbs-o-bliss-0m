@@ -8,9 +8,11 @@ import { Star, ArrowRight } from "lucide-react";
 interface HeroSectionProps {
   locale: string;
   t: any;
+  specialImages: any[];
 }
 
-export function HeroSection({ locale, t }: HeroSectionProps) {
+export function HeroSection({ locale, t, specialImages }: HeroSectionProps) {
+  const heroImage = specialImages?.find(img => img.name.toLowerCase().includes('hero')) || specialImages?.[0];
   const { scrollY } = useScroll();
   const heroY = useTransform(scrollY, [0, 800], [0, 150]);
 
@@ -69,7 +71,7 @@ export function HeroSection({ locale, t }: HeroSectionProps) {
           {/* Main Cake Image placed overlapping the arch */}
           <div className="relative w-56 h-56 md:w-[22rem] md:h-[22rem] lg:w-[26rem] lg:h-[26rem] z-20 -mb-24 md:-mb-32">
             <Image
-              src="/icon.png"
+              src={heroImage?.image_url || "/icon.png"}
               alt="Crumbs O' Bliss"
               fill
               sizes="(max-width: 768px) 250px, 400px"

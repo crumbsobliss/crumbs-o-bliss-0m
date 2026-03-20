@@ -10,7 +10,7 @@ import {
 import details from '@/config/details.json'
 import Image from 'next/image';
 
-type Category = 'cake' | 'pizza' | 'flower' | 'other' | 'catalogue' | null;
+type Category = 'cake' | 'pizza' | 'flower' | 'other' | null;
 
 interface CustomFormData {
   category: Category;
@@ -26,15 +26,14 @@ interface CustomFormData {
   addLights?: boolean;
   addNameTag?: boolean;
   nameTagText?: string;
-  selectedCatalogueId?: string;
-  selectedCatalogueName?: string;
+  selectedCataloguePrice?: number;
   name: string;
   mobile: string;
   address: string;
   pincode: string;
 }
 
-export default function CustomizationClient({ catalogues }: { catalogues: any[] }) {
+export default function CustomizationClient() {
   const [step, setStep] = useState<number>(1);
   const [selectedCategory, setSelectedCategory] = useState<Category>(null);
   const [formData, setFormData] = useState<CustomFormData>({
@@ -71,13 +70,9 @@ export default function CustomizationClient({ catalogues }: { catalogues: any[] 
     }
   }, []);
 
-  const handleCategorySelect = (category: Category, catMeta?: any) => {
+  const handleCategorySelect = (category: Category) => {
     setSelectedCategory(category);
-    setFormData(prev => ({ 
-        ...prev, 
-        category,
-        ...(catMeta?.id && { selectedCatalogueId: catMeta.id, selectedCatalogueName: catMeta.name })
-    }));
+    setFormData(prev => ({ ...prev, category }));
     setStep(2); 
   };
 
@@ -119,8 +114,6 @@ export default function CustomizationClient({ catalogues }: { catalogues: any[] 
       detailsText = `*Type:* 🍕 Custom Pizza\n*Size:* ${formData.pizzaSize}\n*Crust:* ${formData.pizzaCrust}\n*Toppings/Preferences:* ${formData.toppings || 'None'}`;
     } else if (selectedCategory === 'flower') {
       detailsText = `*Type:* 💐 Faux Flower Bouquet\n*Package:* ${formData.flowerPackage}\n*Add-ons:*\n${formData.addLights ? '• ✨ LED Lights (+₹80)' : ''}\n${formData.addNameTag ? `• ✍️ Name Tag (+₹20): ${formData.nameTagText}` : ''}\n${!formData.addLights && !formData.addNameTag ? 'None' : ''}`;
-    } else if (selectedCategory === 'catalogue') {
-      detailsText = `*Type:* 🎁 Custom Package\n*Package:* ${formData.selectedCatalogueName}\n*Extra Notes:* ${formData.description || 'None'}`;
     } else {
       detailsText = `*Type:* 🍽️ Special Request\n*Description:* ${formData.description || 'N/A'}`;
     }
@@ -154,7 +147,6 @@ export default function CustomizationClient({ catalogues }: { catalogues: any[] 
     exit: { opacity: 0, x: -20, transition: { duration: 0.3 } }
   };
 
-  const selectedCatalogueData = catalogues.find(c => c.id === formData.selectedCatalogueId);
 
   return (
     <div className="min-h-screen bg-background text-foreground pb-20 font-sans">
@@ -214,32 +206,6 @@ export default function CustomizationClient({ catalogues }: { catalogues: any[] 
                   </motion.button>
                 </div>
               </div>
-
-              {/* Special Packages / Custom Catalogues */}
-              {catalogues.length > 0 && (
-                 <div>
-                    <h2 className="text-xl font-bold font-serif mb-6 flex items-center gap-2 pt-8 border-t"><Sparkles className="w-5 h-5 text-primary"/> Special Packages & Combos</h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                       {catalogues.map(cat => (
-                         <motion.div key={cat.id} whileHover={{ y: -3 }} className="bg-card border rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all flex flex-col cursor-pointer" onClick={() => handleCategorySelect('catalogue', cat)}>
-                            <div className="relative h-48 bg-muted">
-                               <Image src={cat.image_url || '/assets/placeholder.jpg'} alt={cat.name} fill className="object-cover" />
-                               <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex items-end p-4">
-                                  <h3 className="font-serif text-2xl font-bold text-white">{cat.name}</h3>
-                               </div>
-                            </div>
-                            <div className="p-4 flex flex-col flex-grow">
-                               <p className="text-muted-foreground text-sm flex-grow line-clamp-3 mb-4">{cat.description}</p>
-                               <div className="text-xs uppercase tracking-widest font-bold text-primary flex items-center justify-between">
-                                  <span>{cat.catalogue_items?.length || 0} Items</span>
-                                  <span className="flex items-center gap-1 group-hover:underline">Customize <ArrowRight className="w-3 h-3" /></span>
-                               </div>
-                            </div>
-                         </motion.div>
-                       ))}
-                    </div>
-                 </div>
-              )}
             </motion.div>
           )}
 
@@ -252,14 +218,10 @@ export default function CustomizationClient({ catalogues }: { catalogues: any[] 
                         Customize your {
                            selectedCategory === 'cake' ? 'Cake' : 
                            selectedCategory === 'pizza' ? 'Pizza' : 
-                           selectedCategory === 'flower' ? 'Bouquet' : 
-                           selectedCategory === 'catalogue' ? 'Package' : 'Order'
+                           selectedCategory === 'flower' ? 'Bouquet' : 'Order'
                         }
                      </h2>
                  </div>
-                 {selectedCategory === 'catalogue' && selectedCatalogueData && (
-                     <span className="text-sm font-medium px-3 py-1 bg-primary/20 text-primary rounded-full">{selectedCatalogueData.name}</span>
-                 )}
               </div>
 
               <form onSubmit={handleSubmit} className="p-6 md:p-8 space-y-8">
@@ -333,22 +295,6 @@ export default function CustomizationClient({ catalogues }: { catalogues: any[] 
                      </div>
                   )}
 
-                  {selectedCategory === 'catalogue' && selectedCatalogueData && (
-                     <div className="space-y-6">
-                        <div className="bg-muted p-4 rounded-lg">
-                           <h4 className="font-bold mb-2">Package Items Included:</h4>
-                           <ul className="list-disc list-inside space-y-1 text-sm text-muted-foreground">
-                              {selectedCatalogueData.catalogue_items?.map((item: any, i: number) => (
-                                 <li key={i}>{item.products?.name} <span className="text-xs opacity-70">(₹{item.products?.price})</span></li>
-                              ))}
-                           </ul>
-                        </div>
-                        <div className="space-y-2">
-                           <label className="text-sm font-medium">Any special notes or substitutions?</label>
-                           <textarea name="description" rows={3} placeholder="E.g. No nuts in the cake, please wrap the box in red ribbon..." className="w-full p-3 rounded-lg border bg-background focus:ring-2 focus:ring-primary outline-none resize-none" onChange={handleInputChange}/>
-                        </div>
-                     </div>
-                  )}
 
                   {selectedCategory === 'other' && (
                      <div className="space-y-4">

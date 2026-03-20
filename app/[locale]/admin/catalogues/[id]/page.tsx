@@ -49,21 +49,21 @@ export default async function CatalogueDetailsPage({ params }: Props) {
     .eq('is_active', true)
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between pb-4 border-b">
+    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-3 duration-500">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-border/40">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight text-foreground uppercase">Catalogue Configuration</h1>
-          <p className="text-sm font-mono text-muted-foreground mt-1">ID: {catalogue.id}</p>
+          <h1 className="text-3xl font-bold tracking-tight text-foreground italic">Pack Details</h1>
+          <p className="text-sm font-mono text-muted-foreground mt-1 tracking-tighter uppercase font-bold text-[10px]">ID: {catalogue.id}</p>
         </div>
       </div>
 
-      <div className="grid md:grid-cols-3 gap-6">
+      <div className="grid md:grid-cols-3 gap-8">
         <div className="md:col-span-2">
-          <Card className="rounded-sm shadow-none border">
-            <CardHeader className="border-b pb-4 mb-4">
-              <CardTitle className="text-base font-semibold uppercase tracking-wider">Product Bindings</CardTitle>
+          <Card className="rounded-3xl shadow-sm border-none overflow-hidden">
+            <CardHeader className="bg-muted/30 border-b border-border/40 px-6 py-4">
+              <CardTitle className="text-sm font-bold uppercase tracking-[0.2em] text-muted-foreground">Included Items</CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="p-6">
               <CatalogueManager
                 catalogueId={id}
                 existingItems={existingItems}
@@ -73,11 +73,11 @@ export default async function CatalogueDetailsPage({ params }: Props) {
           </Card>
         </div>
         <div>
-          <Card className="rounded-sm shadow-none border bg-muted/10">
-            <CardHeader className="border-b pb-4 mb-4">
-              <CardTitle className="text-base font-semibold uppercase tracking-wider">Properties</CardTitle>
+          <Card className="rounded-3xl shadow-sm border-none overflow-hidden bg-muted/20">
+            <CardHeader className="bg-muted/30 border-b border-border/40 px-6 py-4">
+              <CardTitle className="text-sm font-bold uppercase tracking-[0.2em] text-muted-foreground">Pack Info</CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="p-6">
               <CatalogueForm catalogue={catalogue} />
             </CardContent>
           </Card>

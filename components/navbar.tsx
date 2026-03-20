@@ -20,6 +20,7 @@ import {
   Menu, // Used for the Hamburger icon
   Utensils, // Added for the actual Menu Link
   X,
+  Gift,
 } from 'lucide-react'
 import { useState, useEffect } from 'react'
 import { useCart } from '@/lib/cart-context'
@@ -111,6 +112,14 @@ export default function Navbar() {
             >
               <Utensils className="w-4 h-4" />
               Menu
+            </Link>
+            
+            <Link
+              href={`/${currentLocale}/collections`}
+              className="text-sm font-medium text-foreground hover:text-primary transition-colors flex items-center gap-1"
+            >
+              <Gift className="w-4 h-4" />
+              Collections
             </Link>
 
             <Link
@@ -261,6 +270,15 @@ export default function Navbar() {
                 >
                   <Utensils className="w-5 h-5" />
                   Menu
+                </Link>
+
+                <Link
+                  href={`/${currentLocale}/collections`}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="text-base font-medium flex items-center gap-3 p-2 rounded-md hover:bg-muted transition-colors"
+                >
+                  <Gift className="w-5 h-5" />
+                  Collections
                 </Link>
 
                 <Link

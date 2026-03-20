@@ -109,6 +109,14 @@ export default async function HomePage({
     .eq('is_active', true)
     .limit(4);
 
+  // Fetch Special Images for Landing Page
+  const { data: specialImages } = await supabase
+    .from('special_images')
+    .select('*')
+    .eq('category', 'landing')
+    .eq('is_active', true)
+    .order('display_order', { ascending: true });
+
   // Prepare data for the client component
   // Map Supabase product to the expected format (BakeryItem interface match)
   const featuredItems = products?.map((p: any) => ({
@@ -147,6 +155,7 @@ export default async function HomePage({
         locale={locale}
         featuredItems={featuredItems}
         bakeryGalleryItems={bakeryGalleryItems}
+        specialImages={specialImages || []}
       />
     </>
   );

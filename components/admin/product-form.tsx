@@ -25,7 +25,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { IKContext, IKUpload } from 'imagekitio-react'
-import { Loader2, X } from 'lucide-react'
+import { Loader2, X, Plus } from 'lucide-react'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 
@@ -155,40 +155,49 @@ export default function ProductForm({ product, onSuccess }: ProductFormProps) {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8 animate-in fade-in duration-500">
       <IKContext
         publicKey={process.env.NEXT_PUBLIC_IMAGEKIT_PUBLIC_KEY}
         urlEndpoint={process.env.NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT}
         authenticator={authenticator}
       >
-        <div className="space-y-2">
-          <Label>Product Image</Label>
+        <div className="space-y-3">
+          <Label className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">Photo</Label>
           {image ? (
-            <div className="relative w-40 h-40 border rounded-lg overflow-hidden group">
-              <Image src={image.url} alt="Product" fill className="object-cover" />
+            <div className="relative w-full aspect-video sm:w-48 sm:h-48 rounded-3xl overflow-hidden group border-2 border-primary/20 bg-muted shadow-lg">
+              <Image src={image.url} alt="Product" fill className="object-cover transition-transform group-hover:scale-110 duration-500" />
               <button
                 type="button"
                 onClick={() => setImage(null)}
-                className="absolute top-1 right-1 bg-red-500 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                className="absolute top-3 right-3 bg-white/90 backdrop-blur-md text-destructive p-2 rounded-2xl shadow-xl hover:bg-destructive hover:text-white transition-all transform hover:scale-110 active:scale-90"
               >
-                <X className="h-4 w-4" />
+                <X className="h-5 w-5" />
               </button>
             </div>
           ) : (
-            <div className="border border-dashed rounded-lg p-4 text-center">
+            <div className="border-2 border-dashed border-primary/20 rounded-3xl p-8 text-center bg-primary/5 hover:bg-primary/10 transition-colors group cursor-pointer relative">
               {uploading ? (
-                <div className="flex items-center justify-center gap-2 text-muted-foreground">
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                  Uploading...
+                <div className="flex flex-col items-center justify-center gap-3 text-primary animate-pulse">
+                  <Loader2 className="h-8 w-8 animate-spin" />
+                  <p className="text-xs font-bold uppercase tracking-widest">Adding photo...</p>
                 </div>
               ) : (
-                <IKUpload
-                  fileName="product_"
-                  onError={onError}
-                  onSuccess={onSuccessUpload}
-                  onUploadStart={() => setUploading(true)}
-                  className="w-full text-sm text-muted-foreground file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-primary-foreground hover:file:bg-primary/90"
-                />
+                <div className="flex flex-col items-center gap-3">
+                    <div className="h-12 w-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
+                        <Plus className="h-6 w-6" />
+                    </div>
+                    <div className="space-y-1">
+                        <p className="text-sm font-bold text-foreground">Upload a Photo</p>
+                        <p className="text-xs text-muted-foreground">Clear images look best</p>
+                    </div>
+                  <IKUpload
+                    fileName="product_"
+                    onError={onError}
+                    onSuccess={onSuccessUpload}
+                    onUploadStart={() => setUploading(true)}
+                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                  />
+                </div>
               )}
             </div>
           )}
@@ -196,30 +205,30 @@ export default function ProductForm({ product, onSuccess }: ProductFormProps) {
       </IKContext>
 
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           <FormField
             control={form.control}
             name="name"
             render={({ field }) => (
-              <FormItem>
-                <FormLabel>Name</FormLabel>
+              <FormItem className="space-y-2">
+                <FormLabel className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">Item Name</FormLabel>
                 <FormControl>
-                  <Input placeholder="Chocolate Cake" {...field} />
+                  <Input placeholder="Chocolate Cheesecake" className="h-12 rounded-xl bg-muted/20 border-border/40 focus:bg-background transition-all" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             <FormField
               control={form.control}
               name="price"
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Price</FormLabel>
+                <FormItem className="space-y-2">
+                  <FormLabel className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">Price (₹)</FormLabel>
                   <FormControl>
-                    <Input type="number" step="0.01" {...field} />
+                    <Input type="number" step="0.01" className="h-12 rounded-xl bg-muted/20 border-border/40" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -229,10 +238,10 @@ export default function ProductForm({ product, onSuccess }: ProductFormProps) {
               control={form.control}
               name="discounted_price"
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Discounted Price</FormLabel>
+                <FormItem className="space-y-2">
+                  <FormLabel className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">Discount Price</FormLabel>
                   <FormControl>
-                    <Input type="number" step="0.01" {...field} />
+                    <Input type="number" step="0.01" className="h-12 rounded-xl bg-muted/20 border-border/40" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -242,10 +251,10 @@ export default function ProductForm({ product, onSuccess }: ProductFormProps) {
               control={form.control}
               name="stock"
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Stock</FormLabel>
+                <FormItem className="space-y-2">
+                  <FormLabel className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">In Stock</FormLabel>
                   <FormControl>
-                    <Input type="number" {...field} />
+                    <Input type="number" className="h-12 rounded-xl bg-muted/20 border-border/40" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -255,10 +264,10 @@ export default function ProductForm({ product, onSuccess }: ProductFormProps) {
               control={form.control}
               name="calories"
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Calories (kcal)</FormLabel>
+                <FormItem className="space-y-2">
+                  <FormLabel className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">Calories</FormLabel>
                   <FormControl>
-                    <Input placeholder="E.g. 250" {...field} />
+                    <Input placeholder="E.g. 250" className="h-12 rounded-xl bg-muted/20 border-border/40" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -266,24 +275,24 @@ export default function ProductForm({ product, onSuccess }: ProductFormProps) {
             />
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 items-center">
             <FormField
               control={form.control}
               name="category"
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Category</FormLabel>
+                <FormItem className="space-y-2">
+                  <FormLabel className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">Category</FormLabel>
                   <Select onValueChange={field.onChange} defaultValue={field.value}>
                     <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select a category" />
+                      <SelectTrigger className="h-12 rounded-xl bg-muted/20 border-border/40">
+                        <SelectValue placeholder="Pick a category" />
                       </SelectTrigger>
                     </FormControl>
-                    <SelectContent>
-                      <SelectItem value="cakes">Cakes</SelectItem>
-                      <SelectItem value="pizzas">Pizzas</SelectItem>
-                      <SelectItem value="beverages">Beverages</SelectItem>
-                      <SelectItem value="custom">Custom</SelectItem>
+                    <SelectContent className="rounded-2xl border-none shadow-xl">
+                      <SelectItem value="cakes" className="rounded-xl">Cakes</SelectItem>
+                      <SelectItem value="pizzas" className="rounded-xl">Pizzas</SelectItem>
+                      <SelectItem value="beverages" className="rounded-xl">Beverages</SelectItem>
+                      <SelectItem value="custom" className="rounded-xl">Custom</SelectItem>
                     </SelectContent>
                   </Select>
                   <FormMessage />
@@ -295,16 +304,15 @@ export default function ProductForm({ product, onSuccess }: ProductFormProps) {
               control={form.control}
               name="is_veg"
               render={({ field }) => (
-                <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 md:mt-6">
+                <FormItem className="flex flex-row items-center justify-between rounded-2xl border border-border/40 p-4 transition-colors hover:bg-muted/5 sm:mt-6">
                   <div className="space-y-0.5">
-                    <FormLabel>Vegetarian</FormLabel>
-                    <div className="text-sm text-muted-foreground">Is this product vegetarian?</div>
+                    <FormLabel className="text-xs font-bold uppercase tracking-widest leading-none">Veg Only</FormLabel>
                   </div>
                   <FormControl>
-                    <div className="flex items-center space-x-2">
+                    <div className="flex items-center">
                       <input
                         type="checkbox"
-                        className="h-5 w-5 rounded border-gray-300 text-primary focus:ring-primary"
+                        className="h-6 w-6 rounded-lg border-primary/20 text-primary focus:ring-primary transition-all cursor-pointer"
                         checked={field.value}
                         onChange={field.onChange}
                       />
@@ -319,22 +327,24 @@ export default function ProductForm({ product, onSuccess }: ProductFormProps) {
             control={form.control}
             name="color"
             render={({ field }) => (
-              <FormItem>
-                <FormLabel>Background Color</FormLabel>
+              <FormItem className="space-y-2">
+                <FormLabel className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">Accent Color</FormLabel>
                 <FormControl>
                   <div className="flex items-center gap-3">
-                    <Input
-                      type="color"
-                      {...field}
-                      value={field.value || "#ffffff"}
-                      className="w-14 h-10 p-1 cursor-pointer"
-                    />
+                    <div className="relative h-12 w-12 rounded-xl border border-border/40 overflow-hidden bg-muted/20 shrink-0">
+                        <Input
+                        type="color"
+                        {...field}
+                        value={field.value || "#ffffff"}
+                        className="absolute inset-0 h-full w-full p-0 border-none cursor-pointer scale-150"
+                        />
+                    </div>
                     <Input
                       type="text"
                       placeholder="#HexCode (Optional)"
+                      className="h-12 rounded-xl bg-muted/20 border-border/40 flex-1"
                       {...field}
                       value={field.value || ""}
-                      className="flex-1"
                     />
                   </div>
                 </FormControl>
@@ -347,19 +357,19 @@ export default function ProductForm({ product, onSuccess }: ProductFormProps) {
             control={form.control}
             name="description"
             render={({ field }) => (
-              <FormItem>
-                <FormLabel>Description</FormLabel>
+              <FormItem className="space-y-2">
+                <FormLabel className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">Details</FormLabel>
                 <FormControl>
-                  <Textarea placeholder="Product description..." {...field} />
+                  <Textarea placeholder="What's special about this item?" className="rounded-2xl min-h-[120px] bg-muted/20 border-border/40 focus:bg-background transition-all" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
 
-          <Button type="submit" disabled={loading || uploading} className="w-full rounded-sm h-10 text-xs font-semibold uppercase tracking-wider">
-            {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-            {loading ? "COMMITTING..." : "COMMIT CHANGES"}
+          <Button type="submit" disabled={loading || uploading} className="w-full rounded-2xl h-14 text-sm font-bold uppercase tracking-[0.2em] shadow-lg shadow-primary/20 transition-all hover:scale-[1.01] active:scale-[0.99]">
+            {loading ? <Loader2 className="mr-2 h-5 w-5 animate-spin" /> : null}
+            {loading ? "Saving..." : "Save Item"}
           </Button>
         </form>
       </Form>
