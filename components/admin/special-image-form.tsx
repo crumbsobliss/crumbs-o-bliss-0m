@@ -19,7 +19,7 @@ import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Loader2, X } from 'lucide-react'
+import { Loader2, X, Plus } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { IKContext, IKUpload } from 'imagekitio-react'
 import Image from 'next/image'
@@ -114,15 +114,15 @@ export default function SpecialImageForm({ specialImage, onSuccess }: SpecialIma
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 animate-in fade-in duration-500">
         <FormField
           control={form.control}
           name="name"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Name (Admin Reference)</FormLabel>
+            <FormItem className="space-y-2">
+              <FormLabel className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">Banner Title</FormLabel>
               <FormControl>
-                <Input placeholder="Home Hero Image" {...field} />
+                <Input placeholder="E.g. Summer Special" className="h-12 rounded-xl bg-muted/20 border-border/40 focus:bg-background transition-all" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -133,18 +133,18 @@ export default function SpecialImageForm({ specialImage, onSuccess }: SpecialIma
           control={form.control}
           name="category"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Category</FormLabel>
+            <FormItem className="space-y-2">
+              <FormLabel className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">Where to Show</FormLabel>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
-                  <SelectTrigger className="rounded-sm">
-                    <SelectValue placeholder="Select a category" />
+                  <SelectTrigger className="h-12 rounded-xl bg-muted/20 border-border/40">
+                    <SelectValue placeholder="Pick a location" />
                   </SelectTrigger>
                 </FormControl>
-                <SelectContent>
-                  <SelectItem value="landing">Landing Page</SelectItem>
-                  <SelectItem value="menu">Menu Gallery</SelectItem>
-                  <SelectItem value="other">Other</SelectItem>
+                <SelectContent className="rounded-2xl border-none shadow-xl">
+                  <SelectItem value="landing" className="rounded-xl">Home Screen</SelectItem>
+                  <SelectItem value="menu" className="rounded-xl">Food Menu</SelectItem>
+                  <SelectItem value="other" className="rounded-xl">Elsewhere</SelectItem>
                 </SelectContent>
               </Select>
               <FormMessage />
@@ -161,36 +161,45 @@ export default function SpecialImageForm({ specialImage, onSuccess }: SpecialIma
             control={form.control}
             name="image_url"
             render={({ field }) => (
-              <FormItem>
-                <FormLabel>Image</FormLabel>
+              <FormItem className="space-y-3">
+                <FormLabel className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">Banner Photo</FormLabel>
                 <FormControl>
                   <div className="space-y-2">
                     {field.value ? (
-                      <div className="relative w-full aspect-video border rounded-lg overflow-hidden group">
-                        <Image src={field.value} alt="Special Image" fill className="object-cover" />
+                      <div className="relative w-full aspect-video rounded-3xl overflow-hidden group border-2 border-primary/20 bg-muted shadow-lg">
+                        <Image src={field.value} alt="Special Image" fill className="object-cover transition-transform group-hover:scale-105 duration-700" />
                         <button
                           type="button"
                           onClick={() => field.onChange('')}
-                          className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                          className="absolute top-4 right-4 bg-white/90 backdrop-blur-md text-destructive p-2.5 rounded-2xl shadow-xl hover:bg-destructive hover:text-white transition-all transform hover:scale-110 active:scale-90"
                         >
-                          <X className="h-4 w-4" />
+                          <X className="h-5 w-5" />
                         </button>
                       </div>
                     ) : (
-                      <div className="border border-dashed rounded-lg p-8 text-center bg-muted/50">
+                      <div className="border-2 border-dashed border-primary/20 rounded-3xl p-12 text-center bg-primary/5 hover:bg-primary/10 transition-colors group cursor-pointer relative">
                         {uploading ? (
-                          <div className="flex flex-col items-center justify-center gap-2 text-muted-foreground">
-                            <Loader2 className="h-6 w-6 animate-spin text-primary" />
-                            <span className="text-sm font-medium">Uploading to Cloud...</span>
+                          <div className="flex flex-col items-center justify-center gap-3 text-primary animate-pulse">
+                            <Loader2 className="h-8 w-8 animate-spin" />
+                            <p className="text-xs font-bold uppercase tracking-widest">Uploading Photo...</p>
                           </div>
                         ) : (
-                          <IKUpload
-                            fileName="special_"
-                            onError={onError}
-                            onSuccess={onSuccessUpload}
-                            onUploadStart={() => setUploading(true)}
-                            className="w-full text-sm text-muted-foreground file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-primary-foreground hover:file:bg-primary/90 cursor-pointer"
-                          />
+                          <div className="flex flex-col items-center gap-3">
+                              <div className="h-12 w-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
+                                  <Plus className="h-6 w-6" />
+                              </div>
+                              <div className="space-y-1">
+                                  <p className="text-sm font-bold text-foreground">Click to Upload</p>
+                                  <p className="text-xs text-muted-foreground">High quality photos work best</p>
+                              </div>
+                            <IKUpload
+                              fileName="special_"
+                              onError={onError}
+                              onSuccess={onSuccessUpload}
+                              onUploadStart={() => setUploading(true)}
+                              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                            />
+                          </div>
                         )}
                       </div>
                     )}
@@ -206,10 +215,10 @@ export default function SpecialImageForm({ specialImage, onSuccess }: SpecialIma
           control={form.control}
           name="link_url"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Link URL (Optional)</FormLabel>
+            <FormItem className="space-y-2">
+              <FormLabel className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">Action Link (Optional)</FormLabel>
               <FormControl>
-                <Input placeholder="/customization or external link" {...field} />
+                <Input placeholder="E.g. /menu or external link" className="h-12 rounded-xl bg-muted/20 border-border/40 focus:bg-background transition-all" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -220,25 +229,25 @@ export default function SpecialImageForm({ specialImage, onSuccess }: SpecialIma
           control={form.control}
           name="description"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Description / Caption (Optional)</FormLabel>
+            <FormItem className="space-y-2">
+              <FormLabel className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">Caption (Optional)</FormLabel>
               <FormControl>
-                <Textarea placeholder="Short description seen by users..." {...field} />
+                <Textarea placeholder="A short description for users..." className="rounded-2xl min-h-[100px] bg-muted/20 border-border/40 focus:bg-background transition-all" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
 
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 items-end">
           <FormField
             control={form.control}
             name="display_order"
             render={({ field }) => (
-              <FormItem>
-                <FormLabel>Display Order</FormLabel>
+              <FormItem className="space-y-2">
+                <FormLabel className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">Order</FormLabel>
                 <FormControl>
-                  <Input type="number" {...field} />
+                  <Input type="number" className="h-12 rounded-xl bg-muted/20 border-border/40" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -249,24 +258,25 @@ export default function SpecialImageForm({ specialImage, onSuccess }: SpecialIma
             control={form.control}
             name="is_active"
             render={({ field }) => (
-              <FormItem className="flex flex-row items-center space-x-3 space-y-0 rounded-md border p-4 mt-6">
+              <FormItem className="flex flex-row items-center justify-between rounded-2xl border border-border/40 p-4 transition-colors hover:bg-muted/5">
+                <div className="space-y-0.5">
+                  <FormLabel className="text-xs font-bold uppercase tracking-widest">Show Banner</FormLabel>
+                </div>
                 <FormControl>
                   <Checkbox
                     checked={field.value}
                     onCheckedChange={field.onChange}
+                    className="h-6 w-6 rounded-lg border-primary/20"
                   />
                 </FormControl>
-                <div className="space-y-1 leading-none">
-                  <FormLabel>Active</FormLabel>
-                </div>
               </FormItem>
             )}
           />
         </div>
 
-        <Button type="submit" disabled={loading || uploading} className="w-full rounded-sm h-10 text-xs font-semibold uppercase tracking-wider">
-          {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-          {loading ? "SAVING..." : "SAVE IMAGE"}
+        <Button type="submit" disabled={loading || uploading} className="w-full rounded-2xl h-14 text-sm font-bold uppercase tracking-[0.2em] shadow-lg shadow-primary/20 transition-all hover:scale-[1.01] active:scale-[0.99] mt-4">
+          {loading ? <Loader2 className="mr-2 h-5 w-5 animate-spin" /> : null}
+          {loading ? "Saving..." : "Save Banner"}
         </Button>
       </form>
     </Form>
